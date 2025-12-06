@@ -12,7 +12,9 @@ interface NavLinkProps {
 
 export default function NavLink({ href, icon, label }: NavLinkProps) {
   const pathname = usePathname();
-  const isActive = pathname ? (pathname === href || (href !== "/admin" && pathname.startsWith(href))) : false;
+  const isActive = pathname && typeof pathname === 'string' 
+    ? (pathname === href || (href !== "/admin" && pathname.startsWith(href))) 
+    : false;
 
   return (
     <Link 

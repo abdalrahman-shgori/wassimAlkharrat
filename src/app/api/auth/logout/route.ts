@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { clearSessionCookie, getCurrentAdmin } from "../../../../../lib/auth";
 import { redirect } from "next/navigation";
 
+// Mark route as dynamic since it uses cookies
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const admin = await getCurrentAdmin();

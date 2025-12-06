@@ -4,9 +4,6 @@ import { useState, FormEvent, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./login.module.scss";
 
-// Mark page as dynamic
-export const dynamic = 'force-dynamic';
-
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();

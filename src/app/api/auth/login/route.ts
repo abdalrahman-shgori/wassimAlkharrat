@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 import { getAdminsCollection } from "../../../../../lib/db";
 import { setSessionCookie } from "../../../../../lib/auth";
 
+// Mark route as dynamic since it uses cookies
+export const dynamic = 'force-dynamic';
+
 // Rate limiting map (in-memory, simple implementation)
 const loginAttempts = new Map<string, { count: number; resetAt: number }>();
 const MAX_ATTEMPTS = 5;
