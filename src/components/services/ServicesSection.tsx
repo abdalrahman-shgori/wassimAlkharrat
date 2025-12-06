@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 const services = [
   {
-    name: 'Wedding',
+    name: 'Wedding Planning',
     description: 'Ensure a seamless event with our expert venue coordination. We manage logistics, site layouts, and vendor communication at your chosen location.',
     image: venue,
   },
