@@ -11,6 +11,8 @@
     "seed:services": "tsx scripts/seed-services.ts"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^6.21.0",
     "next": "16.0.5",
