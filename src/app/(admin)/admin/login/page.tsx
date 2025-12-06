@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./login.module.scss";
 
-export default function LoginPage() {
+// Mark page as dynamic
+export const dynamic = 'force-dynamic';
+
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -59,7 +62,7 @@ export default function LoginPage() {
       }
 
       // Success - redirect to dashboard or original destination
-      const from = searchParams.get("from") || "/admin";
+      const from = searchParams?.get("from") || "/admin";
       router.push(from);
       router.refresh();
     } catch (err) {
@@ -146,6 +149,22 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className={styles.container}>
+        <div className={styles.loginBox}>
+          <div style={{ textAlign: "center", padding: "2rem" }}>
+            <p style={{ color: "#AD8842", fontSize: "1.1rem" }}>Loading...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }
 
