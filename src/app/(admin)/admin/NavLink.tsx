@@ -12,9 +12,23 @@ interface NavLinkProps {
 
 export default function NavLink({ href, icon, label }: NavLinkProps) {
   const pathname = usePathname();
-  const isActive = pathname && typeof pathname === 'string' 
-    ? (pathname === href || (href !== "/admin" && pathname.startsWith(href))) 
-    : false;
+  
+  // Safely determine if link is active with comprehensive checks
+  const isActive = (() => {
+    // Ensure all values are valid strings before comparison
+    if (!pathname || typeof pathname !== 'string') return false;
+    if (!href || typeof href !== 'string') return false;
+    
+    // Direct match
+    if (pathname === href) return true;
+    
+    // Check for nested routes (but not for /admin root)
+    if (href !== "/admin" && typeof pathname.startsWith === 'function') {
+      return pathname.startsWith(href);
+    }
+    
+    return false;
+  })();
 
   return (
     <Link 
