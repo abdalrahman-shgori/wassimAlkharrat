@@ -1,0 +1,172 @@
+.ctaSection {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.backgroundImageWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.backgroundImage {
+  object-fit: cover;
+  object-position: center;
+  filter: blur(0.5px);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.ctaContent {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding:46px 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+@media screen and (max-width: 1024px) {
+  padding: 46px 50px;
+  
+}
+  @media screen and (max-width: 834px) {
+    padding: 46px 50px;
+  }
+  @media screen and (max-width: 480px) {
+    padding: 46px 24px;
+  }
+}
+
+.ctaCard {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-large);
+  border: 1px solid var(--white);
+  backdrop-filter: blur(2px);
+  padding: 60px 80px;
+  border-radius: 8px;
+  width: 100%;
+  animation: fadeInUp 1s ease-out;
+
+  @media screen and (max-width: 1024px) {
+    padding: 40px 50px;
+  }
+  @media screen and (max-width: 834px) {
+    padding: 30px 40px;
+  }
+  @media screen and (max-width: 480px) {
+    padding: 20px 30px;
+  }
+}
+
+.ctaTextContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-medium);
+  flex: 1;
+}
+
+.ctaTitle {
+  font-size: clamp(20px, 4vw, 44px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.2;
+  margin: 0;
+  font-family: var(--font-alice, serif);
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+.ctaDescription {
+  font-size: clamp(10px, 1.5vw, 16px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 754px;
+}
+
+.ctaButtonWrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.ctaButton {
+  white-space: nowrap;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 834px) {
+  .ctaSection {
+    min-height: 500px;
+  }
+
+  .ctaCard {
+    padding: 40px 50px;
+    gap: var(--spacing-medium);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+
+
+  .ctaButtonWrapper {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .ctaSection {
+    min-height: 400px;
+  }
+
+  .ctaCard {
+    padding: 30px 24px;
+    gap: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ctaTitle {
+    text-align: center;
+  }
+
+  .ctaDescription {
+    text-align: center;
+  }
+
+  .ctaButtonWrapper {
+    width: 100%;
+    justify-content: center;
+  }
+
+ 
+}
+

@@ -1,0 +1,54 @@
+$gold: #AD8842;
+$white: #FFFFFF;
+$dark: #363636;
+
+.navLink {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1.25rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: $white;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+  background: transparent;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  position: relative;
+
+  &:hover {
+    background: rgba(173, 136, 66, 0.1);
+    border-color: $gold;
+    color: $gold;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.active {
+    background: $gold;
+    color: $dark;
+    border-color: $gold;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(173, 136, 66, 0.3);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 60%;
+      background: $dark;
+      border-radius: 0 4px 4px 0;
+    }
+
+    &:hover {
+      background: darken($gold, 5%);
+      color: $dark;
+    }
+  }
+}
+

@@ -1,0 +1,11 @@
+.sectionsWrapper {
+  margin-top: -200px;
+
+  @media screen and (max-width: 834px) {
+    margin-top: -200px;
+  }
+  @media screen and (max-width: 480px) {
+    margin-top: -100px;
+  }
+}
+

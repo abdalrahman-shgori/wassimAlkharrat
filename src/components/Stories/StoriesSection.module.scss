@@ -1,0 +1,262 @@
+.storiesSection {
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background: var(--background);
+}
+
+.storiesCard {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100dvh;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+  
+  @media screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  overflow: hidden;
+  
+  @media screen and (max-width: 1024px) {
+    min-height: 400px;
+  }
+  
+  @media screen and (max-width: 480px) {
+    min-height: 300px;
+  }
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: filter 0.3s ease;
+}
+
+.imageWrapper.blurring {
+  filter: blur(10px);
+}
+
+.storyImage {
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.textContainer {
+  background: var(--dark);
+  color: var(--white);
+  padding: 80px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  
+  @media screen and (max-width: 1024px) {
+    padding: 40px 20px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    padding: 40px 30px;
+  }
+  
+  @media screen and (max-width: 480px) {
+    padding: 20px 20px;
+  }
+}
+
+.storiesTitleTop {
+  display: none;
+  font-size: 36px;
+  font-weight: 400;
+  font-family: serif;
+  color: var(--dark);
+  margin: 0 0 40px 0;
+  line-height: 1;
+  text-align: center;
+  
+  @media screen and (max-width: 600px) {
+    display: block;
+  }
+}
+
+.storiesTitle {
+  position: absolute;
+  top: 0;
+  left: -140px;
+  font-size: clamp(36px, 12vw, 206px);
+  font-weight: 400;
+  font-family: serif;
+  color: var(--white);
+  margin: 0;
+  line-height: 1;
+  pointer-events: none;
+  
+  @media screen and (max-width: 840px) {
+    font-size: 120px;
+    left: -80px;
+  }
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
+}
+
+.testimonialWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.testimonialContent {
+  width: 100%;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  margin-top: 120px;
+  
+  @media screen and (max-width: 1024px) {
+    gap: 24px;
+  }
+  @media screen and (max-width: 830px) {
+    gap: 36px;
+    margin-top: 20px;
+  }
+  
+  &.fading {
+    opacity: 0;
+  }
+}
+
+.testimonial {
+  font-size: 24px;
+  line-height: 1.8;
+  font-weight: 300;
+  color: var(--white);
+  text-align: left;
+ overflow: hidden;  
+ text-overflow: ellipsis;
+ display: -webkit-box;
+ -webkit-line-clamp: 5;
+ -webkit-box-orient: vertical;
+ line-clamp: 5;
+ box-orient: vertical;
+  @media screen and (max-width: 1024px) {
+    font-size: 20px;
+  }
+  @media screen and (max-width: 834px) {
+    font-size: 14px;
+  }
+   @media screen and (max-width: 600px) {
+    text-align: center;
+   }
+  @media screen and (max-width: 480px) {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+}
+
+.names {
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--white);
+  font-family: var(--font-allison);
+  margin-bottom: 24px;
+  min-height: 1.2em;
+
+  
+  @media screen and (max-width: 834px) {
+    font-size: 18px;
+  }
+   @media screen and (max-width: 600px) {
+    text-align: center;
+    margin-bottom: 12px;
+   }
+  @media screen and (max-width: 480px) {
+    font-size: 16px;
+  }
+}
+
+.cursor {
+  display: inline-block;
+  animation: blink 1s infinite;
+  margin-left: 2px;
+  color: var(--white);
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  
+  @media screen and (max-width: 600px) {
+    justify-content: center;
+    align-items: center;
+    
+  }
+  @media screen and (max-width: 480px) {
+    margin-top: 30px;
+    gap: 15px;
+  }
+}
+
+.navButton {
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: opacity 0.3s ease;
+  font-family: inherit;
+  
+  &:hover {
+    opacity: 0.7;
+  }
+  
+  &:active {
+    opacity: 0.5;
+  }
+  
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  
+  @media screen and (max-width: 480px) {
+    font-size: 20px;
+    padding: 6px 10px;
+  }
+}
+
+.navIndicator {
+  font-size: 16px;
+  color: var(--white);
+  font-weight: 300;
+  letter-spacing: 2px;
+  
+  @media screen and (max-width: 480px) {
+    font-size: 14px;
+  }
+}
+

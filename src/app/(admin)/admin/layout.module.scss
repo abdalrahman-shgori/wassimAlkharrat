@@ -1,0 +1,79 @@
+// Brand colors
+$gold: #AD8842;
+$dark: #363636;
+$white: #FFFFFF;
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 280px;
+  background: $dark;
+  color: $white;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid $gold;
+}
+
+.header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+
+  .title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $gold;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: $gold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+  }
+
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $gold, transparent);
+    margin: 1rem auto 0.75rem;
+  }
+
+  .adminName {
+    font-size: 0.875rem;
+    color: $white;
+    margin-top: 0.5rem;
+  }
+}
+
+.nav {
+  flex: 1;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 0.75rem;
+    }
+  }
+}
+
+.logoutSection {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid $gold;
+}
+
+.mainContent {
+  flex: 1;
+  background: $white;
+}
+

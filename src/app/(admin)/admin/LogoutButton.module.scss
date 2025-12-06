@@ -1,0 +1,31 @@
+$gold: #AD8842;
+$dark: #363636;
+
+.logoutButton {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background: transparent;
+  color: $gold;
+  border: 1px solid $gold;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  letter-spacing: 0.5px;
+  font-size: 0.95rem;
+
+  &:hover:not(:disabled) {
+    background: $gold;
+    color: $dark;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+

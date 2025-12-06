@@ -1,0 +1,67 @@
+.button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 2px solid var(--white);
+  padding: 18px 45px;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--white);
+  background: transparent;
+  overflow: hidden;
+  cursor: pointer;
+  transition: color 0.5s ease;
+  z-index: 1;
+
+  .arrow {
+    transition: filter 0.5s ease;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: var(--white);
+    transition: width 0.4s ease;
+    z-index: -1;
+  }
+
+  &:hover {
+    color: var(--dark);
+
+    &::before {
+      width: 100%;
+    }
+
+    .arrow {
+      filter: brightness(0);
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    &:hover::before {
+      width: 0;
+    }
+  }
+}
+@media screen and (max-width: 834px) {
+  .button {
+    padding: 12px 24px;
+    font-size: 14px;
+    line-height: 22px;
+  }
+}
+@media screen and (max-width: 480px) {
+  .button {
+    padding: 10px 20px;
+    font-size: 12px;
+    line-height: 20px;
+  }
+}
