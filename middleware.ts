@@ -3,7 +3,12 @@ import type { NextRequest } from "next/server";
 import { verifyToken, getSessionToken } from "./lib/auth";
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const pathname = request.nextUrl?.pathname;
+
+  // Safety check: ensure pathname exists and is a string
+  if (!pathname || typeof pathname !== 'string') {
+    return NextResponse.next();
+  }
 
   // Only apply middleware to /admin routes
   if (pathname.startsWith("/admin")) {

@@ -117,7 +117,7 @@ export function getSessionToken(cookieHeader: string | null): string | null {
   if (!cookieHeader) return null;
   
   const cookies = cookieHeader.split(";").map(c => c.trim());
-  const sessionCookie = cookies.find(c => c.startsWith(`${SESSION_COOKIE_NAME}=`));
+  const sessionCookie = cookies.find(c => c && typeof c === 'string' && c.startsWith(`${SESSION_COOKIE_NAME}=`));
   
   if (!sessionCookie) return null;
   
