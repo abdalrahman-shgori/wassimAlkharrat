@@ -23,9 +23,10 @@ export default function NavLink({ href, icon, label }: NavLinkProps) {
     if (pathname === href) return true;
     
     // Check for nested routes (but not for /admin root)
-    if (href !== "/admin" && typeof pathname.startsWith === 'function') {
+    if (href !== "/admin" && typeof pathname === "string" && typeof href === "string") {
       return pathname.startsWith(href);
     }
+    
     
     return false;
   })();
