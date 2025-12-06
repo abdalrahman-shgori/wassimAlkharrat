@@ -66,8 +66,10 @@
 
 .servicesSectionContentItemTitle {
     margin-top: 16px;
-    font-size: 40px;
+    font-size: clamp(16px, 2.5vw, 40px);
     font-weight: 400;
+
+
 }
 
 .servicesSectionContentItemDescription {

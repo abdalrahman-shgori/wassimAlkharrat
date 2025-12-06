@@ -114,10 +114,10 @@ export async function clearSessionCookie(): Promise<void> {
  * Get the session token from cookies (for middleware)
  */
 export function getSessionToken(cookieHeader: string | null): string | null {
-  if (!cookieHeader) return null;
+  if (!cookieHeader || typeof cookieHeader !== 'string') return null;
   
-  const cookies = cookieHeader.split(";").map(c => c.trim());
-  const sessionCookie = cookies.find(c => c && typeof c === 'string' && c.startsWith(`${SESSION_COOKIE_NAME}=`));
+  const cookies = cookieHeader.split(";").map(c => c?.trim()).filter((c): c is string => Boolean(c && typeof c === 'string'));
+  const sessionCookie = cookies.find(c => c.startsWith(`${SESSION_COOKIE_NAME}=`));
   
   if (!sessionCookie) return null;
   
