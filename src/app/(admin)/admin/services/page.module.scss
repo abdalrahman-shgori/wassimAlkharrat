@@ -39,7 +39,7 @@ $white: #FFFFFF;
   font-size: 1rem;
 
   &:hover {
-    background: darken($gold, 10%);
+    background: #9C7A3B;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(173, 136, 66, 0.3);
   }
@@ -173,7 +173,7 @@ $white: #FFFFFF;
     color: $white;
 
     &:hover {
-      background: darken($gold, 10%);
+      background: #9C7A3B;
     }
   }
 
@@ -182,7 +182,7 @@ $white: #FFFFFF;
     color: $white;
 
     &:hover {
-      background: darken(#ef4444, 10%);
+      background: #D73D3D;
     }
   }
 }
@@ -349,7 +349,7 @@ $white: #FFFFFF;
     color: $dark;
 
     &:hover {
-      background: darken(#e0e0e0, 10%);
+      background: #CACACA;
     }
   }
 
@@ -358,7 +358,7 @@ $white: #FFFFFF;
     color: $white;
 
     &:hover {
-      background: darken($gold, 10%);
+      background: #9C7A3B;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(173, 136, 66, 0.3);
     }
