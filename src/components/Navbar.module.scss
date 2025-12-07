@@ -46,6 +46,20 @@
   img {
     object-fit: contain;
   }
+
+  @media (max-width: 768px) {
+    img {
+      width: 80px !important;
+      height: auto !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    img {
+      width: 70px !important;
+      height: auto !important;
+    }
+  }
 }
 
 // Burger Menu
