@@ -28,9 +28,10 @@ export default function Navbar() {
         setIsScrolled(true);
   
         // Hide on scroll down, show on scroll up
-        if (currentScroll > lastScrollY + 5) {
+        // Check direction directly without threshold to work with slow scrolling
+        if (currentScroll > lastScrollY) {
           setIsVisible(false); // DOWN
-        } else if (currentScroll < lastScrollY - 5) {
+        } else if (currentScroll < lastScrollY) {
           setIsVisible(true); // UP
         }
       }
@@ -49,6 +50,9 @@ export default function Navbar() {
     };
   
     let ticking = false;
+  
+    // Set initial state based on current scroll position
+    handleScroll();
   
     window.addEventListener("scroll", throttledScroll, { passive: true });
   
