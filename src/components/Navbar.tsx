@@ -16,42 +16,45 @@ export default function Navbar() {
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
-    let ticking = false;
-
+  
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollPosition = window.scrollY;
-          
-          // Always show navbar at the top
-          if (scrollPosition === 0) {
-            setIsVisible(true);
-            setIsScrolled(false);
-          } else {
-            // Determine scroll direction
-            const scrollDirection = scrollPosition > lastScrollY ? 'down' : 'up';
-            
-            // Hide navbar when scrolling down, show when scrolling up
-            setIsVisible(scrollDirection === 'up');
-            
-            // Update background based on scroll position
-            setIsScrolled(scrollPosition > 50);
-          }
-          
-          lastScrollY = scrollPosition > 0 ? scrollPosition : 0;
-          ticking = false;
-        });
-        
-        ticking = true;
+      const currentScroll = window.scrollY;
+  
+      // Always show when near the top
+      if (currentScroll < 10) {
+        setIsVisible(true);
+        setIsScrolled(false);
+      } else {
+        setIsScrolled(true);
+  
+        // Hide on scroll down, show on scroll up
+        if (currentScroll > lastScrollY + 5) {
+          setIsVisible(false); // DOWN
+        } else if (currentScroll < lastScrollY - 5) {
+          setIsVisible(true); // UP
+        }
       }
+  
+      lastScrollY = currentScroll;
     };
-
-    // Check initial scroll position
-    handleScroll();
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+  
+    const throttledScroll = () => {
+      if (ticking) return;
+      ticking = true;
+  
+      requestAnimationFrame(() => {
+        handleScroll();
+        ticking = false;
+      });
+    };
+  
+    let ticking = false;
+  
+    window.addEventListener("scroll", throttledScroll, { passive: true });
+  
+    return () => window.removeEventListener("scroll", throttledScroll);
   }, []);
+  
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
