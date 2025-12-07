@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import styles from "./page.module.scss";
 
 export default function EventsPage() {
