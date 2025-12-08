@@ -79,9 +79,9 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className={styles.logo}>
             <Image
-              src="/images/navLogo.svg"
+              src="/images/logoWhite.svg"
               alt="Logo"
-              width={109}
+              width={81}
               height={60}
               priority
             />

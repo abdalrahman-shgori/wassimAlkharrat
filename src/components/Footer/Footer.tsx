@@ -90,19 +90,24 @@ export default function Footer() {
         <div className={styles.rightSection}>
           <h3 className={styles.sectionHeading}>Connect Us</h3>
           <div className={styles.contactInfo}>
-          <div className={styles.contactItem}>
+          <a href="tel:+963944406638" className={styles.contactItem}>
               <FaPhone className={styles.contactIcon} />
-              <span>+1 (212) 555-1234</span>
-            </div>
+              <span>+963 9444 06638</span>
+            </a>
            
-            <div className={styles.contactItem}>
+            <a href="mailto:hello@wassimalkharratevents.com" className={styles.contactItem}>
               <FaEnvelope className={styles.contactIcon} />
               <span>hello@wassimalkharratevents.com</span>
-            </div>
-            <div className={styles.contactItem}>
+            </a>
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query=123+Elegant+Boulevard,+Luxury+District,+NY+10001" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={styles.contactItem}
+            >
               <FaMapMarkerAlt className={styles.contactIcon} />
               <span>123 Elegant Boulevard, Luxury District, NY 10001</span>
-            </div>
+            </a>
             
           </div>
         </div>
