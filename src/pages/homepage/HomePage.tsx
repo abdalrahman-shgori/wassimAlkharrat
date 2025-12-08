@@ -6,15 +6,50 @@ import StoriesSection from '@/components/Stories/StoriesSection';
 import CTASection from '@/components/CTASection/CTASection';
 import styles from './HomePage.module.scss';
 
-export default function HomePage() {
+interface Service {
+  _id: string;
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+  image?: string;
+  isActive: boolean;
+  order: number;
+}
+
+interface Event {
+  _id: string;
+  image: string;
+  eventTitle: string;
+  eventSubtitle: string;
+  isActive: boolean;
+  order: number;
+}
+
+interface Story {
+  _id: string;
+  image: string;
+  names: string;
+  testimonial: string;
+  isActive: boolean;
+  order: number;
+}
+
+interface HomePageProps {
+  services: Service[];
+  events: Event[];
+  stories: Story[];
+}
+
+export function HomePage({ services, events, stories }: HomePageProps) {
   return (
     <>
       <HomepageHero />
        <WelcomeToSection/>
-       <ServicesSection/>
+       <ServicesSection services={services} />
        <div className={styles.sectionsWrapper}>
-       <EventsSection/>
-       <StoriesSection/>
+       <EventsSection events={events} />
+       <StoriesSection stories={stories} />
        <CTASection/>
        </div>
      

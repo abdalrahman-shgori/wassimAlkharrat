@@ -15,6 +15,11 @@ Create `.env.local` in the project root:
 MONGODB_URI=mongodb://localhost:27017/event-planner
 AUTH_SECRET=your-super-secret-jwt-key-change-this-in-production
 NODE_ENV=development
+
+# Cloudinary Configuration (for image uploads)
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
 ```
 
 **Generate a secure AUTH_SECRET:**
@@ -47,7 +52,26 @@ MONGODB_URI=mongodb://localhost:27017/event-planner
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/event-planner
 ```
 
-### 4. Seed Admin Users
+### 4. Set Up Cloudinary (for Image Uploads)
+
+**Cloudinary Setup:**
+1. Go to https://cloudinary.com/users/register/free
+2. Create a free account (25GB storage, 25GB bandwidth/month)
+3. After signing up, go to your Dashboard
+4. Copy your credentials:
+   - **Cloud Name** (found in Dashboard)
+   - **API Key** (found in Dashboard)
+   - **API Secret** (found in Dashboard - click "Reveal")
+5. Add them to your `.env.local`:
+```env
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+```
+
+**Note:** Without Cloudinary credentials, image uploads will fail. The free tier is sufficient for most projects.
+
+### 5. Seed Admin Users
 
 ```bash
 npm run seed:admins
@@ -62,13 +86,13 @@ Admin 1: admin1@eventplanner.com / Admin123!
 Admin 2: admin2@eventplanner.com / Admin456!
 ```
 
-### 5. Start Development Server
+### 6. Start Development Server
 
 ```bash
 npm run dev
 ```
 
-### 6. Test the Application
+### 7. Test the Application
 
 1. **Visit the public site**: http://localhost:3000
 2. **Visit admin login**: http://localhost:3000/admin/login
@@ -90,6 +114,8 @@ npm run dev
 - [ ] Redirected to admin dashboard after login
 - [ ] Can see admin sidebar and navigation
 - [ ] Logout button works
+- [ ] Cloudinary credentials are configured
+- [ ] Can upload service images from admin dashboard
 
 ## Common Issues
 
@@ -112,6 +138,13 @@ npm run seed:admins
 **Solution**: 
 - Make sure `.env.local` exists in the project root
 - Restart the dev server after creating `.env.local`
+
+### "Cloudinary is not configured"
+**Solution**: 
+- Make sure you've added Cloudinary credentials to `.env.local`
+- Sign up for a free Cloudinary account at https://cloudinary.com
+- Copy your Cloud Name, API Key, and API Secret from the Dashboard
+- Restart the dev server after adding credentials
 
 ### Login page shows but login doesn't work
 **Solution**: 

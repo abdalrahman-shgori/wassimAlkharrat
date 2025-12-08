@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     const nextOrder = lastService.length > 0 ? (lastService[0].order || 0) + 1 : 1;
 
     // Create new service
-    const newService = {
+    const newService: any = {
       name: body.name,
       slug: body.slug,
       description: body.description,
@@ -82,6 +82,11 @@ export async function POST(request: NextRequest) {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+
+    // Add image if provided
+    if (body.image) {
+      newService.image = body.image;
+    }
 
     const result = await servicesCollection.insertOne(newService);
 

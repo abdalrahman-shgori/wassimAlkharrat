@@ -6,6 +6,7 @@ export interface Service {
   slug: string;
   description: string;
   icon: string;
+  image?: string; // URL/path to service image
   isActive: boolean;
   order: number;
   createdAt: Date;
@@ -17,6 +18,7 @@ export interface CreateServiceInput {
   slug: string;
   description: string;
   icon?: string;
+  image?: string; // URL/path to service image
   isActive?: boolean;
   order?: number;
 }
@@ -26,6 +28,7 @@ export interface UpdateServiceInput {
   slug?: string;
   description?: string;
   icon?: string;
+  image?: string; // URL/path to service image
   isActive?: boolean;
   order?: number;
 }

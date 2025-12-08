@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
-import { getServicesCollection } from "../../../../../lib/db";
-import { UpdateServiceInput } from "../../../../../lib/models/Service";
+import { getStoriesCollection } from "../../../../../lib/db";
+import { UpdateStoryInput } from "../../../../../lib/models/Story";
 import { requireAdmin } from "../../../../../lib/auth";
 
-// GET /api/services/[id] - Get a single service by ID
+// GET /api/stories/[id] - Get a single story by ID
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -15,35 +15,35 @@ export async function GET(
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "Invalid service ID" },
+        { error: "Invalid story ID" },
         { status: 400 }
       );
     }
 
-    const servicesCollection = await getServicesCollection();
-    const service = await servicesCollection.findOne({ _id: new ObjectId(id) });
+    const storiesCollection = await getStoriesCollection();
+    const story = await storiesCollection.findOne({ _id: new ObjectId(id) });
 
-    if (!service) {
+    if (!story) {
       return NextResponse.json(
-        { error: "Service not found" },
+        { error: "Story not found" },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: service,
+      data: story,
     });
   } catch (error) {
-    console.error("Error fetching service:", error);
+    console.error("Error fetching story:", error);
     return NextResponse.json(
-      { error: "Failed to fetch service" },
+      { error: "Failed to fetch story" },
       { status: 500 }
     );
   }
 }
 
-// PUT /api/services/[id] - Update a service (Admin only)
+// PUT /api/stories/[id] - Update a story (Admin only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -57,35 +57,21 @@ export async function PUT(
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "Invalid service ID" },
+        { error: "Invalid story ID" },
         { status: 400 }
       );
     }
 
-    const body: UpdateServiceInput = await request.json();
-    const servicesCollection = await getServicesCollection();
+    const body: UpdateStoryInput = await request.json();
+    const storiesCollection = await getStoriesCollection();
 
-    // Check if service exists
-    const existingService = await servicesCollection.findOne({ _id: new ObjectId(id) });
-    if (!existingService) {
+    // Check if story exists
+    const existingStory = await storiesCollection.findOne({ _id: new ObjectId(id) });
+    if (!existingStory) {
       return NextResponse.json(
-        { error: "Service not found" },
+        { error: "Story not found" },
         { status: 404 }
       );
-    }
-
-    // If slug is being updated, check for duplicates
-    if (body.slug && body.slug !== existingService.slug) {
-      const duplicateSlug = await servicesCollection.findOne({ 
-        slug: body.slug,
-        _id: { $ne: new ObjectId(id) }
-      });
-      if (duplicateSlug) {
-        return NextResponse.json(
-          { error: "A service with this slug already exists" },
-          { status: 409 }
-        );
-      }
     }
 
     // Build update object
@@ -93,16 +79,14 @@ export async function PUT(
       updatedAt: new Date(),
     };
 
-    if (body.name !== undefined) updateData.name = body.name;
-    if (body.slug !== undefined) updateData.slug = body.slug;
-    if (body.description !== undefined) updateData.description = body.description;
-    if (body.icon !== undefined) updateData.icon = body.icon;
     if (body.image !== undefined) updateData.image = body.image;
+    if (body.names !== undefined) updateData.names = body.names;
+    if (body.testimonial !== undefined) updateData.testimonial = body.testimonial;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
     if (body.order !== undefined) updateData.order = body.order;
 
-    // Update service
-    const result = await servicesCollection.findOneAndUpdate(
+    // Update story
+    const result = await storiesCollection.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: updateData },
       { returnDocument: "after" }
@@ -119,15 +103,15 @@ export async function PUT(
         { status: 401 }
       );
     }
-    console.error("Error updating service:", error);
+    console.error("Error updating story:", error);
     return NextResponse.json(
-      { error: "Failed to update service" },
+      { error: "Failed to update story" },
       { status: 500 }
     );
   }
 }
 
-// DELETE /api/services/[id] - Delete a service (Admin only)
+// DELETE /api/stories/[id] - Delete a story (Admin only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -141,28 +125,28 @@ export async function DELETE(
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "Invalid service ID" },
+        { error: "Invalid story ID" },
         { status: 400 }
       );
     }
 
-    const servicesCollection = await getServicesCollection();
+    const storiesCollection = await getStoriesCollection();
 
-    // Check if service exists
-    const existingService = await servicesCollection.findOne({ _id: new ObjectId(id) });
-    if (!existingService) {
+    // Check if story exists
+    const existingStory = await storiesCollection.findOne({ _id: new ObjectId(id) });
+    if (!existingStory) {
       return NextResponse.json(
-        { error: "Service not found" },
+        { error: "Story not found" },
         { status: 404 }
       );
     }
 
-    // Delete service
-    await servicesCollection.deleteOne({ _id: new ObjectId(id) });
+    // Delete story
+    await storiesCollection.deleteOne({ _id: new ObjectId(id) });
 
     return NextResponse.json({
       success: true,
-      message: "Service deleted successfully",
+      message: "Story deleted successfully",
     });
   } catch (error: any) {
     if (error.message === "Unauthorized") {
@@ -171,9 +155,9 @@ export async function DELETE(
         { status: 401 }
       );
     }
-    console.error("Error deleting service:", error);
+    console.error("Error deleting story:", error);
     return NextResponse.json(
-      { error: "Failed to delete service" },
+      { error: "Failed to delete story" },
       { status: 500 }
     );
   }

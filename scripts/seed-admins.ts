@@ -69,6 +69,14 @@ async function seedAdmins() {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        email: "admin3@eventplanner.com",
+        passwordHash: password2Hash,
+        name: "Admin Three",
+        role: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ];
 
     const result = await adminsCollection.insertMany(admins);

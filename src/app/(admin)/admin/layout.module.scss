@@ -6,6 +6,7 @@ $white: #FFFFFF;
 .container {
   display: flex;
   min-height: 100vh;
+  position: relative;
 }
 
 .sidebar {
@@ -16,6 +17,88 @@ $white: #FFFFFF;
   display: flex;
   flex-direction: column;
   border-right: 1px solid $gold;
+  position: relative;
+  height: 100vh;
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.sidebarOpen {
+  @media (max-width: 768px) {
+    transform: translateX(0);
+  }
+}
+
+.mobileOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.mobileMenuToggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  background: $gold;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background: #9C7A3B;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 24px;
+  height: 18px;
+}
+
+.line {
+  width: 100%;
+  height: 2px;
+  background: $white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.line1 {
+  transform: rotate(45deg) translate(7px, 7px);
+}
+
+.line2 {
+  opacity: 0;
+}
+
+.line3 {
+  transform: rotate(-45deg) translate(7px, -7px);
 }
 
 .header {
@@ -75,5 +158,49 @@ $white: #FFFFFF;
 .mainContent {
   flex: 1;
   background: $white;
+  transition: margin-left 0.3s ease-in-out;
+
+  @media (min-width: 769px) {
+    margin-left: 0; // No margin needed on desktop since sidebar is relative
+  }
+}
+
+// Mobile Responsive Styles
+@media (max-width: 768px) {
+  .mobileMenuToggle {
+    display: block;
+  }
+
+  .mobileOverlay {
+    display: block;
+  }
+
+  .mainContent {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .header {
+    .title {
+      font-size: 1.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.7rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .mobileMenuToggle {
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.625rem;
+  }
 }
 

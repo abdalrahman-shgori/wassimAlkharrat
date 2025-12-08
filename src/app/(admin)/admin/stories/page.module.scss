@@ -1,28 +1,20 @@
-// Only unique styles for services page
+// Only unique styles for stories page
 // Common styles are in @/components/admin/admin.module.scss
 
-.serviceName {
+.storyNames {
   font-size: 1.5rem;
   font-weight: 700;
   color: #363636;
   margin-bottom: 0.5rem;
 }
 
-.slug {
-  font-size: 0.9rem;
-  color: #AD8842;
-  font-weight: 600;
-  font-family: monospace;
-  margin-bottom: 1rem;
-}
-
-.serviceDescription {
+.storyTestimonial {
   color: #666;
   line-height: 1.6;
   margin-bottom: 1rem;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

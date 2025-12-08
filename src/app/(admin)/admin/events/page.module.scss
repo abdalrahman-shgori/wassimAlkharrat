@@ -1,26 +1,18 @@
-$gold: #AD8842;
-$dark: #363636;
-$white: #FFFFFF;
+// Only unique styles for events page
+// Common styles are in @/components/admin/admin.module.scss
 
-.container {
-  padding: 2.5rem;
-  max-width: 1400px;
+.eventTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #363636;
+  margin-bottom: 0.5rem;
 }
 
-.header {
-  margin-bottom: 2rem;
-
-  .title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: $dark;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.5px;
-  }
-
-  .description {
-    font-size: 1rem;
-    color: #666;
-  }
+.eventSubtitle {
+  color: #AD8842;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
-

@@ -106,9 +106,9 @@
 }
 
 .eventDescription {
+    text-transform: uppercase;
     font-size: 16px;
     text-align: center;
-    line-height: 1.5;
     max-width: 600px;
     width: 100%;
     color: var(--dark);
@@ -177,4 +177,17 @@
         font-size: 10px;
         padding: 10px 24px;
     }
+}
+
+.skeletonImageWrapper {
+    width: 100%;
+    aspect-ratio: 736 / 490;
+    overflow: hidden;
+}
+
+.error {
+    text-align: center;
+    padding: 3rem;
+    color: var(--dark);
+    font-size: 1.2rem;
 }

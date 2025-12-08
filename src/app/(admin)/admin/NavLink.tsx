@@ -8,9 +8,10 @@ interface NavLinkProps {
   href: string;
   icon: string;
   label: string;
+  onClick?: () => void;
 }
 
-export default function NavLink({ href, icon, label }: NavLinkProps) {
+export default function NavLink({ href, icon, label, onClick }: NavLinkProps) {
   const pathname = usePathname();
   
   // Safely determine if link is active with comprehensive checks
@@ -35,6 +36,7 @@ export default function NavLink({ href, icon, label }: NavLinkProps) {
     <Link 
       href={href} 
       className={`${styles.navLink} ${isActive ? styles.active : ""}`}
+      onClick={onClick}
     >
       {icon} {label}
     </Link>

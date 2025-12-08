@@ -107,6 +107,30 @@
     filter: brightness(0);
 }
 
+.serviceImage {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    transition: transform 0.3s ease;
+    object-fit: cover;
+}
+
+.error {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--white);
+    font-size: 1.2rem;
+}
+
+.skeletonImageWrapper {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
 @media (max-width: 834px) {
     .servicesSection {
         padding: 0px 92px 0px 92px;

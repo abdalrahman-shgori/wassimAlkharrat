@@ -96,6 +96,12 @@ wassim-kharrat-events/
 
    # Node Environment
    NODE_ENV=development
+
+   # Cloudinary Configuration (for image uploads)
+   # Get credentials from: https://cloudinary.com
+   CLOUDINARY_CLOUD_NAME=your-cloud-name
+   CLOUDINARY_API_KEY=your-api-key
+   CLOUDINARY_API_SECRET=your-api-secret
    ```
 
 4. **Seed admin users**

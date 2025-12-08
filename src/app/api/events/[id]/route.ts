@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
-import { getServicesCollection } from "../../../../../lib/db";
-import { UpdateServiceInput } from "../../../../../lib/models/Service";
+import { getEventsCollection } from "../../../../../lib/db";
+import { UpdateEventInput } from "../../../../../lib/models/Event";
 import { requireAdmin } from "../../../../../lib/auth";
 
-// GET /api/services/[id] - Get a single service by ID
+// GET /api/events/[id] - Get a single event by ID
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -15,35 +15,35 @@ export async function GET(
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "Invalid service ID" },
+        { error: "Invalid event ID" },
         { status: 400 }
       );
     }
 
-    const servicesCollection = await getServicesCollection();
-    const service = await servicesCollection.findOne({ _id: new ObjectId(id) });
+    const eventsCollection = await getEventsCollection();
+    const event = await eventsCollection.findOne({ _id: new ObjectId(id) });
 
-    if (!service) {
+    if (!event) {
       return NextResponse.json(
-        { error: "Service not found" },
+        { error: "Event not found" },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: service,
+      data: event,
     });
   } catch (error) {
-    console.error("Error fetching service:", error);
+    console.error("Error fetching event:", error);
     return NextResponse.json(
-      { error: "Failed to fetch service" },
+      { error: "Failed to fetch event" },
       { status: 500 }
     );
   }
 }
 
-// PUT /api/services/[id] - Update a service (Admin only)
+// PUT /api/events/[id] - Update an event (Admin only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -57,35 +57,21 @@ export async function PUT(
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "Invalid service ID" },
+        { error: "Invalid event ID" },
         { status: 400 }
       );
     }
 
-    const body: UpdateServiceInput = await request.json();
-    const servicesCollection = await getServicesCollection();
+    const body: UpdateEventInput = await request.json();
+    const eventsCollection = await getEventsCollection();
 
-    // Check if service exists
-    const existingService = await servicesCollection.findOne({ _id: new ObjectId(id) });
-    if (!existingService) {
+    // Check if event exists
+    const existingEvent = await eventsCollection.findOne({ _id: new ObjectId(id) });
+    if (!existingEvent) {
       return NextResponse.json(
-        { error: "Service not found" },
+        { error: "Event not found" },
         { status: 404 }
       );
-    }
-
-    // If slug is being updated, check for duplicates
-    if (body.slug && body.slug !== existingService.slug) {
-      const duplicateSlug = await servicesCollection.findOne({ 
-        slug: body.slug,
-        _id: { $ne: new ObjectId(id) }
-      });
-      if (duplicateSlug) {
-        return NextResponse.json(
-          { error: "A service with this slug already exists" },
-          { status: 409 }
-        );
-      }
     }
 
     // Build update object
@@ -93,16 +79,14 @@ export async function PUT(
       updatedAt: new Date(),
     };
 
-    if (body.name !== undefined) updateData.name = body.name;
-    if (body.slug !== undefined) updateData.slug = body.slug;
-    if (body.description !== undefined) updateData.description = body.description;
-    if (body.icon !== undefined) updateData.icon = body.icon;
     if (body.image !== undefined) updateData.image = body.image;
+    if (body.eventTitle !== undefined) updateData.eventTitle = body.eventTitle;
+    if (body.eventSubtitle !== undefined) updateData.eventSubtitle = body.eventSubtitle;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
     if (body.order !== undefined) updateData.order = body.order;
 
-    // Update service
-    const result = await servicesCollection.findOneAndUpdate(
+    // Update event
+    const result = await eventsCollection.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: updateData },
       { returnDocument: "after" }
@@ -119,15 +103,15 @@ export async function PUT(
         { status: 401 }
       );
     }
-    console.error("Error updating service:", error);
+    console.error("Error updating event:", error);
     return NextResponse.json(
-      { error: "Failed to update service" },
+      { error: "Failed to update event" },
       { status: 500 }
     );
   }
 }
 
-// DELETE /api/services/[id] - Delete a service (Admin only)
+// DELETE /api/events/[id] - Delete an event (Admin only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -141,28 +125,28 @@ export async function DELETE(
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "Invalid service ID" },
+        { error: "Invalid event ID" },
         { status: 400 }
       );
     }
 
-    const servicesCollection = await getServicesCollection();
+    const eventsCollection = await getEventsCollection();
 
-    // Check if service exists
-    const existingService = await servicesCollection.findOne({ _id: new ObjectId(id) });
-    if (!existingService) {
+    // Check if event exists
+    const existingEvent = await eventsCollection.findOne({ _id: new ObjectId(id) });
+    if (!existingEvent) {
       return NextResponse.json(
-        { error: "Service not found" },
+        { error: "Event not found" },
         { status: 404 }
       );
     }
 
-    // Delete service
-    await servicesCollection.deleteOne({ _id: new ObjectId(id) });
+    // Delete event
+    await eventsCollection.deleteOne({ _id: new ObjectId(id) });
 
     return NextResponse.json({
       success: true,
-      message: "Service deleted successfully",
+      message: "Event deleted successfully",
     });
   } catch (error: any) {
     if (error.message === "Unauthorized") {
@@ -171,9 +155,9 @@ export async function DELETE(
         { status: 401 }
       );
     }
-    console.error("Error deleting service:", error);
+    console.error("Error deleting event:", error);
     return NextResponse.json(
-      { error: "Failed to delete service" },
+      { error: "Failed to delete event" },
       { status: 500 }
     );
   }

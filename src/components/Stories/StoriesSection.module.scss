@@ -179,14 +179,14 @@
 
   
   @media screen and (max-width: 834px) {
-    font-size: 18px;
+    font-size: 24px;
   }
    @media screen and (max-width: 600px) {
     text-align: center;
     margin-bottom: 12px;
    }
   @media screen and (max-width: 480px) {
-    font-size: 16px;
+    font-size: 24px;
   }
 }
 
@@ -259,6 +259,19 @@
   
   @media screen and (max-width: 480px) {
     font-size: 14px;
+  }
+}
+
+.error {
+  color: var(--white);
+  font-size: 18px;
+  text-align: center;
+  padding: 2rem;
+  opacity: 0.8;
+  
+  @media screen and (max-width: 480px) {
+    font-size: 16px;
+    padding: 1.5rem;
   }
 }
 
