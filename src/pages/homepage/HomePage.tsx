@@ -39,9 +39,10 @@ interface HomePageProps {
   services: Service[];
   events: Event[];
   stories: Story[];
+  heroImage: string;
 }
 
-export function HomePage({ services, events, stories }: HomePageProps) {
+export function HomePage({ services, events, stories, heroImage }: HomePageProps) {
   // Ensure props are always arrays to prevent undefined errors during prerendering
   const safeServices = services || [];
   const safeEvents = events || [];
@@ -49,7 +50,7 @@ export function HomePage({ services, events, stories }: HomePageProps) {
 
   return (
     <>
-      <HomepageHero />
+      <HomepageHero imageSrc={heroImage} />
        <WelcomeToSection/>
        <ServicesSection services={safeServices} />
        <div className={styles.sectionsWrapper}>

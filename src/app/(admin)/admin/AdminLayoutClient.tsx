@@ -47,6 +47,9 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
               <NavLink href="/admin" icon="📊" label="Dashboard" onClick={closeMobileMenu} />
             </li>
             <li>
+              <NavLink href="/admin/hero-section" icon="🌅" label="Hero Section" onClick={closeMobileMenu} />
+            </li>
+            <li>
               <NavLink href="/admin/services" icon="🎯" label="Services" onClick={closeMobileMenu} />
             </li>
             <li>

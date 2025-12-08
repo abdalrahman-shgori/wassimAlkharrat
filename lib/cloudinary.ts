@@ -22,11 +22,11 @@ export async function uploadImageToCloudinary(
       {
         folder: `event-planner/${folder}`,
         resource_type: "image",
-        // Optimize images automatically
+        // Force WebP output with automatic quality
         transformation: [
           {
+            format: "webp",
             quality: "auto",
-            fetch_format: "auto",
           },
         ],
       },

@@ -1,10 +1,14 @@
 import { HomePage } from '@/pages/homepage';
-import { getServicesCollection } from '../../../lib/db';
-import { getEventsCollection } from '../../../lib/db';
-import { getStoriesCollection } from '../../../lib/db';
+import {
+  getEventsCollection,
+  getHomepageSettingsCollection,
+  getServicesCollection,
+  getStoriesCollection,
+} from '../../../lib/db';
 import { Service } from '../../../lib/models/Service';
 import { Event } from '../../../lib/models/Event';
 import { Story } from '../../../lib/models/Story';
+import { HomepageSettings } from '../../../lib/models/HomepageSettings';
 
 export const revalidate = 3600; // Revalidate every hour for ISR
 
@@ -77,18 +81,38 @@ async function getStories() {
   }
 }
 
+async function getHomepageSettings(): Promise<{ heroImage?: string } | null> {
+  try {
+    const homepageSettingsCollection = await getHomepageSettingsCollection();
+    const settings = await homepageSettingsCollection.findOne<HomepageSettings>({}, { sort: { updatedAt: -1 } });
+
+    if (!settings) return null;
+
+    return {
+      heroImage: settings.heroImage,
+    };
+  } catch (error) {
+    console.error('Error fetching homepage settings:', error);
+    return null;
+  }
+}
+
 export default async function Home() {
-  const [services, events, stories] = await Promise.all([
+  const [services, events, stories, homepageSettings] = await Promise.all([
     getServices(),
     getEvents(),
     getStories(),
+    getHomepageSettings(),
   ]);
+
+  const heroImage = homepageSettings?.heroImage || '/images/homepage/DSC06702.webp';
 
   // Ensure all values are arrays (fallback to empty arrays if undefined)
   return <HomePage 
     services={services || []} 
     events={events || []} 
-    stories={stories || []} 
+    stories={stories || []}
+    heroImage={heroImage}
   />;
 }
 
