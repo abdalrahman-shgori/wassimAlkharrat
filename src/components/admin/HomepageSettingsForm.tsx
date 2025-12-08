@@ -55,9 +55,9 @@ export default function HomepageSettingsForm() {
       return;
     }
 
-    const maxSize = 20 * 1024 * 1024; // 20MB
+    const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
-      setError("File size exceeds 20MB limit.");
+      setError("File size exceeds 10MB limit.");
       return;
     }
 
@@ -151,9 +151,9 @@ export default function HomepageSettingsForm() {
           uploadingImage={uploadingImage}
           onImageChange={handleImageUpload}
           onRemoveImage={handleRemoveImage}
-          maxSize={20}
+          maxSize={10}
         />
-        <small>Recommended: landscape orientation, optimized for web (max 20MB).</small>
+        <small>Recommended: landscape orientation, optimized for web (max 10MB).</small>
       </div>
 
       <div className={styles.formActions}>

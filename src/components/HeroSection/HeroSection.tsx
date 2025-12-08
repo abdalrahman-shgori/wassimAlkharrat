@@ -17,6 +17,11 @@ interface HeroSectionProps {
    * clicks the scroll indicator.
    */
   nextSectionId?: string;
+  /**
+   * Optional override to handle the scroll indicator click,
+   * useful when using full-page navigation plugins.
+   */
+  onScrollIndicatorClick?: () => void;
 }
 
 export default function HeroSection({
@@ -28,6 +33,7 @@ export default function HeroSection({
   ctaLink,
   showScrollIndicator = true,
   nextSectionId,
+  onScrollIndicatorClick,
 }: HeroSectionProps) {
   const scrollToNext = () => {
     if (!nextSectionId) return;
@@ -36,6 +42,15 @@ export default function HeroSection({
     if (!nextElement) return;
 
     nextElement.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleScrollIndicatorClick = () => {
+    if (onScrollIndicatorClick) {
+      onScrollIndicatorClick();
+      return;
+    }
+
+    scrollToNext();
   };
 
   return (
@@ -58,7 +73,7 @@ export default function HeroSection({
       </div>
 
       {showScrollIndicator && (
-        <div className={styles.scrollIndicator} onClick={scrollToNext}>
+        <div className={styles.scrollIndicator} onClick={handleScrollIndicatorClick}>
           <div className={styles.mouse}></div>
         </div>
       )}

@@ -19,7 +19,7 @@ export default function ImageUpload({
   uploadingImage,
   onImageChange,
   onRemoveImage,
-  maxSize = 5,
+  maxSize = 10,
 }: ImageUploadProps) {
   const inputId = `image-upload-${Math.random().toString(36).substr(2, 9)}`;
 

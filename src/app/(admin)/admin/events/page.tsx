@@ -21,7 +21,7 @@ const config: AdminCRUDConfig<Event> = {
   title: "Events Management",
   description: "Manage your events",
   addButtonText: "➕ Add New Event",
-  imageMaxSize: 5,
+  imageMaxSize: 10,
   imageRequired: true,
   initialFormData: {
     _id: "",

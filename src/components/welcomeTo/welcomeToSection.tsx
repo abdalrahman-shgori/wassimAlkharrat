@@ -1,3 +1,5 @@
+'use client';
+
 import  React from 'react';
 import styles from './welcomeToSection.module.scss';
 import logo from "../../../public/images/welcomeLogo.svg";

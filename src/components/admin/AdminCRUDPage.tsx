@@ -112,9 +112,9 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
       return;
     }
 
-    const maxSize = (config.imageMaxSize || 5) * 1024 * 1024;
+    const maxSize = (config.imageMaxSize || 10) * 1024 * 1024;
     if (file.size > maxSize) {
-      setError(`File size exceeds ${config.imageMaxSize || 5}MB limit.`);
+      setError(`File size exceeds ${config.imageMaxSize || 10}MB limit.`);
       return;
     }
 

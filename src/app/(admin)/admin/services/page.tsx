@@ -30,7 +30,7 @@ const config: AdminCRUDConfig<Service> = {
   title: "Services Management",
   description: "Manage your event planning services",
   addButtonText: "➕ Add New Service",
-  imageMaxSize: 5,
+  imageMaxSize: 10,
   imageRequired: false,
   initialFormData: {
     _id: "",

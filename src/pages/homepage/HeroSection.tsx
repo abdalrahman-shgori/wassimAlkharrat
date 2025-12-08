@@ -1,10 +1,13 @@
+'use client';
+
 import HeroSection from '@/components/HeroSection/HeroSection';
 
 interface HomepageHeroProps {
   imageSrc: string;
+  onScrollDown?: () => void;
 }
 
-export default function HomepageHero({ imageSrc }: HomepageHeroProps) {
+export default function HomepageHero({ imageSrc, onScrollDown }: HomepageHeroProps) {
   return (
     <>
       <HeroSection
@@ -16,6 +19,7 @@ export default function HomepageHero({ imageSrc }: HomepageHeroProps) {
         ctaLink="/services"
         showScrollIndicator={true}
         nextSectionId="homepage-next-section"
+        onScrollIndicatorClick={onScrollDown}
       />
     </>
   );

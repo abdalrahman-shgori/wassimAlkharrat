@@ -123,7 +123,7 @@
   display: flex;
   flex-direction: column;
   gap: 64px;
-  margin-top: 120px;
+  margin-top: 150px;
   
   @media screen and (max-width: 1024px) {
     gap: 24px;
@@ -134,6 +134,7 @@
   }
   @media screen and (max-width: 600px) {
     margin-top: 0px;
+    gap: 24px;
   }
   
   &.fading {
@@ -170,7 +171,7 @@
 }
 
 .names {
-  font-size: 32px;
+  font-size: 38px;
   font-weight: 400;
   color: var(--white);
   font-family: var(--font-allison);
@@ -186,7 +187,7 @@
     margin-bottom: 12px;
    }
   @media screen and (max-width: 480px) {
-    font-size: 24px;
+    font-size: 28px;
   }
 }
 

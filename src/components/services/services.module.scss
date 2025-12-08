@@ -105,7 +105,13 @@
     width: 20px !important;
     height: 20px !important;
     filter: brightness(0);
+
+    @media screen and (max-width: 600px) {
+        width: 16px !important;
+        height: 16px !important;
+    }
 }
+
 
 .serviceImage {
     width: 100%;
