@@ -41,8 +41,12 @@ export const metadata: Metadata = {
     images: ["https://wassim-alkharrat.vercel.app/logo.png"],
   },
   icons: {
-    icon: "https://wassim-alkharrat.vercel.app/logo.png",
-    apple: "https://wassim-alkharrat.vercel.app/logo.png",
+    icon: [
+      { url: "/logo.png", sizes: "any" },
+      { url: "/logo.png", type: "image/png" },
+    ],
+    apple: "/logo.png",
+    shortcut: "/logo.png",
   },
 };
 
