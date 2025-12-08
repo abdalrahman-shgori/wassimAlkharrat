@@ -1,7 +1,13 @@
 .heroSection {
   position: relative;
   width: 100%;
-  height: 100dvh;
+  height: 100vh;
+  min-height: 100vh;
+  /* keep hero height stable on mobile when browser chrome hides/shows */
+  @supports (height: 100svh) {
+    height: 100svh;
+    min-height: 100svh;
+  }
   display: flex;
   align-items: center;
   justify-content: center;
