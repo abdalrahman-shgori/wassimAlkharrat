@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://wassim-alkharrat.vercel.app/logo.png",
-        width: 1200,
+        width: 800,
         height: 630,
         alt: "Wassim Alkharrat Logo",
       },
