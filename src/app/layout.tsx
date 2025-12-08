@@ -42,11 +42,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/logo.png", sizes: "any" },
-      { url: "/logo.png", type: "image/png" },
+      { url: "https://wassim-alkharrat.vercel.app/logo.png", sizes: "any" },
+      { url: "https://wassim-alkharrat.vercel.app/logo.png", type: "image/png" },
     ],
-    apple: "/logo.png",
-    shortcut: "/logo.png",
+    apple: "https://wassim-alkharrat.vercel.app/logo.png",
+    shortcut: "https://wassim-alkharrat.vercel.app/logo.png",
   },
 };
 
