@@ -69,7 +69,12 @@ export default function Navbar() {
   };
 
   const isActive = (path: string) => {
-    return pathname === path;
+    if (!pathname) return false;
+    if (path === '/') {
+      // For home page, check if pathname is exactly '/' or empty
+      return pathname === '/' || pathname === '';
+    }
+    return pathname === path || pathname.startsWith(path + '/');
   };
 
   return (
