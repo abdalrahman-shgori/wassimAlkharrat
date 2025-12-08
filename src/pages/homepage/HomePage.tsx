@@ -42,14 +42,19 @@ interface HomePageProps {
 }
 
 export function HomePage({ services, events, stories }: HomePageProps) {
+  // Ensure props are always arrays to prevent undefined errors during prerendering
+  const safeServices = services || [];
+  const safeEvents = events || [];
+  const safeStories = stories || [];
+
   return (
     <>
       <HomepageHero />
        <WelcomeToSection/>
-       <ServicesSection services={services} />
+       <ServicesSection services={safeServices} />
        <div className={styles.sectionsWrapper}>
-       <EventsSection events={events} />
-       <StoriesSection stories={stories} />
+       <EventsSection events={safeEvents} />
+       <StoriesSection stories={safeStories} />
        <CTASection/>
        </div>
      
@@ -57,3 +62,4 @@ export function HomePage({ services, events, stories }: HomePageProps) {
   );
 }
 
+export default HomePage;

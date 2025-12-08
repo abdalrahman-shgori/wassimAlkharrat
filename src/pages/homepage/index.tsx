@@ -1,4 +1,5 @@
-import { HomePage } from '@/pages/homepage';
+import { GetServerSideProps } from 'next';
+import HomePage from './HomePage';
 import { getServicesCollection } from '../../../lib/db';
 import { getEventsCollection } from '../../../lib/db';
 import { getStoriesCollection } from '../../../lib/db';
@@ -6,7 +7,38 @@ import { Service } from '../../../lib/models/Service';
 import { Event } from '../../../lib/models/Event';
 import { Story } from '../../../lib/models/Story';
 
-export const revalidate = 3600; // Revalidate every hour for ISR
+// Re-export for other uses
+export { HomePage } from './HomePage';
+export { default as HomepageHero } from './HeroSection';
+
+interface HomePageProps {
+  services: Array<{
+    _id: string;
+    name: string;
+    slug: string;
+    description: string;
+    icon: string;
+    image?: string;
+    isActive: boolean;
+    order: number;
+  }>;
+  events: Array<{
+    _id: string;
+    image: string;
+    eventTitle: string;
+    eventSubtitle: string;
+    isActive: boolean;
+    order: number;
+  }>;
+  stories: Array<{
+    _id: string;
+    image: string;
+    names: string;
+    testimonial: string;
+    isActive: boolean;
+    order: number;
+  }>;
+}
 
 async function getServices() {
   try {
@@ -77,18 +109,21 @@ async function getStories() {
   }
 }
 
-export default async function Home() {
+export const getServerSideProps: GetServerSideProps<HomePageProps> = async () => {
   const [services, events, stories] = await Promise.all([
     getServices(),
     getEvents(),
     getStories(),
   ]);
 
-  // Ensure all values are arrays (fallback to empty arrays if undefined)
-  return <HomePage 
-    services={services || []} 
-    events={events || []} 
-    stories={stories || []} 
-  />;
-}
+  return {
+    props: {
+      services,
+      events,
+      stories,
+    },
+  };
+};
+
+export default HomePage;
 

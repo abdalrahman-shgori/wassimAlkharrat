@@ -24,19 +24,21 @@ interface EventsSectionProps {
 }
 
 export default function EventsSection({ events }: EventsSectionProps) {
+  // Ensure events is always an array
+  const safeEvents = events || [];
   
   // ⭐ FIX FOR LOOP STOPPING:
   // Swiper cannot loop unless there are enough slides,
   // so we duplicate your events when the list is small.
   const loopEvents =
-    events.length < 4 ? [...events, ...events, ...events] : events;
+    safeEvents.length < 4 ? [...safeEvents, ...safeEvents, ...safeEvents] : safeEvents;
 
   return (
     <section className={styles.eventsSection}>
       <h1 className={styles.eventsSectionTitle}>Events</h1>
 
       <div className={styles.eventsSectionContent}>
-        {events.length === 0 ? (
+        {safeEvents.length === 0 ? (
           <div className={styles.error}>No events available at the moment.</div>
         ) : (
           <Swiper

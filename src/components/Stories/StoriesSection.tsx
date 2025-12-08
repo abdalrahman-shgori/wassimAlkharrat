@@ -24,8 +24,11 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   const [displayedNames, setDisplayedNames] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
+  // Ensure stories is always an array
+  const safeStories = stories || [];
+
   // Filter active stories and sort by order
-  const activeStories = stories
+  const activeStories = safeStories
     .filter(story => story.isActive)
     .sort((a, b) => a.order - b.order);
 

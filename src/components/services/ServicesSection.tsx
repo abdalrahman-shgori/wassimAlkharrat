@@ -23,6 +23,8 @@ interface ServicesSectionProps {
 }
 
 export default function ServicesSection({ services }: ServicesSectionProps) {
+  // Ensure services is always an array
+  const safeServices = services || [];
 
   // Get image source - use Cloudinary image if available, otherwise fallback to venue icon
   const getImageSrc = (service: Service) => {
@@ -44,12 +46,12 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
         <Link href='/services' className={styles.servicesSectionLink}>View All</Link>
       </div>
       <div className={styles.servicesSectionContent}>
-        {services.length === 0 ? (
+        {safeServices.length === 0 ? (
           <div className={styles.error}>
             No services available at the moment.
           </div>
         ) : (
-          services.map((service) => {
+          safeServices.map((service) => {
             const imageSrc = getImageSrc(service);
             const isCloudinaryImage = service.image && (service.image.startsWith('http://') || service.image.startsWith('https://'));
             
