@@ -15,7 +15,7 @@ const allison = localFont({
   display: "swap",
 });
 export const metadata: Metadata = {
-  title: "Wassim Alkharrat",
+  title: "Wassim Alkharrat Events",
   description: "Welcome to Wassim Alkharrat - Your trusted partner for exceptional services",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: {
@@ -41,12 +41,9 @@ export const metadata: Metadata = {
     images: ["https://wassim-alkharrat.vercel.app/logo.png"],
   },
   icons: {
-    icon: [
-      { url: "https://wassim-alkharrat.vercel.app/logo.png", sizes: "any" },
-      { url: "https://wassim-alkharrat.vercel.app/logo.png", type: "image/png" },
-    ],
-    apple: "https://wassim-alkharrat.vercel.app/logo.png",
-    shortcut: "https://wassim-alkharrat.vercel.app/logo.png",
+    icon: "/logo.png",
+    apple: "/logo.png",
+    shortcut: "/logo.png",
   },
 };
 
