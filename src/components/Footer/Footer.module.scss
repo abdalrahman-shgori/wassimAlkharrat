@@ -135,7 +135,7 @@
 
 .link {
   color: var(--white);
-  font-size: clamp(10px, 1.8vw, 16px);
+  font-size: clamp(12px, 1.8vw, 16px);
   text-decoration: none;
   transition: color 0.3s ease;
   line-height: 1.6;
@@ -168,7 +168,7 @@
   align-items: center;
   gap: 12px;
   color: var(--white);
-  font-size: clamp(10px, 1.8vw, 16px);
+  font-size: clamp(12px, 1.8vw, 16px);
   line-height: 1.6;
   text-decoration: none;
   transition: color 0.3s ease;
