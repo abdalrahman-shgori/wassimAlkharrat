@@ -15,72 +15,34 @@ const allison = localFont({
   display: "swap",
 });
 export const metadata: Metadata = {
-  title: {
-    default: "Wassim Alkharrat Events - Creating Unforgettable Moments",
-    template: "%s | Wassim Alkharrat Events",
-  },
-  description: "With over a decade of experience, we specialize in crafting extraordinary experiences that celebrate life's most precious moments. Professional event planning services for weddings, corporate events, and special occasions.",
-  keywords: [
-    "event planning",
-    "wedding planning",
-    "event management",
-    "corporate events",
-    "special occasions",
-    "Wassim Alkharrat",
-    "event coordinator",
-    "luxury events",
-    "bespoke events",
-  ],
-  authors: [{ name: "Wassim Alkharrat" }],
-  creator: "Wassim Alkharrat",
-  publisher: "Wassim Alkharrat Events",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
+  title: "Wassim Alkharrat",
+  description: "Welcome to Wassim Alkharrat - Your trusted partner for exceptional services",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
-    type: "website",
-    locale: "en_US",
+    title: "Wassim Alkharrat",
+    description: "Welcome to Wassim Alkharrat - Your trusted partner for exceptional services",
     url: "/",
-    title: "Wassim Alkharrat Events - Creating Unforgettable Moments",
-    description: "With over a decade of experience, we specialize in crafting extraordinary experiences that celebrate life's most precious moments.",
-    siteName: "Wassim Alkharrat Events",
+    siteName: "Wassim Alkharrat",
     images: [
       {
-        url: "/images/logoWhite.png",
+        url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Wassim Alkharrat Events",
+        alt: "Wassim Alkharrat Logo",
       },
     ],
+    locale: "en_US",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wassim Alkharrat Events - Creating Unforgettable Moments",
-    description: "With over a decade of experience, we specialize in crafting extraordinary experiences that celebrate life's most precious moments.",
-    images: ["/images/logoWhite.png"],
+    title: "Wassim Alkharrat",
+    description: "Welcome to Wassim Alkharrat - Your trusted partner for exceptional services",
+    images: ["/logo.png"],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  verification: {
-    // Add your verification codes here when available
-    // google: "your-google-verification-code",
-    // yandex: "your-yandex-verification-code",
-    // bing: "your-bing-verification-code",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
 };
 
