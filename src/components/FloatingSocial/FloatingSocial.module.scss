@@ -2,7 +2,7 @@
   position: fixed;
   right: 24px;
   bottom: 24px;
-  z-index: 1200;
+  z-index: 950; // keep below navbar (z-index 1000)
   display: flex;
   flex-direction: column-reverse;
   align-items: flex-end;
