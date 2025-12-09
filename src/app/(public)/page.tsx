@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { HomePage } from '@/pages/homepage';
+import { HomePage } from '@/homepage';
 import {
   getEventsCollection,
   getHomepageSettingsCollection,
