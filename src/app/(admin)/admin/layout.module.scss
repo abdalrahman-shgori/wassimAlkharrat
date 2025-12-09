@@ -11,17 +11,35 @@ $white: #FFFFFF;
 
 .sidebar {
   width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  flex: 0 0 280px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none; // hide Firefox scrollbar
+  &::-webkit-scrollbar {
+    display: none; // hide WebKit scrollbar
+  }
   background: $dark;
   color: $white;
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   border-right: 1px solid $gold;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   height: 100vh;
   overflow-y: auto;
+  z-index: 100;
+  flex-shrink: 0;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
+    width: 100%;
+    min-width: auto;
+    max-width: 300px;
+    flex-basis: auto;
     position: fixed;
     top: 0;
     left: 0;
@@ -33,7 +51,7 @@ $white: #FFFFFF;
 }
 
 .sidebarOpen {
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     transform: translateX(0);
   }
 }
@@ -159,14 +177,15 @@ $white: #FFFFFF;
   flex: 1;
   background: $white;
   transition: margin-left 0.3s ease-in-out;
+  margin-left: 280px; // offset fixed sidebar on desktop
 
-  @media (min-width: 769px) {
-    margin-left: 0; // No margin needed on desktop since sidebar is relative
+  @media (min-width: 1025px) {
+    margin-left: 280px;
   }
 }
 
 // Mobile Responsive Styles
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .mobileMenuToggle {
     display: block;
   }
@@ -194,7 +213,9 @@ $white: #FFFFFF;
 @media (max-width: 480px) {
   .sidebar {
     width: 100%;
-    max-width: 300px;
+    max-width: 330px;
+    min-width: auto;
+    flex-basis: auto;
   }
 
   .mobileMenuToggle {
@@ -204,3 +225,65 @@ $white: #FFFFFF;
   }
 }
 
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dropdownHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  color: $white;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  padding: 0.875rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  &:hover {
+    background: rgba(173, 136, 66, 0.1);
+    border-color: $gold;
+    color: $gold;
+  }
+}
+
+.dropdownActive {
+  background: rgba(173, 136, 66, 0.15);
+  border-color: $gold;
+  color: $gold;
+}
+
+.dropdownLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(90deg);
+}
+
+.dropdownList {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0 0 0.75rem;
+
+  li {
+    margin-bottom: 0.4rem;
+  }
+
+  a {
+    font-size: 0.95rem;
+  }
+}

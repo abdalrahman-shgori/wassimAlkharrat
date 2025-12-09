@@ -93,7 +93,6 @@ export default async function RootLayout({
           timeZone={timeZone}
         >
           {children}
-          <FloatingSocial />
         </ClientIntlProvider>
       </body>
     </html>
