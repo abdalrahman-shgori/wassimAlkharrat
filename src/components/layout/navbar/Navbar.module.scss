@@ -38,6 +38,16 @@
   justify-content: space-between;
   align-items: center;
 
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+
+    @media (max-width: 768px) {
+      gap: 0.85rem;
+    }
+  }
+
   @media (max-width: 768px) {
     padding: 0 2rem;
   }
@@ -82,10 +92,9 @@
 .burger {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: center;
   gap: 5px;
   width: 30px;
-  height: 24px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -140,7 +149,7 @@
   inset-inline-end: 0;
   bottom: 0;
   width: 100%;
-  max-width: 500px;
+  max-width: 420px;
   background: var(--dark);
   transform: translateX(100%);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -205,7 +214,7 @@
 
   @media (max-width: 768px) {
     top: 1.5rem;
-    right: 1.5rem;
+    inset-inline-end: 1.5rem;
     width: 35px;
     height: 35px;
 
@@ -247,20 +256,43 @@
   font-weight: 600;
 }
 
+.languageSwitcherNav {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-light);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.85rem;
+  }
+}
+
 .languageDivider {
   color: rgba(255, 255, 255, 0.45);
 }
 
 .languageButton {
+ 
   background: transparent;
   border: none;
   color: var(--text-light);
   cursor: pointer;
   padding: 0.25rem 0.35rem;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  border-radius: 6px;
+  font-size: 18px;
 
   &:hover {
     color: var(--gold);
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-1px);
   }
 }
 

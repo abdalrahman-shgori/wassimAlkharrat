@@ -98,16 +98,38 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Burger Menu Icon */}
-          <button
-            className={`${styles.burger} ${isOpen ? styles.active : ''}`}
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          <div className={styles.actions}>
+            <div className={styles.languageSwitcherNav}>
+              <button
+                type="button"
+                onClick={() => changeLocale('en')}
+                className={`${styles.languageButton} ${locale === 'en' ? styles.languageButtonActive : ''}`}
+                aria-label={t('switchToEnglish')}
+              >
+                EN
+              </button>
+              <span className={styles.languageDivider}>|</span>
+              <button
+                type="button"
+                onClick={() => changeLocale('ar')}
+                className={`${styles.languageButton} ${locale === 'ar' ? styles.languageButtonActive : ''}`}
+                aria-label={t('switchToArabic')}
+              >
+                ع
+              </button>
+            </div>
+
+            {/* Burger Menu Icon */}
+            <button
+              className={`${styles.burger} ${isOpen ? styles.active : ''}`}
+              onClick={toggleMenu}
+              aria-label="Toggle menu"
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -165,26 +187,6 @@ export default function Navbar() {
               {t('contact')}
             </Link>
           </nav>
-
-          <div className={styles.languageSwitcher}>
-            <button
-              type="button"
-              onClick={() => changeLocale('en')}
-              className={`${styles.languageButton} ${locale === 'en' ? styles.languageButtonActive : ''}`}
-              aria-label={t('switchToEnglish')}
-            >
-              EN
-            </button>
-            <span className={styles.languageDivider}>|</span>
-            <button
-              type="button"
-              onClick={() => changeLocale('ar')}
-              className={`${styles.languageButton} ${locale === 'ar' ? styles.languageButtonActive : ''}`}
-              aria-label={t('switchToArabic')}
-            >
-              ع
-            </button>
-          </div>
 
           {/* Social Media Icons */}
           <div className={styles.socialMedia}>
