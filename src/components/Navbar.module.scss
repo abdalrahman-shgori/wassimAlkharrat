@@ -10,6 +10,14 @@
   transform: translateY(0);
   opacity: 1;
 
+  @media (max-width: 768px) {
+    padding: 0.85rem 0; // tighten vertical space on tablets/phones
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.75rem 0;
+  }
+
   &.scrolled {
     background: var(--black);
     backdrop-filter: blur(10px);
@@ -29,6 +37,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 768px) {
+    padding: 0 2rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0 1.25rem;
+  }
 }
 
 // Logo
@@ -49,14 +65,14 @@
 
   @media (max-width: 768px) {
     img {
-      width: 80px !important;
+      width: 70px !important;
       height: auto !important;
     }
   }
 
   @media (max-width: 480px) {
     img {
-      width: 70px !important;
+      width: 60px !important;
       height: auto !important;
     }
   }
@@ -279,6 +295,7 @@
 }
 
 @media (max-width: 768px) {
+  
   .socialMedia {
     gap: 1.25rem;
   }

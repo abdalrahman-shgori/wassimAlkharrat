@@ -126,35 +126,35 @@ export default function Navbar() {
             <Link 
               href="/" 
               onClick={closeMenu} 
-              className={`${styles.menuItem} ${isActive('/') ? styles.active : ''}`}
+              className={`${styles.menuItem} ${pathname === '/' ? styles.active : ''}`}
             >
               Home
             </Link>
             <Link 
               href="/events" 
               onClick={closeMenu} 
-              className={`${styles.menuItem} ${isActive('/events') ? styles.active : ''}`}
+              className={`${styles.menuItem} ${pathname === '/events' ? styles.active : ''}`}
             >
               Events
             </Link>
             <Link 
               href="/services" 
               onClick={closeMenu} 
-              className={`${styles.menuItem} ${isActive('/services') ? styles.active : ''}`}
+              className={`${styles.menuItem} ${pathname === '/services' ? styles.active : ''}`}
             >
               Services
             </Link>
             <Link 
               href="/about" 
               onClick={closeMenu} 
-              className={`${styles.menuItem} ${isActive('/about') ? styles.active : ''}`}
+              className={`${styles.menuItem} ${pathname === '/about' ? styles.active : ''}`}
             >
               About
             </Link>
             <Link 
               href="/contact" 
               onClick={closeMenu} 
-              className={`${styles.menuItem} ${isActive('/contact') ? styles.active : ''}`}
+              className={`${styles.menuItem} ${pathname === '/contact' ? styles.active : ''}`}
             >
               Contact
             </Link>
