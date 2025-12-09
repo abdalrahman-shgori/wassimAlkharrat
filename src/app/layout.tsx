@@ -14,6 +14,7 @@ import {
   type Locale,
 } from "@/lib/i18n/config";
 import "./globals.css";
+import FloatingSocial from "@/components/FloatingSocial/FloatingSocial";
 
 const alice = localFont({
   src: "../../public/fonts/Alice-Regular.ttf",
@@ -92,6 +93,7 @@ export default async function RootLayout({
           timeZone={timeZone}
         >
           {children}
+          <FloatingSocial />
         </ClientIntlProvider>
       </body>
     </html>
