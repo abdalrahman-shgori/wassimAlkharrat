@@ -12,7 +12,6 @@ interface Story {
   names: string;
   testimonial: string;
   isActive: boolean;
-  order: number;
 }
 
 interface StoriesSectionProps {
@@ -30,10 +29,8 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   // Ensure stories is always an array
   const safeStories = stories || [];
 
-  // Filter active stories and sort by order
-  const activeStories = safeStories
-    .filter(story => story.isActive)
-    .sort((a, b) => a.order - b.order);
+  // Filter active stories; list is already sorted by API
+  const activeStories = safeStories.filter(story => story.isActive);
 
   const currentStory = activeStories[currentIndex];
 

@@ -37,10 +37,13 @@ export async function GET(
     const titleAr = event.eventTitleAr ?? null;
     const subtitleAr = event.eventSubtitleAr ?? null;
 
+    // Strip legacy "order" field if present
+    const { order: _order, ...safeEvent } = event as any;
+
     return NextResponse.json({
       success: true,
       data: {
-        ...event,
+        ...safeEvent,
         eventTitle: pickLocalizedString(locale, { en: titleEn, ar: titleAr }),
         eventSubtitle: pickLocalizedString(locale, { en: subtitleEn, ar: subtitleAr }),
         eventTitleEn: titleEn,
@@ -102,7 +105,6 @@ export async function PUT(
     if (body.eventSubtitleEn !== undefined) updateData.eventSubtitleEn = body.eventSubtitleEn;
     if (body.eventSubtitleAr !== undefined) updateData.eventSubtitleAr = body.eventSubtitleAr;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
-    if (body.order !== undefined) updateData.order = body.order;
 
     // Update event
     const result = await eventsCollection.findOneAndUpdate(

@@ -17,7 +17,6 @@ interface Event {
   eventTitle: string;
   eventSubtitle: string;
   isActive: boolean;
-  order: number;
 }
 
 interface EventsSectionProps {

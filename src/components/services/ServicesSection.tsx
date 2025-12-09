@@ -17,7 +17,6 @@ interface Service {
   icon: string;
   image?: string;
   isActive: boolean;
-  order: number;
 }
 
 interface ServicesSectionProps {
@@ -28,7 +27,6 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
   // Ensure services is always an array
   const safeServices = services || [];
   const t = useTranslations('services');
-  console.log(services)
   // Get image source - use Cloudinary image if available, otherwise fallback to venue icon
   const getImageSrc = (service: Service) => {
     if (service.image) {

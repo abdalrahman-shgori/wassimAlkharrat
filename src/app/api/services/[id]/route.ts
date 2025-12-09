@@ -37,10 +37,13 @@ export async function GET(
     const nameAr = service.nameAr ?? null;
     const descriptionAr = service.descriptionAr ?? null;
 
+    // Strip legacy "order" field if present
+    const { order: _order, ...safeService } = service as any;
+
     return NextResponse.json({
       success: true,
       data: {
-        ...service,
+        ...safeService,
         name: pickLocalizedString(locale, { en: nameEn, ar: nameAr }),
         description: pickLocalizedString(locale, { en: descriptionEn, ar: descriptionAr }),
         nameEn,
@@ -118,7 +121,6 @@ export async function PUT(
     if (body.icon !== undefined) updateData.icon = body.icon;
     if (body.image !== undefined) updateData.image = body.image;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
-    if (body.order !== undefined) updateData.order = body.order;
 
     // Update service
     const result = await servicesCollection.findOneAndUpdate(

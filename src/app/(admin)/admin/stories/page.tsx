@@ -14,7 +14,6 @@ interface Story {
   testimonialEn: string;
   testimonialAr: string;
   isActive: boolean;
-  order: number;
 }
 
 const config: AdminCRUDConfig<Story> = {
@@ -37,7 +36,6 @@ const config: AdminCRUDConfig<Story> = {
     testimonialEn: "",
     testimonialAr: "",
     isActive: true,
-    order: 1,
   },
   formFields: [
     {
@@ -77,11 +75,6 @@ const config: AdminCRUDConfig<Story> = {
       placeholder: "أدخل نص الشهادة...",
       required: true,
       rows: 6,
-    },
-    {
-      name: "order",
-      label: "Order",
-      type: "number",
     },
     {
       name: "isActive",

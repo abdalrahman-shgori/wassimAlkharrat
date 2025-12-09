@@ -17,10 +17,10 @@ export async function GET(request: NextRequest) {
     // Build query
     const query = activeOnly ? { isActive: true } : {};
     
-    // Fetch events sorted by order
+    // Fetch events sorted by newest first
     const events = await eventsCollection
       .find(query)
-      .sort({ order: 1 })
+      .sort({ createdAt: -1 })
       .toArray();
 
     const localized = events.map((event) => {
@@ -29,8 +29,12 @@ export async function GET(request: NextRequest) {
       const titleAr = event.eventTitleAr ?? null;
       const subtitleAr = event.eventSubtitleAr ?? null;
 
+      // Strip legacy "order" field if it exists
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { order: _order, ...rest } = event as any;
+
       return {
-        ...event,
+        ...rest,
         eventTitle: pickLocalizedString(locale, { en: titleEn, ar: titleAr }),
         eventSubtitle: pickLocalizedString(locale, { en: subtitleEn, ar: subtitleAr }),
         eventTitleEn: titleEn,
@@ -79,15 +83,6 @@ export async function POST(request: NextRequest) {
     }
 
     const eventsCollection = await getEventsCollection();
-    
-    // Get the highest order number
-    const lastEvent = await eventsCollection
-      .find()
-      .sort({ order: -1 })
-      .limit(1)
-      .toArray();
-    
-    const nextOrder = lastEvent.length > 0 ? (lastEvent[0].order || 0) + 1 : 1;
 
     // Create new event
     const newEvent: any = {
@@ -99,7 +94,6 @@ export async function POST(request: NextRequest) {
       eventSubtitleEn: subtitleEn,
       eventSubtitleAr: body.eventSubtitleAr,
       isActive: body.isActive !== undefined ? body.isActive : true,
-      order: body.order !== undefined ? body.order : nextOrder,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

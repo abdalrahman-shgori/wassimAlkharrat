@@ -12,7 +12,6 @@ export interface Service {
   icon: string;
   image?: string; // URL/path to service image
   isActive: boolean;
-  order: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,7 +27,6 @@ export interface CreateServiceInput {
   icon?: string;
   image?: string; // URL/path to service image
   isActive?: boolean;
-  order?: number;
 }
 
 export interface UpdateServiceInput {
@@ -42,6 +40,5 @@ export interface UpdateServiceInput {
   icon?: string;
   image?: string; // URL/path to service image
   isActive?: boolean;
-  order?: number;
 }
 

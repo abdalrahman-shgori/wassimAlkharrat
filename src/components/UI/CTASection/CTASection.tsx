@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Button from '@/components/Button/Button';
+import Button from '@/components/UI/Button/Button';
 import styles from './CTASection.module.scss';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';

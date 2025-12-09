@@ -14,7 +14,6 @@ interface Event {
   eventSubtitleEn: string;
   eventSubtitleAr: string;
   isActive: boolean;
-  order: number;
 }
 
 const config: AdminCRUDConfig<Event> = {
@@ -37,7 +36,6 @@ const config: AdminCRUDConfig<Event> = {
     eventSubtitleEn: "",
     eventSubtitleAr: "",
     isActive: true,
-    order: 1,
   },
   formFields: [
     {
@@ -73,11 +71,6 @@ const config: AdminCRUDConfig<Event> = {
       type: "text",
       placeholder: "مثال: عيد ميلاد",
       required: true,
-    },
-    {
-      name: "order",
-      label: "Order",
-      type: "number",
     },
     {
       name: "isActive",

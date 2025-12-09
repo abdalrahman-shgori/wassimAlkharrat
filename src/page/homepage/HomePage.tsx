@@ -3,7 +3,7 @@ import HomepageHero from './HeroSection';
 import ServicesSection from '@/components/services/ServicesSection';
 import EventsSection from '@/components/Events/EventsSection';
 import StoriesSection from '@/components/Stories/StoriesSection';
-import CTASection from '@/components/CTASection/CTASection';
+import CTASection from '@/components/UI/CTASection/CTASection';
 import styles from './HomePage.module.scss';
 
 interface Service {
@@ -14,7 +14,6 @@ interface Service {
   icon: string;
   image?: string;
   isActive: boolean;
-  order: number;
 }
 
 interface Event {
@@ -23,7 +22,6 @@ interface Event {
   eventTitle: string;
   eventSubtitle: string;
   isActive: boolean;
-  order: number;
 }
 
 interface Story {
@@ -32,7 +30,6 @@ interface Story {
   names: string;
   testimonial: string;
   isActive: boolean;
-  order: number;
 }
 
 interface HomePageProps {

@@ -16,7 +16,6 @@ interface Service {
   icon: string;
   image?: string;
   isActive: boolean;
-  order: number;
 }
 
 const generateSlug = (name: string) => {
@@ -48,7 +47,6 @@ const config: AdminCRUDConfig<Service> = {
     icon: "🎉",
     image: "",
     isActive: true,
-    order: 1,
   },
   formFields: [
     {
@@ -102,11 +100,6 @@ const config: AdminCRUDConfig<Service> = {
       placeholder: "🎉",
       maxLength: 2,
       helpText: "Use an emoji",
-    },
-    {
-      name: "order",
-      label: "Order",
-      type: "number",
     },
     {
       name: "isActive",

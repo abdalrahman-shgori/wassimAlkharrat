@@ -10,7 +10,6 @@ export interface Event {
   eventSubtitleEn?: string;
   eventSubtitleAr?: string;
   isActive: boolean;
-  order: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,7 +23,6 @@ export interface CreateEventInput {
   eventSubtitleEn?: string;
   eventSubtitleAr: string;
   isActive?: boolean;
-  order?: number;
 }
 
 export interface UpdateEventInput {
@@ -36,6 +34,5 @@ export interface UpdateEventInput {
   eventSubtitleEn?: string;
   eventSubtitleAr?: string;
   isActive?: boolean;
-  order?: number;
 }
 

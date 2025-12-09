@@ -38,10 +38,6 @@ export default function AdminCard({
 
       {renderContent(item)}
 
-      <div className={styles.meta}>
-        <span>Order: {item.order}</span>
-      </div>
-
       <div className={styles.actions}>
         <button onClick={() => onEdit(item)} className={styles.editBtn}>
           ✏️ Edit

@@ -14,7 +14,7 @@ import {
   type Locale,
 } from "@/lib/i18n/config";
 import "./globals.css";
-import FloatingSocial from "@/components/FloatingSocial/FloatingSocial";
+import FloatingSocial from "@/components/UI/FloatingSocial/FloatingSocial";
 
 const alice = localFont({
   src: "../../public/fonts/Alice-Regular.ttf",

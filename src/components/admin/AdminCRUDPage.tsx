@@ -46,7 +46,7 @@ export interface AdminCRUDConfig<T = any> {
   validateForm?: (formData: T) => string | null; // Returns error message or null
 }
 
-export default function AdminCRUDPage<T extends { _id: string; image?: string; isActive: boolean; order: number }>({
+export default function AdminCRUDPage<T extends { _id: string; image?: string; isActive: boolean }>({
   config,
 }: {
   config: AdminCRUDConfig<T>;

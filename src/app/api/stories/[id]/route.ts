@@ -37,10 +37,13 @@ export async function GET(
     const namesAr = story.namesAr ?? null;
     const testimonialAr = story.testimonialAr ?? null;
 
+    // Strip legacy "order" field if present
+    const { order: _order, ...safeStory } = story as any;
+
     return NextResponse.json({
       success: true,
       data: {
-        ...story,
+        ...safeStory,
         names: pickLocalizedString(locale, { en: namesEn, ar: namesAr }),
         testimonial: pickLocalizedString(locale, { en: testimonialEn, ar: testimonialAr }),
         namesEn,
@@ -102,7 +105,6 @@ export async function PUT(
     if (body.testimonialEn !== undefined) updateData.testimonialEn = body.testimonialEn;
     if (body.testimonialAr !== undefined) updateData.testimonialAr = body.testimonialAr;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
-    if (body.order !== undefined) updateData.order = body.order;
 
     // Update story
     const result = await storiesCollection.findOneAndUpdate(

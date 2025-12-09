@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styles from './Button.module.scss';
 import Image from 'next/image';
-import arrowRight from "../../../public/images/arrowRight.svg"
+import arrowRight from "../../../../public/images/arrowRight.svg"
 interface ButtonProps {
   children: React.ReactNode;
   href?: string;

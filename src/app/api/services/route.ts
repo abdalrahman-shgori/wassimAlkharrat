@@ -17,10 +17,10 @@ export async function GET(request: NextRequest) {
     // Build query
     const query = activeOnly ? { isActive: true } : {};
     
-    // Fetch services sorted by order
+    // Fetch services sorted by newest first
     const services = await servicesCollection
       .find(query)
-      .sort({ order: 1 })
+      .sort({ createdAt: -1 })
       .toArray();
 
     const localized = services.map((service) => {
@@ -29,8 +29,12 @@ export async function GET(request: NextRequest) {
       const nameAr = service.nameAr ?? null;
       const descriptionAr = service.descriptionAr ?? null;
 
+      // Strip legacy "order" field if it exists
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { order: _order, ...safeService } = service as any;
+
       return {
-        ...service,
+        ...safeService,
         name: pickLocalizedString(locale, { en: nameEn, ar: nameAr }),
         description: pickLocalizedString(locale, { en: descriptionEn, ar: descriptionAr }),
         nameEn,
@@ -83,15 +87,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the highest order number
-    const lastService = await servicesCollection
-      .find()
-      .sort({ order: -1 })
-      .limit(1)
-      .toArray();
-    
-    const nextOrder = lastService.length > 0 ? (lastService[0].order || 0) + 1 : 1;
-
     // Create new service
     const newService: any = {
       name: nameEn,
@@ -103,7 +98,6 @@ export async function POST(request: NextRequest) {
       descriptionAr: body.descriptionAr,
       icon: body.icon || "🎉",
       isActive: body.isActive !== undefined ? body.isActive : true,
-      order: body.order !== undefined ? body.order : nextOrder,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

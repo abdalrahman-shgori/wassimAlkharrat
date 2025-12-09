@@ -17,10 +17,10 @@ export async function GET(request: NextRequest) {
     // Build query
     const query = activeOnly ? { isActive: true } : {};
     
-    // Fetch stories sorted by order
+    // Fetch stories sorted by newest first
     const stories = await storiesCollection
       .find(query)
-      .sort({ order: 1 })
+      .sort({ createdAt: -1 })
       .toArray();
 
     const localized = stories.map((story) => {
@@ -29,8 +29,12 @@ export async function GET(request: NextRequest) {
       const namesAr = story.namesAr ?? null;
       const testimonialAr = story.testimonialAr ?? null;
 
+      // Strip legacy "order" field if it exists
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { order: _order, ...safeStory } = story as any;
+
       return {
-        ...story,
+        ...safeStory,
         names: pickLocalizedString(locale, { en: namesEn, ar: namesAr }),
         testimonial: pickLocalizedString(locale, { en: testimonialEn, ar: testimonialAr }),
         namesEn,
@@ -79,15 +83,6 @@ export async function POST(request: NextRequest) {
     }
 
     const storiesCollection = await getStoriesCollection();
-    
-    // Get the highest order number
-    const lastStory = await storiesCollection
-      .find()
-      .sort({ order: -1 })
-      .limit(1)
-      .toArray();
-    
-    const nextOrder = lastStory.length > 0 ? (lastStory[0].order || 0) + 1 : 1;
 
     // Create new story
     const newStory: any = {
@@ -99,7 +94,6 @@ export async function POST(request: NextRequest) {
       testimonialEn,
       testimonialAr: body.testimonialAr,
       isActive: body.isActive !== undefined ? body.isActive : true,
-      order: body.order !== undefined ? body.order : nextOrder,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -10,7 +10,6 @@ export interface Story {
   testimonialEn?: string;
   testimonialAr?: string;
   isActive: boolean;
-  order: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,7 +23,6 @@ export interface CreateStoryInput {
   testimonialEn?: string;
   testimonialAr: string;
   isActive?: boolean;
-  order?: number;
 }
 
 export interface UpdateStoryInput {
@@ -36,6 +34,5 @@ export interface UpdateStoryInput {
   testimonialEn?: string;
   testimonialAr?: string;
   isActive?: boolean;
-  order?: number;
 }
 
