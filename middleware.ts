@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { verifyToken, getSessionToken } from "./lib/auth";
+import { verifyMiddlewareToken, getSessionToken } from "./lib/auth-middleware";
 
 export async function middleware(request: NextRequest) {
   // Safety check: ensure nextUrl exists
@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
     const sessionToken = getSessionToken(cookieHeader);
 
     // Verify the session token
-    const payload = sessionToken ? await verifyToken(sessionToken) : null;
+    const payload = sessionToken ? await verifyMiddlewareToken(sessionToken) : null;
     const isAuthenticated = !!payload;
 
     // If trying to access login page while authenticated, redirect to dashboard
