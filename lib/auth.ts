@@ -1,10 +1,11 @@
-import jwt from "jsonwebtoken";
+import { SignJWT, jwtVerify, type JWTPayload as JosePayload } from "jose";
 import { cookies } from "next/headers";
 import { getAdminsCollection } from "./db";
 import { AdminWithoutPassword, removePassword } from "./models/Admin";
 import { ObjectId } from "mongodb";
 
 const AUTH_SECRET = process.env.AUTH_SECRET || "fallback-secret-change-in-production";
+const AUTH_SECRET_BYTES = new TextEncoder().encode(AUTH_SECRET);
 const SESSION_COOKIE_NAME = "admin_session";
 const SESSION_MAX_AGE = 12 * 60 * 60; // 12 hours in seconds
 
@@ -13,26 +14,27 @@ interface JWTPayload {
   email: string;
   iat?: number;
   exp?: number;
+  [key: string]: unknown;
 }
 
 /**
  * Sign a JWT token for an admin user
  */
-export function signToken(adminId: string, email: string): string {
-  return jwt.sign(
-    { adminId, email } as JWTPayload,
-    AUTH_SECRET,
-    { expiresIn: SESSION_MAX_AGE }
-  );
+export async function signToken(adminId: string, email: string): Promise<string> {
+  // Use jose to ensure compatibility with the Edge runtime
+  return new SignJWT({ adminId, email } as JWTPayload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime(`${SESSION_MAX_AGE}s`)
+    .sign(AUTH_SECRET_BYTES);
 }
 
 /**
  * Verify and decode a JWT token
  */
-export function verifyToken(token: string): JWTPayload | null {
+export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
-    const decoded = jwt.verify(token, AUTH_SECRET) as JWTPayload;
-    return decoded;
+    const { payload } = await jwtVerify(token, AUTH_SECRET_BYTES);
+    return payload as JWTPayload & JosePayload;
   } catch (error) {
     // Token is invalid or expired
     return null;
@@ -52,7 +54,7 @@ export async function getCurrentAdmin(): Promise<AdminWithoutPassword | null> {
       return null;
     }
 
-    const payload = verifyToken(sessionToken);
+    const payload = await verifyToken(sessionToken);
     if (!payload) {
       return null;
     }
@@ -90,7 +92,7 @@ export async function requireAdmin(): Promise<AdminWithoutPassword> {
  * Set the session cookie
  */
 export async function setSessionCookie(adminId: string, email: string): Promise<void> {
-  const token = signToken(adminId, email);
+  const token = await signToken(adminId, email);
   const cookieStore = await cookies();
   
   cookieStore.set(SESSION_COOKIE_NAME, token, {
