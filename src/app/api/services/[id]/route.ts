@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { getServicesCollection } from "../../../../../lib/db";
 import { UpdateServiceInput } from "../../../../../lib/models/Service";
 import { requireAdmin } from "../../../../../lib/auth";
+import { getPreferredLocale, pickLocalizedString } from "../../../../../lib/i18n/serverLocale";
 
 // GET /api/services/[id] - Get a single service by ID
 export async function GET(
@@ -11,6 +12,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const locale = getPreferredLocale(request);
 
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
@@ -30,9 +32,22 @@ export async function GET(
       );
     }
 
+    const nameEn = service.nameEn ?? service.name ?? "";
+    const descriptionEn = service.descriptionEn ?? service.description ?? "";
+    const nameAr = service.nameAr ?? null;
+    const descriptionAr = service.descriptionAr ?? null;
+
     return NextResponse.json({
       success: true,
-      data: service,
+      data: {
+        ...service,
+        name: pickLocalizedString(locale, { en: nameEn, ar: nameAr }),
+        description: pickLocalizedString(locale, { en: descriptionEn, ar: descriptionAr }),
+        nameEn,
+        nameAr: nameAr ?? "",
+        descriptionEn,
+        descriptionAr: descriptionAr ?? "",
+      },
     });
   } catch (error) {
     console.error("Error fetching service:", error);
@@ -94,8 +109,12 @@ export async function PUT(
     };
 
     if (body.name !== undefined) updateData.name = body.name;
+    if (body.nameEn !== undefined) updateData.nameEn = body.nameEn;
+    if (body.nameAr !== undefined) updateData.nameAr = body.nameAr;
     if (body.slug !== undefined) updateData.slug = body.slug;
     if (body.description !== undefined) updateData.description = body.description;
+    if (body.descriptionEn !== undefined) updateData.descriptionEn = body.descriptionEn;
+    if (body.descriptionAr !== undefined) updateData.descriptionAr = body.descriptionAr;
     if (body.icon !== undefined) updateData.icon = body.icon;
     if (body.image !== undefined) updateData.image = body.image;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;

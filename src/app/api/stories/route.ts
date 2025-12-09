@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getStoriesCollection } from "../../../../lib/db";
 import { CreateStoryInput } from "../../../../lib/models/Story";
 import { requireAdmin } from "../../../../lib/auth";
+import { getPreferredLocale, pickLocalizedString } from "../../../../lib/i18n/serverLocale";
 
 // GET /api/stories - Get all stories
 export async function GET(request: NextRequest) {
   try {
     const storiesCollection = await getStoriesCollection();
+    const locale = getPreferredLocale(request);
     
     // Get query parameters
     const { searchParams } = new URL(request.url);
@@ -21,10 +23,27 @@ export async function GET(request: NextRequest) {
       .sort({ order: 1 })
       .toArray();
 
+    const localized = stories.map((story) => {
+      const namesEn = story.namesEn ?? story.names ?? "";
+      const testimonialEn = story.testimonialEn ?? story.testimonial ?? "";
+      const namesAr = story.namesAr ?? null;
+      const testimonialAr = story.testimonialAr ?? null;
+
+      return {
+        ...story,
+        names: pickLocalizedString(locale, { en: namesEn, ar: namesAr }),
+        testimonial: pickLocalizedString(locale, { en: testimonialEn, ar: testimonialAr }),
+        namesEn,
+        namesAr: namesAr ?? "",
+        testimonialEn,
+        testimonialAr: testimonialAr ?? "",
+      };
+    });
+
     return NextResponse.json({
       success: true,
-      data: stories,
-      count: stories.length,
+      data: localized,
+      count: localized.length,
     });
   } catch (error) {
     console.error("Error fetching stories:", error);
@@ -42,11 +61,19 @@ export async function POST(request: NextRequest) {
     await requireAdmin();
 
     const body: CreateStoryInput = await request.json();
+    const namesEn = body.namesEn ?? body.names;
+    const testimonialEn = body.testimonialEn ?? body.testimonial;
     
     // Validate required fields
-    if (!body.image || !body.names || !body.testimonial) {
+    if (
+      !body.image ||
+      !namesEn ||
+      !testimonialEn ||
+      !body.namesAr ||
+      !body.testimonialAr
+    ) {
       return NextResponse.json(
-        { error: "Image, names, and testimonial are required" },
+        { error: "Image, English/Arabic names and English/Arabic testimonial are required" },
         { status: 400 }
       );
     }
@@ -65,8 +92,12 @@ export async function POST(request: NextRequest) {
     // Create new story
     const newStory: any = {
       image: body.image,
-      names: body.names,
-      testimonial: body.testimonial,
+      names: namesEn,
+      namesEn,
+      namesAr: body.namesAr,
+      testimonial: testimonialEn,
+      testimonialEn,
+      testimonialAr: body.testimonialAr,
       isActive: body.isActive !== undefined ? body.isActive : true,
       order: body.order !== undefined ? body.order : nextOrder,
       createdAt: new Date(),

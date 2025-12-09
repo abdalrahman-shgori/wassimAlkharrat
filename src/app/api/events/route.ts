@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getEventsCollection } from "../../../../lib/db";
 import { CreateEventInput } from "../../../../lib/models/Event";
 import { requireAdmin } from "../../../../lib/auth";
+import { getPreferredLocale, pickLocalizedString } from "../../../../lib/i18n/serverLocale";
 
 // GET /api/events - Get all events
 export async function GET(request: NextRequest) {
   try {
     const eventsCollection = await getEventsCollection();
+    const locale = getPreferredLocale(request);
     
     // Get query parameters
     const { searchParams } = new URL(request.url);
@@ -21,10 +23,27 @@ export async function GET(request: NextRequest) {
       .sort({ order: 1 })
       .toArray();
 
+    const localized = events.map((event) => {
+      const titleEn = event.eventTitleEn ?? event.eventTitle ?? "";
+      const subtitleEn = event.eventSubtitleEn ?? event.eventSubtitle ?? "";
+      const titleAr = event.eventTitleAr ?? null;
+      const subtitleAr = event.eventSubtitleAr ?? null;
+
+      return {
+        ...event,
+        eventTitle: pickLocalizedString(locale, { en: titleEn, ar: titleAr }),
+        eventSubtitle: pickLocalizedString(locale, { en: subtitleEn, ar: subtitleAr }),
+        eventTitleEn: titleEn,
+        eventTitleAr: titleAr ?? "",
+        eventSubtitleEn: subtitleEn,
+        eventSubtitleAr: subtitleAr ?? "",
+      };
+    });
+
     return NextResponse.json({
       success: true,
-      data: events,
-      count: events.length,
+      data: localized,
+      count: localized.length,
     });
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -42,11 +61,19 @@ export async function POST(request: NextRequest) {
     await requireAdmin();
 
     const body: CreateEventInput = await request.json();
+    const titleEn = body.eventTitleEn ?? body.eventTitle;
+    const subtitleEn = body.eventSubtitleEn ?? body.eventSubtitle;
     
     // Validate required fields
-    if (!body.image || !body.eventTitle || !body.eventSubtitle) {
+    if (
+      !body.image ||
+      !titleEn ||
+      !subtitleEn ||
+      !body.eventTitleAr ||
+      !body.eventSubtitleAr
+    ) {
       return NextResponse.json(
-        { error: "Image, eventTitle, and eventSubtitle are required" },
+        { error: "Image, English/Arabic title and English/Arabic subtitle are required" },
         { status: 400 }
       );
     }
@@ -65,8 +92,12 @@ export async function POST(request: NextRequest) {
     // Create new event
     const newEvent: any = {
       image: body.image,
-      eventTitle: body.eventTitle,
-      eventSubtitle: body.eventSubtitle,
+      eventTitle: titleEn,
+      eventTitleEn: titleEn,
+      eventTitleAr: body.eventTitleAr,
+      eventSubtitle: subtitleEn,
+      eventSubtitleEn: subtitleEn,
+      eventSubtitleAr: body.eventSubtitleAr,
       isActive: body.isActive !== undefined ? body.isActive : true,
       order: body.order !== undefined ? body.order : nextOrder,
       createdAt: new Date(),

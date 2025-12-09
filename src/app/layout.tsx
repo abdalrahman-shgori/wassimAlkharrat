@@ -1,5 +1,18 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic";
+
+import ClientIntlProvider from "@/components/i18n/ClientIntlProvider";
+import {
+  defaultLocale,
+  defaultTimeZone,
+  getDirection,
+  getMessages,
+  isLocale,
+  type Locale,
+} from "@/lib/i18n/config";
 import "./globals.css";
 
 const alice = localFont({
@@ -47,15 +60,39 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let locale: Locale = defaultLocale;
+  try {
+    const cookieStore = await cookies();
+    const cookieValue = cookieStore.get("NEXT_LOCALE")?.value;
+    if (isLocale(cookieValue)) {
+      locale = cookieValue;
+    }
+  } catch {
+    // fall back to default locale
+  }
+  const direction = getDirection(locale);
+  const messages = getMessages(locale);
+  const timeZone = process.env.NEXT_PUBLIC_DEFAULT_TIMEZONE || defaultTimeZone;
+
   return (
-    <html lang="en">
-      <body className={`${alice.variable} ${allison.variable}`}>
-        {children}
+    <html lang={locale} dir={direction}>
+      <body
+        className={`${alice.variable} ${allison.variable}`}
+        data-direction={direction}
+      >
+        <ClientIntlProvider
+          locale={locale}
+          direction={direction}
+          messages={messages}
+          timeZone={timeZone}
+        >
+          {children}
+        </ClientIntlProvider>
       </body>
     </html>
   );

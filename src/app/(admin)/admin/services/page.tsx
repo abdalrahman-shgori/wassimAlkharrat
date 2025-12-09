@@ -7,8 +7,12 @@ import styles from "./page.module.scss";
 interface Service {
   _id: string;
   name: string;
+  nameEn: string;
+  nameAr: string;
   slug: string;
   description: string;
+  descriptionEn: string;
+  descriptionAr: string;
   icon: string;
   image?: string;
   isActive: boolean;
@@ -35,8 +39,12 @@ const config: AdminCRUDConfig<Service> = {
   initialFormData: {
     _id: "",
     name: "",
+    nameEn: "",
+    nameAr: "",
     slug: "",
     description: "",
+    descriptionEn: "",
+    descriptionAr: "",
     icon: "🎉",
     image: "",
     isActive: true,
@@ -44,12 +52,19 @@ const config: AdminCRUDConfig<Service> = {
   },
   formFields: [
     {
-      name: "name",
-      label: "Service Name",
+      name: "nameEn",
+      label: "Service Name (EN)",
       type: "text",
       placeholder: "e.g., Weddings",
       required: true,
       generateSlug,
+    },
+    {
+      name: "nameAr",
+      label: "Service Name (AR)",
+      type: "text",
+      placeholder: "مثال: حفلات الزفاف",
+      required: true,
     },
     {
       name: "slug",
@@ -60,10 +75,18 @@ const config: AdminCRUDConfig<Service> = {
       helpText: "URL-friendly identifier (lowercase, no spaces)",
     },
     {
-      name: "description",
-      label: "Description",
+      name: "descriptionEn",
+      label: "Description (EN)",
       type: "textarea",
       placeholder: "Describe your service...",
+      required: true,
+      rows: 4,
+    },
+    {
+      name: "descriptionAr",
+      label: "Description (AR)",
+      type: "textarea",
+      placeholder: "وصف الخدمة...",
       required: true,
       rows: 4,
     },

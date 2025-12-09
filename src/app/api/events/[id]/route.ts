@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { getEventsCollection } from "../../../../../lib/db";
 import { UpdateEventInput } from "../../../../../lib/models/Event";
 import { requireAdmin } from "../../../../../lib/auth";
+import { getPreferredLocale, pickLocalizedString } from "../../../../../lib/i18n/serverLocale";
 
 // GET /api/events/[id] - Get a single event by ID
 export async function GET(
@@ -11,6 +12,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const locale = getPreferredLocale(request);
 
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
@@ -30,9 +32,22 @@ export async function GET(
       );
     }
 
+    const titleEn = event.eventTitleEn ?? event.eventTitle ?? "";
+    const subtitleEn = event.eventSubtitleEn ?? event.eventSubtitle ?? "";
+    const titleAr = event.eventTitleAr ?? null;
+    const subtitleAr = event.eventSubtitleAr ?? null;
+
     return NextResponse.json({
       success: true,
-      data: event,
+      data: {
+        ...event,
+        eventTitle: pickLocalizedString(locale, { en: titleEn, ar: titleAr }),
+        eventSubtitle: pickLocalizedString(locale, { en: subtitleEn, ar: subtitleAr }),
+        eventTitleEn: titleEn,
+        eventTitleAr: titleAr ?? "",
+        eventSubtitleEn: subtitleEn,
+        eventSubtitleAr: subtitleAr ?? "",
+      },
     });
   } catch (error) {
     console.error("Error fetching event:", error);
@@ -81,7 +96,11 @@ export async function PUT(
 
     if (body.image !== undefined) updateData.image = body.image;
     if (body.eventTitle !== undefined) updateData.eventTitle = body.eventTitle;
+    if (body.eventTitleEn !== undefined) updateData.eventTitleEn = body.eventTitleEn;
+    if (body.eventTitleAr !== undefined) updateData.eventTitleAr = body.eventTitleAr;
     if (body.eventSubtitle !== undefined) updateData.eventSubtitle = body.eventSubtitle;
+    if (body.eventSubtitleEn !== undefined) updateData.eventSubtitleEn = body.eventSubtitleEn;
+    if (body.eventSubtitleAr !== undefined) updateData.eventSubtitleAr = body.eventSubtitleAr;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
     if (body.order !== undefined) updateData.order = body.order;
 

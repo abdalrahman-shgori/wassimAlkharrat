@@ -5,16 +5,19 @@ import Link from 'next/link';
 import { FaFacebookF, FaInstagram, FaYoutube, FaTiktok, FaWhatsapp, FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import styles from './Footer.module.scss';
+import { useTranslations } from 'next-intl';
 
 export default function Footer() {
+  const t = useTranslations('footer');
+
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
         {/* Left Section - Company Info and Social Media */}
         <div className={styles.leftSection}>
-          <h2 className={styles.companyName}>Wassim Alkharrat </h2>
+          <h2 className={styles.companyName}>{t('companyName')}</h2>
           <p className={styles.slogan}>
-            Creating unforgettable moments with elegance, creativity, and precision. Your dream event awaits.
+            {t('slogan')}
           </p>
           <div className={styles.socialMedia}>
             <a 
@@ -76,19 +79,19 @@ export default function Footer() {
 
         {/* Middle Section - Quick Links */}
         <div className={styles.middleSection}>
-          <h3 className={styles.sectionHeading}>Quick Links</h3>
+          <h3 className={styles.sectionHeading}>{t('quickLinks')}</h3>
           <nav className={styles.quickLinks}>
-            <Link href="/" className={styles.link}>Home</Link>
-            <Link href="/services" className={styles.link}>Services</Link>
-            <Link href="/events" className={styles.link}>Events</Link>
-            <Link href="/accessories" className={styles.link}>Accessories</Link>
-            <Link href="/about" className={styles.link}>About us</Link>
+            <Link href="/" className={styles.link}>{t('home')}</Link>
+            <Link href="/services" className={styles.link}>{t('services')}</Link>
+            <Link href="/events" className={styles.link}>{t('events')}</Link>
+            <Link href="/accessories" className={styles.link}>{t('accessories')}</Link>
+            <Link href="/about" className={styles.link}>{t('about')}</Link>
           </nav>
         </div>
 
         {/* Right Section - Connect Us */}
         <div className={styles.rightSection}>
-          <h3 className={styles.sectionHeading}>Connect Us</h3>
+          <h3 className={styles.sectionHeading}>{t('connect')}</h3>
           <div className={styles.contactInfo}>
           <a href="tel:+963944406638" className={styles.contactItem}>
               <FaPhone className={styles.contactIcon} />
@@ -116,7 +119,7 @@ export default function Footer() {
       {/* Copyright Section */}
       <div className={styles.copyrightSection}>
         <div className={styles.copyrightLine}></div>
-        <p className={styles.copyright}>© All rights reserved, 2025</p>
+        <p className={styles.copyright}>{t('copyright')}</p>
       </div>
     </footer>
   );

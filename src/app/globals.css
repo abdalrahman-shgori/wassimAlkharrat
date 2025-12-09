@@ -51,6 +51,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body[dir='rtl'] {
+  direction: rtl;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

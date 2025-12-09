@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useLocale } from "next-intl";
 import ImageUpload from "./ImageUpload";
 import AdminCard from "./AdminCard";
 import styles from "./admin.module.scss";
@@ -50,6 +51,7 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
 }: {
   config: AdminCRUDConfig<T>;
 }) {
+  const locale = useLocale();
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -60,14 +62,23 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const baseHeaders = useMemo(
+    () => ({
+      "Accept-Language": locale,
+    }),
+    [locale]
+  );
+
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [locale]);
 
   const fetchItems = async () => {
     try {
       setLoading(true);
-      const response = await fetch(config.apiEndpoint);
+      const response = await fetch(config.apiEndpoint, {
+        headers: baseHeaders,
+      });
       const data = await response.json();
       if (data.success) {
         setItems(data.data);
@@ -127,6 +138,7 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
 
       const response = await fetch(config.uploadEndpoint, {
         method: "POST",
+        headers: baseHeaders,
         body: formDataToSend,
       });
 
@@ -195,7 +207,7 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
 
       const response = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { ...baseHeaders, "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -228,6 +240,7 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
     try {
       const response = await fetch(`${config.apiEndpoint}/${id}`, {
         method: "DELETE",
+        headers: baseHeaders,
       });
 
       if (response.ok) {

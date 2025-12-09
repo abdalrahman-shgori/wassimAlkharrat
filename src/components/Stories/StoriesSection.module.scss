@@ -92,7 +92,7 @@
 .storiesTitle {
   position: absolute;
   top: 0;
-  left: -140px;
+  inset-inline-start: -140px;
   font-size: clamp(36px, 12vw, 206px);
   font-weight: 400;
   font-family: serif;
@@ -147,7 +147,6 @@
   line-height: 1.8;
   font-weight: 300;
   color: var(--white);
-  text-align: left;
  overflow: hidden;  
  text-overflow: ellipsis;
  display: -webkit-box;
@@ -177,7 +176,7 @@
   font-family: var(--font-allison);
   margin-bottom: 24px;
   min-height: 1.2em;
-
+  
   
   @media screen and (max-width: 834px) {
     font-size: 24px;
@@ -232,7 +231,9 @@
   padding: 8px 12px;
   transition: opacity 0.3s ease;
   font-family: inherit;
-  
+  [dir="rtl"] & {
+    transform: scaleX(-1);
+  }
   &:hover {
     opacity: 0.7;
   }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './StoriesSection.module.scss';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 interface Story {
   _id: string;
@@ -24,6 +25,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   const [imageKey, setImageKey] = useState(0);
   const [displayedNames, setDisplayedNames] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const t = useTranslations('stories');
 
   // Ensure stories is always an array
   const safeStories = stories || [];
@@ -124,11 +126,11 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
       >
-        <h2 className={styles.storiesTitleTop}>Stories</h2>
+        <h2 className={styles.storiesTitleTop}>{t('title')}</h2>
         <div className={styles.storiesCard}>
           <div className={styles.textContainer}>
-            <h2 className={styles.storiesTitle}>Stories</h2>
-            <p className={styles.error}>No stories available at the moment.</p>
+            <h2 className={styles.storiesTitle}>{t('title')}</h2>
+            <p className={styles.error}>{t('empty')}</p>
           </div>
         </div>
       </motion.section>
@@ -146,7 +148,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
-      <h2 className={styles.storiesTitleTop}>Stories</h2>
+      <h2 className={styles.storiesTitleTop}>{t('title')}</h2>
 
       <div className={styles.storiesCard}>
         <div className={styles.imageContainer}>
@@ -181,7 +183,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
         </div>
         
         <div className={styles.textContainer}>
-          <h2 className={styles.storiesTitle}>Stories</h2>
+          <h2 className={styles.storiesTitle}>{t('title')}</h2>
           
           <div className={styles.testimonialWrapper}>
             <div 
@@ -200,7 +202,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
             <button 
               className={styles.navButton}
               onClick={handlePrevious}
-              aria-label="Previous story"
+              aria-label={t('previous')}
               disabled={activeStories.length <= 1}
             >
               ←
@@ -211,7 +213,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
             <button 
               className={styles.navButton}
               onClick={handleNext}
-              aria-label="Next story"
+              aria-label={t('next')}
               disabled={activeStories.length <= 1}
             >
               →

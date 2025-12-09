@@ -16,6 +16,9 @@
 
   .arrow {
     transition: filter 0.5s ease;
+    [dir="rtl"] & {
+      transform: scaleX(-1);
+    }
   }
 
   &::before {

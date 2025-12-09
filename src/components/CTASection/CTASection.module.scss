@@ -45,7 +45,7 @@
   
 }
   @media screen and (max-width: 834px) {
-    padding: 46px 50px;
+    padding: 46px 60;
   }
   @media screen and (max-width: 480px) {
     padding: 46px 24px;
@@ -89,7 +89,6 @@
   margin: 0;
   font-family: var(--font-alice, serif);
   letter-spacing: 0.02em;
-  text-align: left;
 }
 
 .ctaDescription {
@@ -130,14 +129,11 @@
   .ctaCard {
     padding: 40px 50px;
     gap: var(--spacing-medium);
-    flex-direction: column;
-    align-items: flex-start;
   }
 
 
 
   .ctaButtonWrapper {
-    width: 100%;
     justify-content: center;
   }
 }
@@ -151,7 +147,7 @@
     padding: 30px 24px;
     gap: 20px;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
   }
 
   .ctaTitle {

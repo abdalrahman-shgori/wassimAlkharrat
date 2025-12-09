@@ -7,6 +7,7 @@ import venue from "../../../public/images/homepage/venue.svg";
 import arrowRight from "../../../public/images/arrowRight.svg";
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 interface Service {
   _id: string;
@@ -26,7 +27,8 @@ interface ServicesSectionProps {
 export default function ServicesSection({ services }: ServicesSectionProps) {
   // Ensure services is always an array
   const safeServices = services || [];
-
+  const t = useTranslations('services');
+  console.log(services)
   // Get image source - use Cloudinary image if available, otherwise fallback to venue icon
   const getImageSrc = (service: Service) => {
     if (service.image) {
@@ -54,15 +56,15 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
       transition={{ staggerChildren: 0.12, duration: 0.6, ease: "easeOut" }}
     >
       <div className={styles.servicesSectionHeader}>
-        <motion.h1 className={styles.servicesSectionTitle} variants={fadeUp}>Services</motion.h1>
+        <motion.h1 className={styles.servicesSectionTitle} variants={fadeUp}>{t('title')}</motion.h1>
         <motion.div variants={fadeUp}>
-          <Link href='/services' className={styles.servicesSectionLink}>View All</Link>
+          <Link href='/services' className={styles.servicesSectionLink}>{t('viewAll')}</Link>
         </motion.div>
       </div>
       <div className={styles.servicesSectionContent}>
         {safeServices.length === 0 ? (
           <motion.div className={styles.error} variants={fadeUp}>
-            No services available at the moment.
+            {t('empty')}
           </motion.div>
         ) : (
           safeServices.map((service) => {
@@ -74,7 +76,6 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
                 key={service._id}
                 variants={fadeUp}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                whileHover={{ translateY: -6, scale: 1.01 }}
               >
               <Link 
                 href={`/services/${service.slug}`} 
@@ -100,7 +101,7 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
                 <h3 className={styles.servicesSectionContentItemTitle}>{service.name}</h3>
                 <p className={styles.servicesSectionContentItemDescription}>{service.description}</p>
                 <div className={styles.servicesSectionContentItemLink}>
-                  Learn more
+                  {t('learnMore')}
                   <Image src={arrowRight} alt="arrow" className={styles.servicesSectionContentItemLinkArrow} />
                 </div>
               </Link>

@@ -6,7 +6,7 @@
 
 .welcomeToSectionLogo{
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 95px;
     width: 50%;
     max-width: 600px;
@@ -17,6 +17,11 @@
     width: 100%;
     height: auto;
     object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+[dir="rtl"] .welcomeToSectionLogoImage{
+    transform: scaleX(-1);
 }
 
 .welcomeToSectionContent{
@@ -64,7 +69,7 @@
         top: 50px;
     }
     .welcomeToSectionContent{
-        padding:109px 92px 0px 92px;
+        padding:109px 60px 0px 60px;
     }
     .welcomeToSectionTitle{
         font-size: 34px;

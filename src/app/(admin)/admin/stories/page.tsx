@@ -8,7 +8,11 @@ interface Story {
   _id: string;
   image: string;
   names: string;
+  namesEn: string;
+  namesAr: string;
   testimonial: string;
+  testimonialEn: string;
+  testimonialAr: string;
   isActive: boolean;
   order: number;
 }
@@ -27,7 +31,11 @@ const config: AdminCRUDConfig<Story> = {
     _id: "",
     image: "",
     names: "",
+    namesEn: "",
+    namesAr: "",
     testimonial: "",
+    testimonialEn: "",
+    testimonialAr: "",
     isActive: true,
     order: 1,
   },
@@ -39,18 +47,34 @@ const config: AdminCRUDConfig<Story> = {
       required: true,
     },
     {
-      name: "names",
-      label: "Names",
+      name: "namesEn",
+      label: "Names (EN)",
       type: "text",
       placeholder: "e.g., Chris & Elena",
       required: true,
       helpText: "Names of the people in the story",
     },
     {
-      name: "testimonial",
-      label: "Testimonial",
+      name: "namesAr",
+      label: "Names (AR)",
+      type: "text",
+      placeholder: "مثال: كريس وإيلينا",
+      required: true,
+      helpText: "Names of the people in the story (Arabic)",
+    },
+    {
+      name: "testimonialEn",
+      label: "Testimonial (EN)",
       type: "textarea",
       placeholder: "Enter the testimonial text...",
+      required: true,
+      rows: 6,
+    },
+    {
+      name: "testimonialAr",
+      label: "Testimonial (AR)",
+      type: "textarea",
+      placeholder: "أدخل نص الشهادة...",
       required: true,
       rows: 6,
     },

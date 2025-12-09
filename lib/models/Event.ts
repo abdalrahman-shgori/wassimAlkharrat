@@ -4,7 +4,11 @@ export interface Event {
   _id?: ObjectId;
   image: string; // URL/path to event image
   eventTitle: string;
+  eventTitleEn?: string;
+  eventTitleAr?: string;
   eventSubtitle: string;
+  eventSubtitleEn?: string;
+  eventSubtitleAr?: string;
   isActive: boolean;
   order: number;
   createdAt: Date;
@@ -14,7 +18,11 @@ export interface Event {
 export interface CreateEventInput {
   image: string;
   eventTitle: string;
+  eventTitleEn?: string;
+  eventTitleAr: string;
   eventSubtitle: string;
+  eventSubtitleEn?: string;
+  eventSubtitleAr: string;
   isActive?: boolean;
   order?: number;
 }
@@ -22,7 +30,11 @@ export interface CreateEventInput {
 export interface UpdateEventInput {
   image?: string;
   eventTitle?: string;
+  eventTitleEn?: string;
+  eventTitleAr?: string;
   eventSubtitle?: string;
+  eventSubtitleEn?: string;
+  eventSubtitleAr?: string;
   isActive?: boolean;
   order?: number;
 }

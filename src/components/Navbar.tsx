@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import { FaFacebookF, FaInstagram, FaYoutube, FaTiktok, FaWhatsapp } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import styles from './Navbar.module.scss';
@@ -13,6 +14,9 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations('navbar');
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -68,13 +72,15 @@ export default function Navbar() {
     setIsOpen(false);
   };
 
-  const isActive = (path: string) => {
-    if (!pathname) return false;
-    if (path === '/') {
-      // For home page, check if pathname is exactly '/' or empty
-      return pathname === '/' || pathname === '';
-    }
-    return pathname === path || pathname.startsWith(path + '/');
+  const changeLocale = (nextLocale: string) => {
+    if (nextLocale === locale) return;
+
+    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
+    closeMenu();
+
+    // Force a soft refresh so Next reads the new locale cookie on the server
+    router.replace(pathname || '/');
+    router.refresh();
   };
 
   return (
@@ -121,44 +127,64 @@ export default function Navbar() {
           <span></span>
           <span></span>
         </button>
-        <div className={styles.menuContent}>
+        <div className={`${styles.menuContent} ${isOpen ? styles.open : ''}`}>
           <nav className={styles.menuLinks}>
             <Link 
               href="/" 
               onClick={closeMenu} 
               className={`${styles.menuItem} ${pathname === '/' ? styles.active : ''}`}
             >
-              Home
+              {t('home')}
             </Link>
             <Link 
               href="/events" 
               onClick={closeMenu} 
               className={`${styles.menuItem} ${pathname === '/events' ? styles.active : ''}`}
             >
-              Events
+              {t('events')}
             </Link>
             <Link 
               href="/services" 
               onClick={closeMenu} 
               className={`${styles.menuItem} ${pathname === '/services' ? styles.active : ''}`}
             >
-              Services
+              {t('services')}
             </Link>
             <Link 
               href="/about" 
               onClick={closeMenu} 
               className={`${styles.menuItem} ${pathname === '/about' ? styles.active : ''}`}
             >
-              About
+              {t('about')}
             </Link>
             <Link 
               href="/contact" 
               onClick={closeMenu} 
               className={`${styles.menuItem} ${pathname === '/contact' ? styles.active : ''}`}
             >
-              Contact
+              {t('contact')}
             </Link>
           </nav>
+
+          <div className={styles.languageSwitcher}>
+            <button
+              type="button"
+              onClick={() => changeLocale('en')}
+              className={`${styles.languageButton} ${locale === 'en' ? styles.languageButtonActive : ''}`}
+              aria-label={t('switchToEnglish')}
+            >
+              EN
+            </button>
+            <span className={styles.languageDivider}>|</span>
+            <button
+              type="button"
+              onClick={() => changeLocale('ar')}
+              className={`${styles.languageButton} ${locale === 'ar' ? styles.languageButtonActive : ''}`}
+              aria-label={t('switchToArabic')}
+            >
+              ع
+            </button>
+          </div>
 
           {/* Social Media Icons */}
           <div className={styles.socialMedia}>

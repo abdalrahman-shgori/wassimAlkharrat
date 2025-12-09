@@ -72,7 +72,7 @@ export default function HeroSection({
         fill
         priority
         className={styles.backgroundImage}
-        quality={100}
+        quality={90}
       />
 
       <div className={styles.heroContent}>

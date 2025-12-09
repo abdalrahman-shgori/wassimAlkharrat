@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLocale } from "next-intl";
 import ImageUpload from "./ImageUpload";
 import styles from "./admin.module.scss";
 
 const DEFAULT_HERO_IMAGE = "/images/homepage/DSC06702.webp";
 
 export default function HomepageSettingsForm() {
+  const locale = useLocale();
   const [heroImage, setHeroImage] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -14,6 +16,13 @@ export default function HomepageSettingsForm() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const baseHeaders = useMemo(
+    () => ({
+      "Accept-Language": locale,
+    }),
+    [locale]
+  );
 
   useEffect(() => {
     fetchSettings();
@@ -24,7 +33,9 @@ export default function HomepageSettingsForm() {
       setLoading(true);
       setError("");
 
-      const response = await fetch("/api/homepage-settings");
+      const response = await fetch("/api/homepage-settings", {
+        headers: baseHeaders,
+      });
       const data = await response.json();
 
       if (!response.ok || !data.success) {
@@ -70,6 +81,7 @@ export default function HomepageSettingsForm() {
 
       const response = await fetch("/api/homepage-settings/upload", {
         method: "POST",
+        headers: baseHeaders,
         body: formData,
       });
 
@@ -111,7 +123,7 @@ export default function HomepageSettingsForm() {
       setSaving(true);
       const response = await fetch("/api/homepage-settings", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { ...baseHeaders, "Content-Type": "application/json" },
         body: JSON.stringify({ heroImage }),
       });
 

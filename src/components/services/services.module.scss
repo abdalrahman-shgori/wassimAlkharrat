@@ -52,7 +52,7 @@
         transition: transform 0.3s ease;
     }
 
-    &:hover img {
+    &:hover .serviceImage {
         transform: scale(1.05);
     }
 
@@ -105,6 +105,9 @@
     width: 20px !important;
     height: 20px !important;
     filter: brightness(0);
+    [dir="rtl"] & {
+        transform: scaleX(-1);
+    }
 
     @media screen and (max-width: 600px) {
         width: 16px !important;
@@ -139,7 +142,7 @@
 
 @media (max-width: 834px) {
     .servicesSection {
-        padding: 0px 92px 0px 92px;
+        padding: 0px 60px 0px 60px;
         bottom: 200px;
     }
 

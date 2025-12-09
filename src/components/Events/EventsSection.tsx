@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import Image from 'next/image';
 import styles from './EventsSection.module.scss';
+import { useTranslations } from 'next-intl';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -26,27 +27,27 @@ interface EventsSectionProps {
 export default function EventsSection({ events }: EventsSectionProps) {
   // Ensure events is always an array
   const safeEvents = events || [];
+  const t = useTranslations('events');
   
   // ⭐ FIX FOR LOOP STOPPING:
   // Swiper cannot loop unless there are enough slides,
   // so we duplicate your events when the list is small.
   const loopEvents =
-    safeEvents.length < 4 ? [...safeEvents, ...safeEvents, ...safeEvents] : safeEvents;
+    safeEvents.length < 20 ? [...safeEvents, ...safeEvents, ...safeEvents] : safeEvents;
 
   return (
     <section className={styles.eventsSection}>
-      <h1 className={styles.eventsSectionTitle}>Events</h1>
+      <h1 className={styles.eventsSectionTitle}>{t('title')}</h1>
 
       <div className={styles.eventsSectionContent}>
-        {safeEvents.length === 0 ? (
-          <div className={styles.error}>No events available at the moment.</div>
+        {events?.length === 0 ? (
+          <div className={styles.error}>{t('empty')}</div>
         ) : (
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={24}
             centeredSlides={true}
             loop={true}
-            loopAdditionalSlides={5}   // ⭐ FIX: forces proper looping
             slidesPerView={1.2}
             autoplay={{
               delay: 2500,
@@ -59,7 +60,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
             }}
             className={styles.eventsSwiper}
           >
-            {loopEvents.map((event, index) => {
+            {events?.map((event, index) => {
               const isCloudinaryImage =
                 event.image &&
                 (event.image.startsWith('http://') ||
@@ -95,7 +96,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
           </Swiper>
         )}
 
-        <button className={styles.exploreButton}>Explore Events</button>
+        <button className={styles.exploreButton}>{t('explore')}</button>
       </div>
     </section>
   );

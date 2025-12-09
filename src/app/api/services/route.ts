@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServicesCollection } from "../../../../lib/db";
 import { CreateServiceInput } from "../../../../lib/models/Service";
 import { requireAdmin } from "../../../../lib/auth";
+import { getPreferredLocale, pickLocalizedString } from "../../../../lib/i18n/serverLocale";
 
 // GET /api/services - Get all services
 export async function GET(request: NextRequest) {
   try {
     const servicesCollection = await getServicesCollection();
+    const locale = getPreferredLocale(request);
     
     // Get query parameters
     const { searchParams } = new URL(request.url);
@@ -21,10 +23,27 @@ export async function GET(request: NextRequest) {
       .sort({ order: 1 })
       .toArray();
 
+    const localized = services.map((service) => {
+      const nameEn = service.nameEn ?? service.name ?? "";
+      const descriptionEn = service.descriptionEn ?? service.description ?? "";
+      const nameAr = service.nameAr ?? null;
+      const descriptionAr = service.descriptionAr ?? null;
+
+      return {
+        ...service,
+        name: pickLocalizedString(locale, { en: nameEn, ar: nameAr }),
+        description: pickLocalizedString(locale, { en: descriptionEn, ar: descriptionAr }),
+        nameEn,
+        nameAr: nameAr ?? "",
+        descriptionEn,
+        descriptionAr: descriptionAr ?? "",
+      };
+    });
+
     return NextResponse.json({
       success: true,
-      data: services,
-      count: services.length,
+      data: localized,
+      count: localized.length,
     });
   } catch (error) {
     console.error("Error fetching services:", error);
@@ -42,11 +61,13 @@ export async function POST(request: NextRequest) {
     await requireAdmin();
 
     const body: CreateServiceInput = await request.json();
+    const nameEn = body.nameEn ?? body.name;
+    const descriptionEn = body.descriptionEn ?? body.description;
     
     // Validate required fields
-    if (!body.name || !body.slug || !body.description) {
+    if (!nameEn || !body.slug || !descriptionEn || !body.nameAr || !body.descriptionAr) {
       return NextResponse.json(
-        { error: "Name, slug, and description are required" },
+        { error: "English name/description, Arabic name/description and slug are required" },
         { status: 400 }
       );
     }
@@ -73,9 +94,13 @@ export async function POST(request: NextRequest) {
 
     // Create new service
     const newService: any = {
-      name: body.name,
+      name: nameEn,
+      nameEn,
+      nameAr: body.nameAr,
       slug: body.slug,
-      description: body.description,
+      description: descriptionEn,
+      descriptionEn,
+      descriptionAr: body.descriptionAr,
       icon: body.icon || "🎉",
       isActive: body.isActive !== undefined ? body.isActive : true,
       order: body.order !== undefined ? body.order : nextOrder,

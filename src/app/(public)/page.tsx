@@ -1,3 +1,4 @@
+import { cookies } from 'next/headers';
 import { HomePage } from '@/pages/homepage';
 import {
   getEventsCollection,
@@ -9,11 +10,14 @@ import { Service } from '../../../lib/models/Service';
 import { Event } from '../../../lib/models/Event';
 import { Story } from '../../../lib/models/Story';
 import { HomepageSettings } from '../../../lib/models/HomepageSettings';
+import { Locale, defaultLocale, isLocale } from '@/lib/i18n/config';
+import { pickLocalizedString } from '../../../lib/i18n/serverLocale';
 
 export const revalidate = 3600; // Revalidate every hour for ISR
 
 async function getServices() {
   try {
+    const locale = await getLocale();
     const servicesCollection = await getServicesCollection();
     const services = await servicesCollection
       .find({ isActive: true })
@@ -23,9 +27,15 @@ async function getServices() {
     
     return services.map((service: Service) => ({
       _id: service._id?.toString() || '',
-      name: service.name,
+      name: pickLocalizedString(locale, {
+        en: service.nameEn ?? service.name,
+        ar: service.nameAr ?? null,
+      }),
       slug: service.slug,
-      description: service.description,
+      description: pickLocalizedString(locale, {
+        en: service.descriptionEn ?? service.description,
+        ar: service.descriptionAr ?? null,
+      }),
       icon: service.icon,
       image: service.image,
       isActive: service.isActive,
@@ -39,6 +49,7 @@ async function getServices() {
 
 async function getEvents() {
   try {
+    const locale = await getLocale();
     const eventsCollection = await getEventsCollection();
     const events = await eventsCollection
       .find({ isActive: true })
@@ -48,8 +59,14 @@ async function getEvents() {
     return events.map((event: Event) => ({
       _id: event._id?.toString() || '',
       image: event.image,
-      eventTitle: event.eventTitle,
-      eventSubtitle: event.eventSubtitle,
+      eventTitle: pickLocalizedString(locale, {
+        en: event.eventTitleEn ?? event.eventTitle,
+        ar: event.eventTitleAr ?? null,
+      }),
+      eventSubtitle: pickLocalizedString(locale, {
+        en: event.eventSubtitleEn ?? event.eventSubtitle,
+        ar: event.eventSubtitleAr ?? null,
+      }),
       isActive: event.isActive,
       order: event.order,
     }));
@@ -61,6 +78,7 @@ async function getEvents() {
 
 async function getStories() {
   try {
+    const locale = await getLocale();
     const storiesCollection = await getStoriesCollection();
     const stories = await storiesCollection
       .find({ isActive: true })
@@ -70,8 +88,14 @@ async function getStories() {
     return stories.map((story: Story) => ({
       _id: story._id?.toString() || '',
       image: story.image,
-      names: story.names,
-      testimonial: story.testimonial,
+      names: pickLocalizedString(locale, {
+        en: story.namesEn ?? story.names,
+        ar: story.namesAr ?? null,
+      }),
+      testimonial: pickLocalizedString(locale, {
+        en: story.testimonialEn ?? story.testimonial,
+        ar: story.testimonialAr ?? null,
+      }),
       isActive: story.isActive,
       order: story.order,
     }));
@@ -114,5 +138,18 @@ export default async function Home() {
     stories={stories || []}
     heroImage={heroImage}
   />;
+}
+
+async function getLocale(): Promise<Locale> {
+  try {
+    const cookieStore = await cookies();
+    const cookieValue = cookieStore.get('NEXT_LOCALE')?.value;
+    if (isLocale(cookieValue)) {
+      return cookieValue;
+    }
+  } catch {
+    // ignore and fall back
+  }
+  return defaultLocale;
 }
 

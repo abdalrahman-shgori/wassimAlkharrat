@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { getStoriesCollection } from "../../../../../lib/db";
 import { UpdateStoryInput } from "../../../../../lib/models/Story";
 import { requireAdmin } from "../../../../../lib/auth";
+import { getPreferredLocale, pickLocalizedString } from "../../../../../lib/i18n/serverLocale";
 
 // GET /api/stories/[id] - Get a single story by ID
 export async function GET(
@@ -11,6 +12,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const locale = getPreferredLocale(request);
 
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
@@ -30,9 +32,22 @@ export async function GET(
       );
     }
 
+    const namesEn = story.namesEn ?? story.names ?? "";
+    const testimonialEn = story.testimonialEn ?? story.testimonial ?? "";
+    const namesAr = story.namesAr ?? null;
+    const testimonialAr = story.testimonialAr ?? null;
+
     return NextResponse.json({
       success: true,
-      data: story,
+      data: {
+        ...story,
+        names: pickLocalizedString(locale, { en: namesEn, ar: namesAr }),
+        testimonial: pickLocalizedString(locale, { en: testimonialEn, ar: testimonialAr }),
+        namesEn,
+        namesAr: namesAr ?? "",
+        testimonialEn,
+        testimonialAr: testimonialAr ?? "",
+      },
     });
   } catch (error) {
     console.error("Error fetching story:", error);
@@ -81,7 +96,11 @@ export async function PUT(
 
     if (body.image !== undefined) updateData.image = body.image;
     if (body.names !== undefined) updateData.names = body.names;
+    if (body.namesEn !== undefined) updateData.namesEn = body.namesEn;
+    if (body.namesAr !== undefined) updateData.namesAr = body.namesAr;
     if (body.testimonial !== undefined) updateData.testimonial = body.testimonial;
+    if (body.testimonialEn !== undefined) updateData.testimonialEn = body.testimonialEn;
+    if (body.testimonialAr !== undefined) updateData.testimonialAr = body.testimonialAr;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
     if (body.order !== undefined) updateData.order = body.order;
 

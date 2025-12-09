@@ -8,7 +8,11 @@ interface Event {
   _id: string;
   image: string;
   eventTitle: string;
+  eventTitleEn: string;
+  eventTitleAr: string;
   eventSubtitle: string;
+  eventSubtitleEn: string;
+  eventSubtitleAr: string;
   isActive: boolean;
   order: number;
 }
@@ -27,7 +31,11 @@ const config: AdminCRUDConfig<Event> = {
     _id: "",
     image: "",
     eventTitle: "",
+    eventTitleEn: "",
+    eventTitleAr: "",
     eventSubtitle: "",
+    eventSubtitleEn: "",
+    eventSubtitleAr: "",
     isActive: true,
     order: 1,
   },
@@ -39,17 +47,31 @@ const config: AdminCRUDConfig<Event> = {
       required: true,
     },
     {
-      name: "eventTitle",
-      label: "Event Title",
+      name: "eventTitleEn",
+      label: "Event Title (EN)",
       type: "text",
       placeholder: "e.g., Birthday or Anniversary Celebration",
       required: true,
     },
     {
-      name: "eventSubtitle",
-      label: "Event Subtitle",
+      name: "eventTitleAr",
+      label: "Event Title (AR)",
+      type: "text",
+      placeholder: "مثال: عيد ميلاد أو ذكرى سنوية",
+      required: true,
+    },
+    {
+      name: "eventSubtitleEn",
+      label: "Event Subtitle (EN)",
       type: "text",
       placeholder: "e.g., BIRTHDAY",
+      required: true,
+    },
+    {
+      name: "eventSubtitleAr",
+      label: "Event Subtitle (AR)",
+      type: "text",
+      placeholder: "مثال: عيد ميلاد",
       required: true,
     },
     {
@@ -65,8 +87,14 @@ const config: AdminCRUDConfig<Event> = {
   ],
   validateForm: (formData) => {
     if (!formData.image) return "Event image is required";
-    if (!formData.eventTitle) return "Event title is required";
-    if (!formData.eventSubtitle) return "Event subtitle is required";
+    if (!formData.eventTitleEn) return "Event title (EN) is required";
+    if (!formData.eventTitleAr) return "Event title (AR) is required";
+    if (!formData.eventSubtitleEn) return "Event subtitle (EN) is required";
+    if (!formData.eventSubtitleAr) return "Event subtitle (AR) is required";
+
+    // Keep derived fields in sync for display/API fallbacks
+    formData.eventTitle = formData.eventTitleEn;
+    formData.eventSubtitle = formData.eventSubtitleEn;
     return null;
   },
   renderCardContent: (event) => (

@@ -1,0 +1,58 @@
+{
+  "navbar": {
+    "home": "Home",
+    "events": "Events",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "switchToArabic": "العربية",
+    "switchToEnglish": "English"
+  },
+  "hero": {
+    "title": "Creating Unforgettable Moments",
+    "subtitle": "Transform your vision into reality with elegant, bespoke event planning services that exceed expectations.",
+    "cta": "Explore Services",
+    "imageAlt": "Elegant event setup"
+  },
+  "welcome": {
+    "title": "Welcome to Wassim Alkharrat Events",
+    "description": "With over a decade of experience, we specialize in crafting extraordinary experiences that celebrate life's most precious moments. Our team of dedicated professionals combines creativity, precision, and passion to deliver events that leave lasting impressions.",
+    "author": "Wassim Alkharrat ..."
+  },
+  "services": {
+    "title": "Services",
+    "viewAll": "View All",
+    "empty": "No services available at the moment.",
+    "learnMore": "Learn more"
+  },
+  "events": {
+    "title": "Events",
+    "empty": "No events available at the moment.",
+    "explore": "Explore Events"
+  },
+  "stories": {
+    "title": "Stories",
+    "empty": "No stories available at the moment.",
+    "previous": "Previous story",
+    "next": "Next story"
+  },
+  "cta": {
+    "title": "Ready to Plan Your Dream Event?",
+    "description": "Let's create something extraordinary together. Get in touch with our team to start planning your unforgettable celebration.",
+    "button": "Connect Us",
+    "imageAlt": "Luxurious outdoor event with floral arch and ocean backdrop"
+  },
+  "footer": {
+    "companyName": "Wassim Alkharrat",
+    "slogan": "Creating unforgettable moments with elegance, creativity, and precision. Your dream event awaits.",
+    "quickLinks": "Quick Links",
+    "connect": "Connect Us",
+    "home": "Home",
+    "services": "Services",
+    "events": "Events",
+    "accessories": "Accessories",
+    "about": "About us",
+    "copyright": "© All rights reserved, 2025"
+  }
+}
+
