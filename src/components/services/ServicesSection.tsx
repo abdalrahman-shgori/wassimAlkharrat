@@ -6,6 +6,7 @@ import Link from 'next/link';
 import venue from "../../../public/images/homepage/venue.svg";
 import arrowRight from "../../../public/images/arrowRight.svg";
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 interface Service {
   _id: string;
@@ -39,27 +40,45 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
     return venue;
   };
 
+  const fadeUp = {
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
-    <section className={styles.servicesSection}>
+    <motion.section 
+      className={styles.servicesSection}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.12, duration: 0.6, ease: "easeOut" }}
+    >
       <div className={styles.servicesSectionHeader}>
-        <h1 className={styles.servicesSectionTitle}>Services</h1>
-        <Link href='/services' className={styles.servicesSectionLink}>View All</Link>
+        <motion.h1 className={styles.servicesSectionTitle} variants={fadeUp}>Services</motion.h1>
+        <motion.div variants={fadeUp}>
+          <Link href='/services' className={styles.servicesSectionLink}>View All</Link>
+        </motion.div>
       </div>
       <div className={styles.servicesSectionContent}>
         {safeServices.length === 0 ? (
-          <div className={styles.error}>
+          <motion.div className={styles.error} variants={fadeUp}>
             No services available at the moment.
-          </div>
+          </motion.div>
         ) : (
           safeServices.map((service) => {
             const imageSrc = getImageSrc(service);
             const isCloudinaryImage = service.image && (service.image.startsWith('http://') || service.image.startsWith('https://'));
             
             return (
+              <motion.div
+                key={service._id}
+                variants={fadeUp}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                whileHover={{ translateY: -6, scale: 1.01 }}
+              >
               <Link 
                 href={`/services/${service.slug}`} 
                 className={styles.servicesSectionContentItem} 
-                key={service._id}
               >
                 {isCloudinaryImage ? (
                   <Image 
@@ -85,10 +104,11 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
                   <Image src={arrowRight} alt="arrow" className={styles.servicesSectionContentItemLinkArrow} />
                 </div>
               </Link>
+              </motion.div>
             );
           })
         )}
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import Image from 'next/image';
 import styles from './EventsSection.module.scss';
+import { motion } from 'framer-motion';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -33,13 +34,24 @@ export default function EventsSection({ events }: EventsSectionProps) {
   const loopEvents =
     safeEvents.length < 4 ? [...safeEvents, ...safeEvents, ...safeEvents] : safeEvents;
 
-  return (
-    <section className={styles.eventsSection}>
-      <h1 className={styles.eventsSectionTitle}>Events</h1>
+  const container = {
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0 },
+  };
 
-      <div className={styles.eventsSectionContent}>
+  return (
+    <motion.section 
+      className={styles.eventsSection}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.15, duration: 0.6, ease: "easeOut" }}
+    >
+      <motion.h1 className={styles.eventsSectionTitle} variants={container}>Events</motion.h1>
+
+      <motion.div className={styles.eventsSectionContent} variants={container}>
         {safeEvents.length === 0 ? (
-          <div className={styles.error}>No events available at the moment.</div>
+          <motion.div className={styles.error} variants={container}>No events available at the moment.</motion.div>
         ) : (
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
@@ -67,7 +79,13 @@ export default function EventsSection({ events }: EventsSectionProps) {
 
               return (
                 <SwiperSlide key={event._id + '-' + index} className={styles.eventSlide}>
-                  <div className={styles.eventCard}>
+                  <motion.div 
+                    className={styles.eventCard}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
+                  >
                     {isCloudinaryImage ? (
                       <img
                         src={event.image}
@@ -88,15 +106,22 @@ export default function EventsSection({ events }: EventsSectionProps) {
                       <h3 className={styles.eventSubtitle}>{event.eventTitle}</h3>
                       <p className={styles.eventDescription}>{event.eventSubtitle}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 </SwiperSlide>
               );
             })}
           </Swiper>
         )}
 
-        <button className={styles.exploreButton}>Explore Events</button>
-      </div>
-    </section>
+        <motion.button 
+          className={styles.exploreButton}
+          variants={container}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Explore Events
+        </motion.button>
+      </motion.div>
+    </motion.section>
   );
 }

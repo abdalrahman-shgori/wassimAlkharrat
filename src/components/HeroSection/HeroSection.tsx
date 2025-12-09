@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Button from "@/components/Button/Button";
 import styles from "./HeroSection.module.scss";
+import { motion } from "framer-motion";
 
 interface HeroSectionProps {
   imageSrc: string;
@@ -53,8 +54,18 @@ export default function HeroSection({
     scrollToNext();
   };
 
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
-    <section className={styles.heroSection}>
+    <motion.section 
+      className={styles.heroSection}
+      initial="hidden"
+      animate="visible"
+      transition={{ staggerChildren: 0.15, duration: 0.7, ease: "easeOut" }}
+    >
       <Image
         src={imageSrc}
         alt={imageAlt}
@@ -65,18 +76,25 @@ export default function HeroSection({
       />
 
       <div className={styles.heroContent}>
-        <h1 className={styles.heroTitle}>{title}</h1>
-        <p className={styles.heroSubtitle}>{subtitle}</p>
-        <Button href={ctaLink} >
-         {ctaText}  
-        </Button>
+        <motion.h1 className={styles.heroTitle} variants={fadeUp}>{title}</motion.h1>
+        <motion.p className={styles.heroSubtitle} variants={fadeUp}>{subtitle}</motion.p>
+        <motion.div variants={fadeUp}>
+          <Button href={ctaLink} >
+           {ctaText}  
+          </Button>
+        </motion.div>
       </div>
 
       {showScrollIndicator && (
-        <div className={styles.scrollIndicator} onClick={handleScrollIndicatorClick}>
+        <motion.div 
+          className={styles.scrollIndicator} 
+          onClick={handleScrollIndicatorClick}
+          variants={fadeUp}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
           <div className={styles.mouse}></div>
-        </div>
+        </motion.div>
       )}
-    </section>
+    </motion.section>
   );
 }

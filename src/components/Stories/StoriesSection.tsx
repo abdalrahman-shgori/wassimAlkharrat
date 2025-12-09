@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './StoriesSection.module.scss';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 interface Story {
   _id: string;
@@ -116,7 +117,13 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   // Show empty state if no stories
   if (activeStories.length === 0) {
     return (
-      <section className={styles.storiesSection}>
+      <motion.section 
+        className={styles.storiesSection}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
+      >
         <h2 className={styles.storiesTitleTop}>Stories</h2>
         <div className={styles.storiesCard}>
           <div className={styles.textContainer}>
@@ -124,7 +131,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
             <p className={styles.error}>No stories available at the moment.</p>
           </div>
         </div>
-      </section>
+      </motion.section>
     );
   }
 
@@ -132,7 +139,13 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
     (currentStory.image.startsWith('http://') || currentStory.image.startsWith('https://'));
 
   return (
-    <section className={styles.storiesSection}>
+    <motion.section 
+      className={styles.storiesSection}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+    >
       <h2 className={styles.storiesTitleTop}>Stories</h2>
 
       <div className={styles.storiesCard}>
@@ -171,7 +184,10 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
           <h2 className={styles.storiesTitle}>Stories</h2>
           
           <div className={styles.testimonialWrapper}>
-            <div className={`${styles.testimonialContent} ${isTransitioning ? styles.fading : ''}`}>
+            <div 
+              className={`${styles.testimonialContent} ${isTransitioning ? styles.fading : ''}`}
+              key={currentIndex}
+            >
               <p className={styles.testimonial}>{currentStory.testimonial}</p>
               <p className={styles.names}>
                 {displayedNames}
@@ -203,6 +219,6 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
