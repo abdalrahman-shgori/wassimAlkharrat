@@ -5,6 +5,7 @@ import Button from "@/components/UI/Button/Button";
 import styles from "./HeroSection.module.scss";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+
 interface HeroSectionProps {
   imageSrc: string;
   imageAlt?: string;
@@ -15,21 +16,13 @@ interface HeroSectionProps {
   showScrollIndicator?: boolean;
   isHomePage?: boolean;
   sectionTitle?: string;
-  /**
-   * The id of the next section to scroll to when the user
-   * clicks the scroll indicator.
-   */
   nextSectionId?: string;
-  /**
-   * Optional override to handle the scroll indicator click,
-   * useful when using full-page navigation plugins.
-   */
   onScrollIndicatorClick?: () => void;
 }
 
 export default function HeroSection({
   imageSrc,
-  imageAlt = "Hero background",
+  imageAlt = "Event services and creative solutions",
   title,
   subtitle,
   ctaText,
@@ -38,25 +31,24 @@ export default function HeroSection({
   nextSectionId,
   sectionTitle,
   onScrollIndicatorClick,
-  isHomePage = false 
+  isHomePage = false,
 }: HeroSectionProps) {
   const t = useTranslations();
+
+  // ✅ SAFE TRANSLATION HANDLER
+  const translate = (value?: string) => {
+    if (!value) return '';
+    return t.has(value) ? t(value) : value;
+  };
+
   const scrollToNext = () => {
     if (!nextSectionId) return;
-
     const nextElement = document.getElementById(nextSectionId);
-    if (!nextElement) return;
-
-    nextElement.scrollIntoView({ behavior: "smooth" });
+    nextElement?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleScrollIndicatorClick = () => {
-    if (onScrollIndicatorClick) {
-      onScrollIndicatorClick();
-      return;
-    }
-
-    scrollToNext();
+    onScrollIndicatorClick ? onScrollIndicatorClick() : scrollToNext();
   };
 
   const fadeUp = {
@@ -65,7 +57,7 @@ export default function HeroSection({
   };
 
   return (
-    <motion.section 
+    <motion.section
       className={styles.heroSection}
       initial="hidden"
       animate="visible"
@@ -82,22 +74,34 @@ export default function HeroSection({
 
       <div className={styles.heroContent}>
         {sectionTitle && (
-          <motion.h5 className={styles.heroSectionTitle} variants={fadeUp}>{t(sectionTitle)}</motion.h5>
+          <motion.h5
+            className={styles.heroSectionTitle}
+            variants={fadeUp}
+          >
+            {translate(sectionTitle)}
+          </motion.h5>
         )}
-        <motion.h1 className={styles.heroTitle} variants={fadeUp}>{t(title)}</motion.h1>
-        <motion.p className={styles.heroSubtitle} variants={fadeUp}>{t(subtitle)}</motion.p>
+
+        <motion.h1 className={styles.heroTitle} variants={fadeUp}>
+          {translate(title)}
+        </motion.h1>
+
+        <motion.p className={styles.heroSubtitle} variants={fadeUp}>
+          {translate(subtitle)}
+        </motion.p>
+
         {isHomePage && (
           <motion.div variants={fadeUp}>
-            <Button href={ctaLink} >
-              {ctaText}  
+            <Button href={ctaLink}>
+              {translate(ctaText)}
             </Button>
           </motion.div>
         )}
       </div>
 
       {showScrollIndicator && (
-        <motion.div 
-          className={styles.scrollIndicator} 
+        <motion.div
+          className={styles.scrollIndicator}
           onClick={handleScrollIndicatorClick}
           variants={fadeUp}
           transition={{ duration: 0.6, delay: 0.3 }}

@@ -34,9 +34,9 @@ async function getLocale(): Promise<Locale> {
 async function getServiceBySlug(slug: string, locale: Locale) {
   try {
     const servicesCollection = await getServicesCollection();
-    const service = await servicesCollection.findOne({ 
-      slug, 
-      isActive: true 
+    const service = await servicesCollection.findOne({
+      slug,
+      isActive: true
     });
 
     if (!service) {
@@ -136,7 +136,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
           <WhatWeDoSection items={service.whatWeDo} />
         )}
       </section>
-      <CTASection/>
+      <CTASection />
     </>
   );
 }
