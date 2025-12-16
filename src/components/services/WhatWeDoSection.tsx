@@ -47,7 +47,7 @@ export default function WhatWeDoSection({ items }: WhatWeDoSectionProps) {
       viewport={{ once: true, amount: 0.2 }}
       transition={{ staggerChildren: 0.15, duration: 0.6, ease: "easeOut" }}
     >
-      <h1 className={styles.whatWeDoSectionTitle}>{t('whatWeDo')}</h1>
+      <h2 className={styles.whatWeDoSectionTitle}>{t('whatWeDo')}</h2>
 
       <div className={styles.whatWeDoContainer}>
         {items.map((item, index) => {
