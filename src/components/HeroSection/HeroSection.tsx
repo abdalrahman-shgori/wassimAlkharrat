@@ -40,7 +40,7 @@ export default function HeroSection({
   onScrollIndicatorClick,
   isHomePage = false 
 }: HeroSectionProps) {
-  const t = useTranslations('services');
+  const t = useTranslations();
   const scrollToNext = () => {
     if (!nextSectionId) return;
 
@@ -84,8 +84,8 @@ export default function HeroSection({
         {sectionTitle && (
           <motion.h5 className={styles.heroSectionTitle} variants={fadeUp}>{t(sectionTitle)}</motion.h5>
         )}
-        <motion.h1 className={styles.heroTitle} variants={fadeUp}>{title}</motion.h1>
-        <motion.p className={styles.heroSubtitle} variants={fadeUp}>{subtitle}</motion.p>
+        <motion.h1 className={styles.heroTitle} variants={fadeUp}>{t(title)}</motion.h1>
+        <motion.p className={styles.heroSubtitle} variants={fadeUp}>{t(subtitle)}</motion.p>
         {isHomePage && (
           <motion.div variants={fadeUp}>
             <Button href={ctaLink} >

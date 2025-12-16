@@ -51,7 +51,6 @@ export function HomePage({ services, events, stories, heroImage }: HomePageProps
     <>
       <HomepageHero imageSrc={heroImage} isHomePage={true} />
        <WelcomeToSection
-       
        title={t('title')}
        description={t('description')}
        author={t('author')}

@@ -17,8 +17,8 @@ export default function HomepageHero({ imageSrc, onScrollDown, isHomePage = fals
       <HeroSection
         imageSrc={imageSrc || "/images/homepage/DSC06702.webp"}
         imageAlt={t('imageAlt')}
-        title={t('title')}
-        subtitle={t('subtitle')}
+        title="hero.title"
+        subtitle="hero.subtitle"
         ctaText={t('cta')}
         ctaLink="/services"
         showScrollIndicator={true}

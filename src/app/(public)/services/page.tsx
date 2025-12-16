@@ -97,11 +97,11 @@ export default async function ServicesPage() {
     <>
       <HeroSection
         imageSrc="/images/services/servicesPage.webp"
-        title={heroTranslations?.title || 'Events That Inspire Awe'}
-        subtitle={heroTranslations?.subtitle || 'We transform your vision into exquisite experiences, curated with artistry and intention.'}
+        title={heroTranslations?.title || 'services.EventsThat'}
+        subtitle={heroTranslations?.subtitle || 'services.WeTransform'}
         ctaText={heroTranslations?.ctaText || 'Services'}
         ctaLink="/services"
-        sectionTitle="title"
+        sectionTitle="services.title"
         nextSectionId="services-next-section"
       />
       <ServicesSection services={services} filters={filters} />
