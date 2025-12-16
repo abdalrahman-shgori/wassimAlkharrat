@@ -116,7 +116,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
 
   const imageSrc = getImageSrc();
   const isCloudinaryImage = service.image && (service.image.startsWith('http://') || service.image.startsWith('https://'));
-
+ console.log(service)
   return (
     <>
       <HeroSection
@@ -125,7 +125,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
         subtitle={service.description}
         ctaText=""
         ctaLink=""
-        sectionTitle={service.name}
+        sectionTitle="title"
         nextSectionId="service-detail-content"
       />
       <section id="service-detail-content" className={styles.serviceDetailSection}>

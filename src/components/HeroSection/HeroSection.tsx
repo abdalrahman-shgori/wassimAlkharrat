@@ -4,7 +4,7 @@ import Image from "next/image";
 import Button from "@/components/UI/Button/Button";
 import styles from "./HeroSection.module.scss";
 import { motion } from "framer-motion";
-
+import { useTranslations } from "next-intl";
 interface HeroSectionProps {
   imageSrc: string;
   imageAlt?: string;
@@ -40,6 +40,7 @@ export default function HeroSection({
   onScrollIndicatorClick,
   isHomePage = false 
 }: HeroSectionProps) {
+  const t = useTranslations('services');
   const scrollToNext = () => {
     if (!nextSectionId) return;
 
@@ -81,7 +82,7 @@ export default function HeroSection({
 
       <div className={styles.heroContent}>
         {sectionTitle && (
-          <motion.h5 className={styles.heroSectionTitle} variants={fadeUp}>{sectionTitle}</motion.h5>
+          <motion.h5 className={styles.heroSectionTitle} variants={fadeUp}>{t(sectionTitle)}</motion.h5>
         )}
         <motion.h1 className={styles.heroTitle} variants={fadeUp}>{title}</motion.h1>
         <motion.p className={styles.heroSubtitle} variants={fadeUp}>{subtitle}</motion.p>
