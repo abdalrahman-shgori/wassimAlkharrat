@@ -124,7 +124,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
         subtitle={service.description}
         ctaText=""
         ctaLink=""
-        sectionTitle="title"
+        sectionTitle="services.title"
         nextSectionId="service-detail-content"
       />
       <section id="service-detail-content" className={styles.serviceDetailSection}>
