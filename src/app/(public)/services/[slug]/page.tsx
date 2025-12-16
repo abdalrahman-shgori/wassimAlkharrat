@@ -116,7 +116,6 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
 
   const imageSrc = getImageSrc();
   const isCloudinaryImage = service.image && (service.image.startsWith('http://') || service.image.startsWith('https://'));
- console.log(service)
   return (
     <>
       <HeroSection
