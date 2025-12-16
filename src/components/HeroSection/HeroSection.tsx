@@ -13,6 +13,8 @@ interface HeroSectionProps {
   ctaText: string;
   ctaLink: string;
   showScrollIndicator?: boolean;
+  isHomePage?: boolean;
+  sectionTitle?: string;
   /**
    * The id of the next section to scroll to when the user
    * clicks the scroll indicator.
@@ -34,7 +36,9 @@ export default function HeroSection({
   ctaLink,
   showScrollIndicator = true,
   nextSectionId,
+  sectionTitle,
   onScrollIndicatorClick,
+  isHomePage = false 
 }: HeroSectionProps) {
   const scrollToNext = () => {
     if (!nextSectionId) return;
@@ -76,13 +80,18 @@ export default function HeroSection({
       />
 
       <div className={styles.heroContent}>
+        {sectionTitle && (
+          <motion.h5 className={styles.heroSectionTitle} variants={fadeUp}>{sectionTitle}</motion.h5>
+        )}
         <motion.h1 className={styles.heroTitle} variants={fadeUp}>{title}</motion.h1>
         <motion.p className={styles.heroSubtitle} variants={fadeUp}>{subtitle}</motion.p>
-        <motion.div variants={fadeUp}>
-          <Button href={ctaLink} >
-           {ctaText}  
-          </Button>
-        </motion.div>
+        {isHomePage && (
+          <motion.div variants={fadeUp}>
+            <Button href={ctaLink} >
+              {ctaText}  
+            </Button>
+          </motion.div>
+        )}
       </div>
 
       {showScrollIndicator && (

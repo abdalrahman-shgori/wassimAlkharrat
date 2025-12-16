@@ -16,19 +16,37 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  const servicesPageRoutes = useMemo(
+    () => ["/admin/services-page"],
+    []
+  );
+  const isServicesPageActive = servicesPageRoutes.some((route) => pathname?.startsWith(route));
+  const [isServicesPageOpen, setIsServicesPageOpen] = useState(isServicesPageActive);
+
   const homepageRoutes = useMemo(
     () => ["/admin/hero-section", "/admin/services", "/admin/events", "/admin/stories"],
     []
   );
-  const isHomepageActive = homepageRoutes.some((route) => pathname?.startsWith(route));
+  // Check homepage routes, but exclude services-page routes to avoid conflicts
+  // This prevents /admin/services-page from matching /admin/services
+  const isHomepageActive = !isServicesPageActive && homepageRoutes.some((route) => pathname?.startsWith(route));
   const [isHomepageOpen, setIsHomepageOpen] = useState(isHomepageActive);
 
   useEffect(() => {
-    // Keep dropdown open when visiting a child route from the group
+    // Update homepage dropdown state
     if (isHomepageActive) {
       setIsHomepageOpen(true);
+    } else {
+      setIsHomepageOpen(false);
     }
-  }, [isHomepageActive]);
+    
+    // Update services page dropdown state
+    if (isServicesPageActive) {
+      setIsServicesPageOpen(true);
+    } else {
+      setIsServicesPageOpen(false);
+    }
+  }, [isHomepageActive, isServicesPageActive]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -103,6 +121,30 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
                         href="/admin/stories"
                         icon="📖"
                         label="Stories"
+                        onClick={closeMobileMenu}
+                      />
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </li>
+            <li>
+              <div className={styles.dropdown}>
+                <button
+                  type="button"
+                  className={`${styles.dropdownHeader} ${isServicesPageActive ? styles.dropdownActive : ""}`}
+                  onClick={() => setIsServicesPageOpen((prev) => !prev)}
+                >
+                  <span className={styles.dropdownLabel}>📄 Services Page</span>
+                  <span className={`${styles.chevron} ${isServicesPageOpen ? styles.chevronOpen : ""}`}>▸</span>
+                </button>
+                {isServicesPageOpen && (
+                  <ul className={styles.dropdownList}>
+                    <li>
+                      <NavLink
+                        href="/admin/services-page/filters"
+                        icon="🔍"
+                        label="Services Filters"
                         onClick={closeMobileMenu}
                       />
                     </li>

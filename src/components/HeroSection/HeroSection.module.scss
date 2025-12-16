@@ -51,6 +51,13 @@
   margin-bottom: var(--spacing-medium);
 }
 
+.heroSectionTitle {
+  font-size: var(--hero-subtitle-size);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--white);
+}
+
 .heroSubtitle {
   font-size: var(--hero-subtitle-size);
   max-width: 821px;

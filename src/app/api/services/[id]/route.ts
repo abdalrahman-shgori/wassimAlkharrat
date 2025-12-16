@@ -36,6 +36,10 @@ export async function GET(
     const descriptionEn = service.descriptionEn ?? service.description ?? "";
     const nameAr = service.nameAr ?? null;
     const descriptionAr = service.descriptionAr ?? null;
+    const titleEn = service.titleEn ?? service.title ?? null;
+    const titleAr = service.titleAr ?? null;
+    const detailsEn = service.detailsEn ?? service.details ?? null;
+    const detailsAr = service.detailsAr ?? null;
 
     // Strip legacy "order" field if present
     const { order: _order, ...safeService } = service as any;
@@ -46,10 +50,17 @@ export async function GET(
         ...safeService,
         name: pickLocalizedString(locale, { en: nameEn, ar: nameAr }),
         description: pickLocalizedString(locale, { en: descriptionEn, ar: descriptionAr }),
+        title: titleEn || titleAr ? pickLocalizedString(locale, { en: titleEn, ar: titleAr }) : null,
+        details: detailsEn || detailsAr ? pickLocalizedString(locale, { en: detailsEn, ar: detailsAr }) : null,
+        whatWeDo: safeService.whatWeDo || null,
         nameEn,
         nameAr: nameAr ?? "",
         descriptionEn,
         descriptionAr: descriptionAr ?? "",
+        titleEn: titleEn ?? "",
+        titleAr: titleAr ?? "",
+        detailsEn: detailsEn ?? "",
+        detailsAr: detailsAr ?? "",
       },
     });
   } catch (error) {
@@ -118,9 +129,23 @@ export async function PUT(
     if (body.description !== undefined) updateData.description = body.description;
     if (body.descriptionEn !== undefined) updateData.descriptionEn = body.descriptionEn;
     if (body.descriptionAr !== undefined) updateData.descriptionAr = body.descriptionAr;
+    if (body.title !== undefined) updateData.title = body.title;
+    if (body.titleEn !== undefined) {
+      updateData.title = body.titleEn;
+      updateData.titleEn = body.titleEn;
+    }
+    if (body.titleAr !== undefined) updateData.titleAr = body.titleAr;
+    if (body.details !== undefined) updateData.details = body.details;
+    if (body.detailsEn !== undefined) {
+      updateData.details = body.detailsEn;
+      updateData.detailsEn = body.detailsEn;
+    }
+    if (body.detailsAr !== undefined) updateData.detailsAr = body.detailsAr;
     if (body.icon !== undefined) updateData.icon = body.icon;
     if (body.image !== undefined) updateData.image = body.image;
+    if (body.filterKey !== undefined) updateData.filterKey = body.filterKey;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
+    if (body.whatWeDo !== undefined) updateData.whatWeDo = body.whatWeDo;
 
     // Update service
     const result = await servicesCollection.findOneAndUpdate(

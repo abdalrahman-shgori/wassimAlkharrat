@@ -6,9 +6,10 @@ import { useTranslations } from 'next-intl';
 interface HomepageHeroProps {
   imageSrc: string;
   onScrollDown?: () => void;
+  isHomePage?: boolean;
 }
 
-export default function HomepageHero({ imageSrc, onScrollDown }: HomepageHeroProps) {
+export default function HomepageHero({ imageSrc, onScrollDown, isHomePage = false }: HomepageHeroProps) {
   const t = useTranslations('hero');
 
   return (
@@ -23,6 +24,7 @@ export default function HomepageHero({ imageSrc, onScrollDown }: HomepageHeroPro
         showScrollIndicator={true}
         nextSectionId="homepage-next-section"
         onScrollIndicatorClick={onScrollDown}
+        isHomePage={isHomePage}
       />
     </>
   );

@@ -9,13 +9,16 @@ import styles from "./admin.module.scss";
 export interface FormField {
   name: string;
   label: string;
-  type: "text" | "textarea" | "number" | "checkbox" | "image" | "icon" | "slug";
+  type: "text" | "textarea" | "number" | "checkbox" | "image" | "icon" | "slug" | "select" | "custom";
   placeholder?: string;
   required?: boolean;
   maxLength?: number;
   rows?: number;
   helpText?: string;
   generateSlug?: (value: string) => string;
+  options?: { value: string; label: string }[]; // For select type
+  fetchOptions?: () => Promise<{ value: string; label: string }[]>; // For dynamic select options
+  customRender?: (value: any, onChange: (value: any) => void, formData: any) => React.ReactNode; // For custom field type
 }
 
 export interface AdminCRUDConfig<T = any> {
@@ -395,6 +398,41 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
                         placeholder={field.placeholder}
                       />
                       {field.helpText && <small>{field.helpText}</small>}
+                    </div>
+                  );
+                }
+
+                if (field.type === "select") {
+                  return (
+                    <div key={field.name} className={styles.formGroup}>
+                      <label>
+                        {field.label} {field.required && "*"}
+                      </label>
+                      <select
+                        value={(formData as any)[field.name] || ""}
+                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                        required={field.required}
+                      >
+                        <option value="">{field.placeholder || "Select an option..."}</option>
+                        {field.options?.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      {field.helpText && <small>{field.helpText}</small>}
+                    </div>
+                  );
+                }
+
+                if (field.type === "custom" && field.customRender) {
+                  return (
+                    <div key={field.name} className={styles.formGroup}>
+                      {field.customRender(
+                        (formData as any)[field.name],
+                        (value) => handleFieldChange(field.name, value),
+                        formData
+                      )}
                     </div>
                   );
                 }

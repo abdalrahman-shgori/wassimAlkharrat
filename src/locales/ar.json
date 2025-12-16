@@ -22,8 +22,11 @@
   "services": {
     "title": "الخدمات",
     "viewAll": "عرض الكل",
+    "allFilters": "الكل",
+    "loading": "جاري التحميل...",
     "empty": "لا تتوفر خدمات حالياً.",
-    "learnMore": "اكتشف المزيد"
+    "learnMore": "اكتشف المزيد",
+    "whatWeDo": "ما نفعله"
   },
   "events": {
     "title": "الفعاليات",

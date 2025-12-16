@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import styles from './welcomeToSection.module.scss';
 import logo from "../../../public/images/welcomeLogo.svg";
 import Image from 'next/image';
-export default function WelcomeToSection() {
+export default function WelcomeToSection({title,description,author}: {title: string, description: string, author?: string}) {
   const t = useTranslations('welcome');
 
   const fadeUp = {
@@ -28,9 +28,9 @@ export default function WelcomeToSection() {
             <Image src={logo} alt="logo" className={styles.welcomeToSectionLogoImage} />
         </motion.div>
         <motion.div className={styles.welcomeToSectionContent} variants={fadeUp}>
-          <h1 className={styles.welcomeToSectionTitle}>{t('title')}</h1>
-          <p className={styles.welcomeToSectionDescription}>{t('description')}</p>
-        <h5 className={styles.welcomeToSectionAuthor}>{t('author')}</h5>
+          <h1 className={styles.welcomeToSectionTitle}>{title}</h1>
+          <p className={styles.welcomeToSectionDescription}>{description}</p>
+        <h5 className={styles.welcomeToSectionAuthor}>{author}</h5>
         </motion.div>
 
      

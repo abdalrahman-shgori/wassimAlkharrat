@@ -23,9 +23,15 @@ export default function NavLink({ href, icon, label, onClick }: NavLinkProps) {
     // Direct match
     if (pathname === href) return true;
     
+    // Special case: prevent /admin/services from matching /admin/services-page
+    if (href === "/admin/services" && pathname.startsWith("/admin/services-page")) {
+      return false;
+    }
+    
     // Check for nested routes (but not for /admin root)
+    // Match if pathname starts with href + "/" to ensure exact prefix matching
     if (href !== "/admin" && typeof pathname === "string" && typeof href === "string") {
-      return pathname.startsWith(href);
+      return pathname.startsWith(href + "/") || pathname === href;
     }
     
     

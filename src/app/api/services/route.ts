@@ -13,9 +13,15 @@ export async function GET(request: NextRequest) {
     // Get query parameters
     const { searchParams } = new URL(request.url);
     const activeOnly = searchParams.get("active") === "true";
+    const filterKey = searchParams.get("filterKey");
     
     // Build query
-    const query = activeOnly ? { isActive: true } : {};
+    const query: any = activeOnly ? { isActive: true } : {};
+    
+    // Add filterKey to query if provided
+    if (filterKey) {
+      query.filterKey = filterKey;
+    }
     
     // Fetch services sorted by newest first
     const services = await servicesCollection
@@ -28,19 +34,35 @@ export async function GET(request: NextRequest) {
       const descriptionEn = service.descriptionEn ?? service.description ?? "";
       const nameAr = service.nameAr ?? null;
       const descriptionAr = service.descriptionAr ?? null;
+      const titleEn = service.titleEn ?? service.title ?? null;
+      const titleAr = service.titleAr ?? null;
+      const detailsEn = service.detailsEn ?? service.details ?? null;
+      const detailsAr = service.detailsAr ?? null;
 
       // Strip legacy "order" field if it exists
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { order: _order, ...safeService } = service as any;
 
       return {
-        ...safeService,
+        _id: safeService._id?.toString() || safeService._id,
+        slug: safeService.slug,
+        icon: safeService.icon || "🎉",
+        image: safeService.image,
+        filterKey: safeService.filterKey,
+        isActive: safeService.isActive ?? true,
+        whatWeDo: safeService.whatWeDo || null,
         name: pickLocalizedString(locale, { en: nameEn, ar: nameAr }),
         description: pickLocalizedString(locale, { en: descriptionEn, ar: descriptionAr }),
+        title: titleEn || titleAr ? pickLocalizedString(locale, { en: titleEn, ar: titleAr }) : null,
+        details: detailsEn || detailsAr ? pickLocalizedString(locale, { en: detailsEn, ar: detailsAr }) : null,
         nameEn,
         nameAr: nameAr ?? "",
         descriptionEn,
         descriptionAr: descriptionAr ?? "",
+        titleEn: titleEn ?? "",
+        titleAr: titleAr ?? "",
+        detailsEn: detailsEn ?? "",
+        detailsAr: detailsAr ?? "",
       };
     });
 
@@ -102,9 +124,37 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date(),
     };
 
+    // Add title fields if provided
+    if (body.titleEn) {
+      newService.title = body.titleEn;
+      newService.titleEn = body.titleEn;
+    }
+    if (body.titleAr) {
+      newService.titleAr = body.titleAr;
+    }
+
+    // Add details fields if provided
+    if (body.detailsEn) {
+      newService.details = body.detailsEn;
+      newService.detailsEn = body.detailsEn;
+    }
+    if (body.detailsAr) {
+      newService.detailsAr = body.detailsAr;
+    }
+
     // Add image if provided
     if (body.image) {
       newService.image = body.image;
+    }
+
+    // Add filterKey if provided
+    if (body.filterKey) {
+      newService.filterKey = body.filterKey;
+    }
+
+    // Add whatWeDo array if provided
+    if (body.whatWeDo && Array.isArray(body.whatWeDo) && body.whatWeDo.length > 0) {
+      newService.whatWeDo = body.whatWeDo;
     }
 
     const result = await servicesCollection.insertOne(newService);

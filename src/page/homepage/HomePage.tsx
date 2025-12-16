@@ -1,3 +1,4 @@
+'use client';
 import WelcomeToSection from '@/components/welcomeTo/welcomeToSection';
 import HomepageHero from './HeroSection';
 import ServicesSection from '@/components/services/ServicesSection';
@@ -5,7 +6,7 @@ import EventsSection from '@/components/Events/EventsSection';
 import StoriesSection from '@/components/Stories/StoriesSection';
 import CTASection from '@/components/UI/CTASection/CTASection';
 import styles from './HomePage.module.scss';
-
+import { useTranslations } from 'next-intl';
 interface Service {
   _id: string;
   name: string;
@@ -44,12 +45,18 @@ export function HomePage({ services, events, stories, heroImage }: HomePageProps
   const safeServices = services || [];
   const safeEvents = events || [];
   const safeStories = stories || [];
+  const t = useTranslations('welcome');
 
   return (
     <>
-      <HomepageHero imageSrc={heroImage} />
-       <WelcomeToSection/>
-       <ServicesSection services={safeServices} />
+      <HomepageHero imageSrc={heroImage} isHomePage={true} />
+       <WelcomeToSection
+       
+       title={t('title')}
+       description={t('description')}
+       author={t('author')}
+       />
+       <ServicesSection services={safeServices} isHomePage={true} />
        <div className={styles.sectionsWrapper}>
        <EventsSection events={safeEvents} />
        <StoriesSection stories={safeStories} />

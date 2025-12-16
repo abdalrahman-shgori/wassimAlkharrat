@@ -22,8 +22,11 @@
   "services": {
     "title": "Services",
     "viewAll": "View All",
+    "allFilters": "All",
+    "loading": "Loading...",
     "empty": "No services available at the moment.",
-    "learnMore": "Learn more"
+    "learnMore": "Learn more",
+    "whatWeDo": "What We Do"
   },
   "events": {
     "title": "Events",
