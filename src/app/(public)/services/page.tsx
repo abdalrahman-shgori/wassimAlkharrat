@@ -101,7 +101,7 @@ export default async function ServicesPage() {
         subtitle={heroTranslations?.subtitle || 'We transform your vision into exquisite experiences, curated with artistry and intention.'}
         ctaText={heroTranslations?.ctaText || 'Services'}
         ctaLink="/services"
-        sectionTitle={heroTranslations?.sectionTitle || 'Services'}
+        sectionTitle="title"
         nextSectionId="services-next-section"
       />
       <ServicesSection services={services} filters={filters} />
