@@ -31,8 +31,34 @@ export default function EventsSection({ events }: EventsSectionProps) {
   const locale = useLocale();
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   
-  // Preserve events during locale transitions to prevent disappearing
+  // Get current direction from DOM (RTL/LTR)
+  const [direction, setDirection] = useState<'ltr' | 'rtl'>('ltr');
+  
+  // Preserve events during locale/direction transitions
   const [preservedEvents, setPreservedEvents] = useState<Event[]>(safeEvents);
+  
+  // Update direction from DOM when locale changes
+  useEffect(() => {
+    const updateDirection = () => {
+      const dir = document.documentElement.dir || document.body?.getAttribute('data-direction') || 'ltr';
+      setDirection(dir as 'ltr' | 'rtl');
+    };
+    
+    updateDirection();
+    
+    // Watch for direction changes
+    const observer = new MutationObserver(updateDirection);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['dir'],
+    });
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['data-direction'],
+    });
+    
+    return () => observer.disconnect();
+  }, [locale]);
   
   // Update preserved events when new events arrive (and they're not empty)
   useEffect(() => {
@@ -41,7 +67,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
     }
   }, [safeEvents]);
   
-  // Use preserved events to prevent disappearing during locale changes
+  // Use preserved events to prevent disappearing during locale/direction changes
   const displayEvents = preservedEvents.length > 0 ? preservedEvents : safeEvents;
   
   // ⭐ FIX FOR LOOP STOPPING:
@@ -50,19 +76,20 @@ export default function EventsSection({ events }: EventsSectionProps) {
   const loopEvents =
     displayEvents.length < 20 ? [...displayEvents, ...displayEvents, ...displayEvents] : displayEvents;
 
-  // Update Swiper when locale changes to prevent whitespace
+  // Update Swiper when locale or direction changes
   useEffect(() => {
     if (swiperInstance && displayEvents.length > 0) {
-      // Small delay to ensure translations are updated
+      // Small delay to ensure DOM and translations are updated
       const timeoutId = setTimeout(() => {
         swiperInstance.update();
         swiperInstance.updateSlides();
         swiperInstance.updateSlidesClasses();
-      }, 100);
+        swiperInstance.slideTo(0, 0); // Reset to first slide
+      }, 150);
 
       return () => clearTimeout(timeoutId);
     }
-  }, [locale, swiperInstance, displayEvents.length]);
+  }, [locale, direction, swiperInstance, displayEvents.length]);
 
   return (
     <section className={styles.eventsSection}>
@@ -73,12 +100,13 @@ export default function EventsSection({ events }: EventsSectionProps) {
           <div className={styles.error}>{t('empty')}</div>
         ) : (
           <Swiper
-            key={`events-swiper-${locale}-${displayEvents.length}`}
+            key={`events-swiper-${locale}-${direction}-${displayEvents.length}`}
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={24}
             centeredSlides={true}
             loop={displayEvents.length > 1}
             slidesPerView={1.2}
+            dir={direction}
             autoplay={{
               delay: 2500,
               disableOnInteraction: false,
