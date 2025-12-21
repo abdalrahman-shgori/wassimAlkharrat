@@ -65,6 +65,7 @@ export default function EventsSection({ events = [] }: EventsSectionProps) {
             centeredSlides
             loop
             slidesPerView={1.2}
+            dir={locale === 'ar' ? 'rtl' : 'ltr'}
             autoplay={{
               delay: 2500,
               disableOnInteraction: false,
