@@ -4,9 +4,11 @@ import ServicesSection from '@/components/services/ServicesSection';
 import {
   getServicesCollection,
   getServiceFiltersCollection,
+  getServicesPageSettingsCollection,
 } from '../../../../lib/db';
 import { Service } from '../../../../lib/models/Service';
 import { ServiceFilter } from '../../../../lib/models/ServiceFilter';
+import { ServicesPageSettings } from '../../../../lib/models/ServicesPageSettings';
 import {
   Locale,
   defaultLocale,
@@ -109,6 +111,21 @@ async function getAllFilters(locale: Locale) {
 }
 
 /**
+ * Get services page settings (hero image)
+ */
+async function getServicesPageSettings(): Promise<{ heroImage?: string } | null> {
+  try {
+    const collection = await getServicesPageSettingsCollection();
+    const settings = await collection.findOne<ServicesPageSettings>({}, { sort: { updatedAt: -1 } });
+
+    return settings ? { heroImage: settings.heroImage } : null;
+  } catch (error) {
+    console.error('[getServicesPageSettings] Error:', error);
+    return null;
+  }
+}
+
+/**
  * SEO Metadata
  */
 export async function generateMetadata(): Promise<Metadata> {
@@ -153,15 +170,20 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function ServicesPage() {
   const locale = await getLocale();
-  const services = await getAllServices(locale);
-  const filters = await getAllFilters(locale);
+  const [services, filters, servicesPageSettings] = await Promise.all([
+    getAllServices(locale),
+    getAllFilters(locale),
+    getServicesPageSettings(),
+  ]);
   const messages = getMessages(locale);
   const heroTranslations = (messages as any).servicesPage?.hero;
+
+  const heroImage = servicesPageSettings?.heroImage || '/images/services/servicesPage.webp';
 
   return (
     <>
       <HeroSection
-        imageSrc="/images/services/servicesPage.webp"
+        imageSrc={heroImage}
         title={heroTranslations?.title || 'services.EventsThat'}
         subtitle={heroTranslations?.subtitle || 'services.WeTransform'}
         ctaText={heroTranslations?.ctaText || 'Services'}

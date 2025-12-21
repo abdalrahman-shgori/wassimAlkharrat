@@ -4,6 +4,8 @@ import { Service } from "./models/Service";
 import { Event } from "./models/Event";
 import { Story } from "./models/Story";
 import { HomepageSettings } from "./models/HomepageSettings";
+import { ServicesPageSettings } from "./models/ServicesPageSettings";
+import { EventsPageSettings } from "./models/EventsPageSettings";
 import { ServiceFilter } from "./models/ServiceFilter";
 
 export async function getAdminsCollection() {
@@ -46,5 +48,17 @@ export async function getServiceFiltersCollection() {
   const client = await clientPromise;
   const db = client.db("event_planner");
   return db.collection<ServiceFilter>("service_filters");
+}
+
+export async function getServicesPageSettingsCollection() {
+  const client = await clientPromise;
+  const db = client.db("event_planner");
+  return db.collection<ServicesPageSettings>("services_page_settings");
+}
+
+export async function getEventsPageSettingsCollection() {
+  const client = await clientPromise;
+  const db = client.db("event_planner");
+  return db.collection<EventsPageSettings>("events_page_settings");
 }
 

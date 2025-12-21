@@ -17,19 +17,26 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
   const pathname = usePathname();
 
   const servicesPageRoutes = useMemo(
-    () => ["/admin/services-page"],
+    () => ["/admin/services-page", "/admin/services-hero-section"],
     []
   );
   const isServicesPageActive = servicesPageRoutes.some((route) => pathname?.startsWith(route));
   const [isServicesPageOpen, setIsServicesPageOpen] = useState(isServicesPageActive);
 
+  const eventsPageRoutes = useMemo(
+    () => ["/admin/events-hero-section"],
+    []
+  );
+  const isEventsPageActive = eventsPageRoutes.some((route) => pathname?.startsWith(route));
+  const [isEventsPageOpen, setIsEventsPageOpen] = useState(isEventsPageActive);
+
   const homepageRoutes = useMemo(
     () => ["/admin/hero-section", "/admin/services", "/admin/events", "/admin/stories"],
     []
   );
-  // Check homepage routes, but exclude services-page routes to avoid conflicts
+  // Check homepage routes, but exclude services-page and events-page routes to avoid conflicts
   // This prevents /admin/services-page from matching /admin/services
-  const isHomepageActive = !isServicesPageActive && homepageRoutes.some((route) => pathname?.startsWith(route));
+  const isHomepageActive = !isServicesPageActive && !isEventsPageActive && homepageRoutes.some((route) => pathname?.startsWith(route));
   const [isHomepageOpen, setIsHomepageOpen] = useState(isHomepageActive);
 
   useEffect(() => {
@@ -46,7 +53,14 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
     } else {
       setIsServicesPageOpen(false);
     }
-  }, [isHomepageActive, isServicesPageActive]);
+    
+    // Update events page dropdown state
+    if (isEventsPageActive) {
+      setIsEventsPageOpen(true);
+    } else {
+      setIsEventsPageOpen(false);
+    }
+  }, [isHomepageActive, isServicesPageActive, isEventsPageActive]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -142,9 +156,41 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
                   <ul className={styles.dropdownList}>
                     <li>
                       <NavLink
+                        href="/admin/services-hero-section"
+                        icon="🌅"
+                        label="Hero Section"
+                        onClick={closeMobileMenu}
+                      />
+                    </li>
+                    <li>
+                      <NavLink
                         href="/admin/services-page/filters"
                         icon="🔍"
                         label="Services Filters"
+                        onClick={closeMobileMenu}
+                      />
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </li>
+            <li>
+              <div className={styles.dropdown}>
+                <button
+                  type="button"
+                  className={`${styles.dropdownHeader} ${isEventsPageActive ? styles.dropdownActive : ""}`}
+                  onClick={() => setIsEventsPageOpen((prev) => !prev)}
+                >
+                  <span className={styles.dropdownLabel}>🎉 Events Page</span>
+                  <span className={`${styles.chevron} ${isEventsPageOpen ? styles.chevronOpen : ""}`}>▸</span>
+                </button>
+                {isEventsPageOpen && (
+                  <ul className={styles.dropdownList}>
+                    <li>
+                      <NavLink
+                        href="/admin/events-hero-section"
+                        icon="🌅"
+                        label="Hero Section"
                         onClick={closeMobileMenu}
                       />
                     </li>
