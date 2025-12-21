@@ -56,7 +56,9 @@ export default function ServicesSection({ services, filters = [], isHomePage = f
         ? `/api/services?active=true&filterKey=${encodeURIComponent(filterKey)}`
         : '/api/services?active=true';
       
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        credentials: 'include', // Include cookies in the request
+      });
       const data = await response.json();
       
       if (data.success && data.data) {

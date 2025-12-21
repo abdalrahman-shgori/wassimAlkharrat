@@ -2,10 +2,17 @@ import { NextRequest } from "next/server";
 import { Locale, defaultLocale, isLocale } from "@/lib/i18n/config";
 
 /**
- * Read the preferred locale from the Accept-Language header.
+ * Read the preferred locale from cookies first, then Accept-Language header.
  * Falls back to the default locale when missing/invalid.
  */
 export function getPreferredLocale(request: NextRequest): Locale {
+  // First, try to get locale from cookie (user's explicit choice)
+  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  if (cookieLocale && isLocale(cookieLocale)) {
+    return cookieLocale;
+  }
+
+  // Fall back to Accept-Language header
   const header = request.headers.get("accept-language");
   if (header) {
     // take the first language token (e.g. "ar-SA,ar;q=0.9,en;q=0.8")

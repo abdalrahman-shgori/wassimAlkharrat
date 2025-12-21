@@ -1,11 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
 import styles from './EventsSection.module.scss';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -27,12 +28,28 @@ export default function EventsSection({ events }: EventsSectionProps) {
   // Ensure events is always an array
   const safeEvents = events || [];
   const t = useTranslations('events');
+  const locale = useLocale();
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   
   // ⭐ FIX FOR LOOP STOPPING:
   // Swiper cannot loop unless there are enough slides,
   // so we duplicate your events when the list is small.
   const loopEvents =
     safeEvents.length < 20 ? [...safeEvents, ...safeEvents, ...safeEvents] : safeEvents;
+
+  // Update Swiper when locale changes to prevent whitespace
+  useEffect(() => {
+    if (swiperInstance) {
+      // Small delay to ensure translations are updated
+      const timeoutId = setTimeout(() => {
+        swiperInstance.update();
+        swiperInstance.updateSlides();
+        swiperInstance.updateSlidesClasses();
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [locale, swiperInstance]);
 
   return (
     <section className={styles.eventsSection}>
@@ -43,6 +60,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
           <div className={styles.error}>{t('empty')}</div>
         ) : (
           <Swiper
+            key={`events-swiper-${locale}`}
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={24}
             centeredSlides={true}
@@ -58,6 +76,7 @@ export default function EventsSection({ events }: EventsSectionProps) {
               1024: { slidesPerView: 2.2, spaceBetween: 24 },
             }}
             className={styles.eventsSwiper}
+            onSwiper={setSwiperInstance}
           >
             {events?.map((event, index) => {
               const isCloudinaryImage =

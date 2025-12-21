@@ -77,16 +77,16 @@ async function getServiceBySlug(slug: string, locale: Locale) {
 
       whatWeDo: service.whatWeDo
         ? service.whatWeDo.map((item: any) => ({
-            title: pickLocalizedString(locale, {
-              en: item.titleEn ?? item.title,
-              ar: item.titleAr ?? null,
-            }),
-            description: pickLocalizedString(locale, {
-              en: item.descriptionEn ?? item.description,
-              ar: item.descriptionAr ?? null,
-            }),
-            image: item.image,
-          }))
+          title: pickLocalizedString(locale, {
+            en: item.titleEn ?? item.title,
+            ar: item.titleAr ?? null,
+          }),
+          description: pickLocalizedString(locale, {
+            en: item.descriptionEn ?? item.description,
+            ar: item.descriptionAr ?? null,
+          }),
+          image: item.image,
+        }))
         : [],
     };
   } catch (error) {
@@ -124,8 +124,8 @@ export async function generateMetadata(
 
   const ogImage =
     service.image &&
-    (service.image.startsWith('http://') ||
-      service.image.startsWith('https://'))
+      (service.image.startsWith('http://') ||
+        service.image.startsWith('https://'))
       ? service.image
       : `${process.env.NEXT_PUBLIC_SITE_URL}/images/services/servicesPage.webp`;
 
@@ -171,8 +171,8 @@ export default async function ServiceDetailPage({
 
   const imageSrc =
     service.image &&
-    (service.image.startsWith('http://') ||
-      service.image.startsWith('https://'))
+      (service.image.startsWith('http://') ||
+        service.image.startsWith('https://'))
       ? service.image
       : service.image || '/images/services/servicesPage.webp';
 
