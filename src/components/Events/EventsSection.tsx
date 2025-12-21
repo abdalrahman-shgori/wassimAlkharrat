@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
-import styles from './EventsSection.module.scss';
 import { useTranslations, useLocale } from 'next-intl';
+
+import styles from './EventsSection.module.scss';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -24,89 +24,47 @@ interface EventsSectionProps {
   events: Event[];
 }
 
-export default function EventsSection({ events }: EventsSectionProps) {
-  // Ensure events is always an array
-  const safeEvents = events || [];
+export default function EventsSection({ events = [] }: EventsSectionProps) {
   const t = useTranslations('events');
   const locale = useLocale();
-  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
-  
-  // Get current direction from DOM (RTL/LTR)
-  const [direction, setDirection] = useState<'ltr' | 'rtl'>('ltr');
-  
-  // Preserve events during locale/direction transitions
-  const [preservedEvents, setPreservedEvents] = useState<Event[]>(safeEvents);
-  
-  // Update direction from DOM when locale changes
-  useEffect(() => {
-    const updateDirection = () => {
-      const dir = document.documentElement.dir || document.body?.getAttribute('data-direction') || 'ltr';
-      setDirection(dir as 'ltr' | 'rtl');
-    };
-    
-    updateDirection();
-    
-    // Watch for direction changes
-    const observer = new MutationObserver(updateDirection);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['dir'],
-    });
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['data-direction'],
-    });
-    
-    return () => observer.disconnect();
-  }, [locale]);
-  
-  // Update preserved events when new events arrive (and they're not empty)
-  useEffect(() => {
-    if (safeEvents.length > 0) {
-      setPreservedEvents(safeEvents);
-    }
-  }, [safeEvents]);
-  
-  // Use preserved events to prevent disappearing during locale/direction changes
-  const displayEvents = preservedEvents.length > 0 ? preservedEvents : safeEvents;
-  
-  // ⭐ FIX FOR LOOP STOPPING:
-  // Swiper cannot loop unless there are enough slides,
-  // so we duplicate your events when the list is small.
-  const loopEvents =
-    displayEvents.length < 20 ? [...displayEvents, ...displayEvents, ...displayEvents] : displayEvents;
 
-  // Update Swiper when locale or direction changes
-  useEffect(() => {
-    if (swiperInstance && displayEvents.length > 0) {
-      // Small delay to ensure DOM and translations are updated
-      const timeoutId = setTimeout(() => {
-        swiperInstance.update();
-        swiperInstance.updateSlides();
-        swiperInstance.updateSlidesClasses();
-        swiperInstance.slideTo(0, 0); // Reset to first slide
-      }, 150);
-
-      return () => clearTimeout(timeoutId);
+  /**
+   * 🔁 Swiper loop fix
+   * Swiper cannot loop correctly with few slides,
+   * so we duplicate slides when the list is small.
+   */
+  const loopEvents = useMemo(() => {
+    if (events.length < 6) {
+      return [...events, ...events, ...events];
     }
-  }, [locale, direction, swiperInstance, displayEvents.length]);
+    return events;
+  }, [events]);
+
+  /**
+   * ⭐ KEY POINT
+   * Changing this key forces Swiper to fully remount
+   * when language OR data changes (production-safe)
+   */
+  const swiperKey = useMemo(
+    () => `events-swiper-${locale}-${loopEvents.length}`,
+    [locale, loopEvents.length]
+  );
 
   return (
     <section className={styles.eventsSection}>
       <h1 className={styles.eventsSectionTitle}>{t('title')}</h1>
 
       <div className={styles.eventsSectionContent}>
-        {displayEvents.length === 0 ? (
+        {events.length === 0 ? (
           <div className={styles.error}>{t('empty')}</div>
         ) : (
           <Swiper
-            key={`events-swiper-${locale}-${direction}-${displayEvents.length}`}
+            key={swiperKey}
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={24}
-            centeredSlides={true}
-            loop={displayEvents.length > 1}
+            centeredSlides
+            loop
             slidesPerView={1.2}
-            dir={direction}
             autoplay={{
               delay: 2500,
               disableOnInteraction: false,
@@ -117,22 +75,24 @@ export default function EventsSection({ events }: EventsSectionProps) {
               1024: { slidesPerView: 2.2, spaceBetween: 24 },
             }}
             className={styles.eventsSwiper}
-            onSwiper={setSwiperInstance}
           >
-            {displayEvents.map((event, index) => {
-              const isCloudinaryImage =
-                event.image &&
-                (event.image.startsWith('http://') ||
-                  event.image.startsWith('https://'));
+            {loopEvents.map((event, index) => {
+              const isExternalImage =
+                event.image?.startsWith('http://') ||
+                event.image?.startsWith('https://');
 
               return (
-                <SwiperSlide key={event._id + '-' + index} className={styles.eventSlide}>
+                <SwiperSlide
+                  key={`${event._id}-${index}`}
+                  className={styles.eventSlide}
+                >
                   <div className={styles.eventCard}>
-                    {isCloudinaryImage ? (
+                    {isExternalImage ? (
                       <img
                         src={event.image}
                         alt={event.eventTitle}
                         className={styles.eventImage}
+                        loading="lazy"
                       />
                     ) : (
                       <Image
@@ -141,12 +101,17 @@ export default function EventsSection({ events }: EventsSectionProps) {
                         className={styles.eventImage}
                         width={736}
                         height={490}
+                        priority={index === 0}
                       />
                     )}
 
                     <div className={styles.eventInfo}>
-                      <h3 className={styles.eventSubtitle}>{event.eventTitle}</h3>
-                      <p className={styles.eventDescription}>{event.eventSubtitle}</p>
+                      <h3 className={styles.eventSubtitle}>
+                        {event.eventTitle}
+                      </h3>
+                      <p className={styles.eventDescription}>
+                        {event.eventSubtitle}
+                      </p>
                     </div>
                   </div>
                 </SwiperSlide>
