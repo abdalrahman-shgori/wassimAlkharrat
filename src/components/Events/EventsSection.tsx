@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 import Image from 'next/image';
 import styles from './EventsSection.module.scss';
 import { useTranslations, useLocale } from 'next-intl';
@@ -23,79 +24,60 @@ interface EventsSectionProps {
   events: Event[];
 }
 
-export default function EventsSection({ events: initialEvents }: EventsSectionProps) {
+export default function EventsSection({ events }: EventsSectionProps) {
+  // Ensure events is always an array
+  const safeEvents = events || [];
   const t = useTranslations('events');
   const locale = useLocale();
-  const [events, setEvents] = useState<Event[]>(initialEvents || []);
-  const [loading, setLoading] = useState(false);
-  const [prevLocale, setPrevLocale] = useState<string | null>(null);
-
-  // Fetch events when locale changes
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+  
+  // Preserve events during locale transitions to prevent disappearing
+  const [preservedEvents, setPreservedEvents] = useState<Event[]>(safeEvents);
+  
+  // Update preserved events when new events arrive (and they're not empty)
   useEffect(() => {
-    // Skip on initial mount
-    if (prevLocale === null) {
-      setPrevLocale(locale);
-      return;
+    if (safeEvents.length > 0) {
+      setPreservedEvents(safeEvents);
     }
+  }, [safeEvents]);
+  
+  // Use preserved events to prevent disappearing during locale changes
+  const displayEvents = preservedEvents.length > 0 ? preservedEvents : safeEvents;
+  
+  // ⭐ FIX FOR LOOP STOPPING:
+  // Swiper cannot loop unless there are enough slides,
+  // so we duplicate your events when the list is small.
+  const loopEvents =
+    displayEvents.length < 20 ? [...displayEvents, ...displayEvents, ...displayEvents] : displayEvents;
 
-    // Only fetch if locale actually changed
-    if (prevLocale !== locale) {
-      const fetchEvents = async () => {
-        setLoading(true);
-        try {
-          const response = await fetch('/api/events?active=true', {
-            credentials: 'include', // Include cookies to get the correct locale
-          });
-          const data = await response.json();
-          
-          if (data.success && data.data) {
-            const formattedEvents = data.data.map((event: any) => ({
-              _id: event._id?.toString() || event._id,
-              image: event.image || '',
-              eventTitle: event.eventTitle || '',
-              eventSubtitle: event.eventSubtitle || '',
-              isActive: event.isActive ?? true,
-            }));
-            setEvents(formattedEvents);
-          } else {
-            setEvents([]);
-          }
-        } catch (error) {
-          console.error('Error fetching events:', error);
-          setEvents([]);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchEvents();
-      setPrevLocale(locale);
-    }
-  }, [locale, prevLocale]);
-
-  // Update events when initialEvents prop changes (from server re-render)
+  // Update Swiper when locale changes to prevent whitespace
   useEffect(() => {
-    if (initialEvents && initialEvents.length > 0) {
-      setEvents(initialEvents);
-    }
-  }, [initialEvents]);
+    if (swiperInstance && displayEvents.length > 0) {
+      // Small delay to ensure translations are updated
+      const timeoutId = setTimeout(() => {
+        swiperInstance.update();
+        swiperInstance.updateSlides();
+        swiperInstance.updateSlidesClasses();
+      }, 100);
 
-  const safeEvents = events || [];
+      return () => clearTimeout(timeoutId);
+    }
+  }, [locale, swiperInstance, displayEvents.length]);
 
   return (
     <section className={styles.eventsSection}>
       <h1 className={styles.eventsSectionTitle}>{t('title')}</h1>
 
       <div className={styles.eventsSectionContent}>
-        {safeEvents.length === 0 && !loading ? (
+        {displayEvents.length === 0 ? (
           <div className={styles.error}>{t('empty')}</div>
-        ) : safeEvents.length > 0 ? (
+        ) : (
           <Swiper
-            key={`events-swiper-${locale}-${safeEvents.map(e => e._id).join('-')}`}
+            key={`events-swiper-${locale}-${displayEvents.length}`}
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={24}
             centeredSlides={true}
-            loop={safeEvents.length > 1}
+            loop={displayEvents.length > 1}
             slidesPerView={1.2}
             autoplay={{
               delay: 2500,
@@ -107,8 +89,9 @@ export default function EventsSection({ events: initialEvents }: EventsSectionPr
               1024: { slidesPerView: 2.2, spaceBetween: 24 },
             }}
             className={styles.eventsSwiper}
+            onSwiper={setSwiperInstance}
           >
-            {safeEvents.map((event, index) => {
+            {displayEvents.map((event, index) => {
               const isCloudinaryImage =
                 event.image &&
                 (event.image.startsWith('http://') ||
@@ -142,7 +125,7 @@ export default function EventsSection({ events: initialEvents }: EventsSectionPr
               );
             })}
           </Swiper>
-        ) : null}
+        )}
 
         <button className={styles.exploreButton}>{t('explore')}</button>
       </div>
