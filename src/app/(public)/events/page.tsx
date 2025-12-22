@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
-import EventsSection from '@/components/Events/EventsSection';
+import EventsGridSection from '@/components/Events/EventsGridSection';
 import {
   getEventsPageSettingsCollection,
   getEventsCollection,
@@ -159,7 +159,7 @@ export default async function EventsPage() {
         nextSectionId="events-next-section"
       />
 
-      <EventsSection events={events} />
+      <EventsGridSection events={events} />
 
       <CTASection />
     </>

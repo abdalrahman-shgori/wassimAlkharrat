@@ -1,11 +1,16 @@
 'use client';
 
-import React from 'react';
-import styles from './EventsSection.module.scss';
+import React, { useMemo } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import Image from 'next/image';
-import arrowRight from "../../../public/images/arrowRight.svg";
-import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+
+import styles from './EventsSection.module.scss';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 interface Event {
   _id: string;
@@ -21,82 +26,103 @@ interface EventsSectionProps {
 
 export default function EventsSection({ events = [] }: EventsSectionProps) {
   const t = useTranslations('events');
-  const safeEvents = events || [];
+  const locale = useLocale();
 
-  // Get image source - handle both Cloudinary URLs and local paths
-  const getImageSrc = (event: Event) => {
-    if (event.image) {
-      return event.image;
+  /**
+   * 🔁 Swiper loop fix
+   * Swiper cannot loop correctly with few slides,
+   * so we duplicate slides when the list is small.
+   */
+  const loopEvents = useMemo(() => {
+    if (events.length < 6) {
+      return [...events, ...events, ...events];
     }
-    return '/images/placeholder.jpg'; // fallback placeholder
-  };
+    return events;
+  }, [events]);
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 24 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  // Reset animation key when events change
-  const contentKey = safeEvents.length > 0 ? safeEvents.map(e => e._id).join(',') : 'empty';
+  /**
+   * ⭐ KEY POINT
+   * Changing this key forces Swiper to fully remount
+   * when language OR data changes (production-safe)
+   */
+  const swiperKey = useMemo(
+    () => `events-swiper-${locale}-${loopEvents.length}`,
+    [locale, loopEvents.length]
+  );
 
   return (
-    <motion.section 
-      id="events-next-section"
-      className={styles.eventsSection}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, amount: 0.2 }}
-      transition={{ staggerChildren: 0.12, duration: 0.6, ease: "easeOut" }}
-    >
-      <div className={styles.eventsSectionContent} key={contentKey}>
-        {safeEvents.length === 0 ? (
-          <motion.div className={styles.error} variants={fadeUp} initial="hidden" animate="visible">
-            {t('empty') || 'No events available'}
-          </motion.div>
+    <section className={styles.eventsSection}>
+      <h1 className={styles.eventsSectionTitle}>{t('title')}</h1>
+
+      <div className={styles.eventsSectionContent}>
+        {events.length === 0 ? (
+          <div className={styles.error}>{t('empty')}</div>
         ) : (
-          safeEvents.map((event) => {
-            const imageSrc = getImageSrc(event);
-            const isCloudinaryImage = event.image && (event.image.startsWith('http://') || event.image.startsWith('https://'));
-            
-            return (
-              <motion.div
-                key={event._id}
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              >
-                <div className={styles.eventsSectionContentItem}>
-                  <div className={styles.eventImageWrapper}>
-                    {isCloudinaryImage ? (
+          <Swiper
+            key={swiperKey}
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={24}
+            centeredSlides
+            loop
+            slidesPerView={1.2}
+            dir={locale === 'ar' ? 'rtl' : 'ltr'}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+            }}
+            breakpoints={{
+              640: { slidesPerView: 2, spaceBetween: 24 },
+              768: { slidesPerView: 1.8, spaceBetween: 24 },
+              1024: { slidesPerView: 2.2, spaceBetween: 24 },
+            }}
+            className={styles.eventsSwiper}
+          >
+            {loopEvents.map((event, index) => {
+              const isExternalImage =
+                event.image?.startsWith('http://') ||
+                event.image?.startsWith('https://');
+
+              return (
+                <SwiperSlide
+                  key={`${event._id}-${index}`}
+                  className={styles.eventSlide}
+                >
+                  <div className={styles.eventCard}>
+                    {isExternalImage ? (
                       <img
-                        src={imageSrc}
+                        src={event.image}
                         alt={event.eventTitle}
                         className={styles.eventImage}
                         loading="lazy"
                       />
                     ) : (
-                      <Image 
-                        src={imageSrc} 
+                      <Image
+                        src={event.image}
                         alt={event.eventTitle}
-                        fill
                         className={styles.eventImage}
-                        sizes="(max-width: 834px) 50vw, (max-width: 1200px) 33vw, 400px"
+                        width={736}
+                        height={490}
+                        priority={index === 0}
                       />
                     )}
+
+                    <div className={styles.eventInfo}>
+                      <h3 className={styles.eventSubtitle}>
+                        {event.eventTitle}
+                      </h3>
+                      <p className={styles.eventDescription}>
+                        {event.eventSubtitle}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className={styles.eventsSectionContentItemTitle}>{event.eventTitle}</h3>
-                  <p className={styles.eventsSectionContentItemDescription}>{event.eventSubtitle}</p>
-                  <div className={styles.eventsSectionContentItemLink}>
-                    learn more
-                    <Image src={arrowRight} alt="arrow" className={styles.eventsSectionContentItemLinkArrow} />
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
         )}
+
+        <button className={styles.exploreButton}>{t('explore')}</button>
       </div>
-    </motion.section>
+    </section>
   );
 }
