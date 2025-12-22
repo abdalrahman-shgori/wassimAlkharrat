@@ -166,7 +166,9 @@ export default function HeroSection({
         const deltaY = touchStartY.current - currentY;
         
         // Check if we're in the AboutEthiq section and swiping up
-        if (sectionRef.current && deltaY > 80) {
+        // Lower the swipe threshold so lighter upward swipes trigger scroll on mobile
+        const swipeThreshold = 40;
+        if (sectionRef.current && deltaY > swipeThreshold) {
           const rect = sectionRef.current.getBoundingClientRect();
           const isInSection = rect.bottom > window.innerHeight * 0.3;
           
