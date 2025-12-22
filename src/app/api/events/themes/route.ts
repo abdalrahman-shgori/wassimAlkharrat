@@ -8,7 +8,13 @@ export async function GET(request: NextRequest) {
     
     // Get all active events with themes
     const events = await eventsCollection
-      .find({ isActive: true, theme: { $exists: true, $ne: null, $ne: "" } })
+      .find({ 
+        isActive: true, 
+        theme: { 
+          $exists: true,
+          $nin: [null, ""] as any
+        }
+      } as any)
       .toArray();
 
     // Extract unique themes

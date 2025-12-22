@@ -8,7 +8,13 @@ export async function GET(request: NextRequest) {
     
     // Get all active events with sizes
     const events = await eventsCollection
-      .find({ isActive: true, size: { $exists: true, $ne: null, $ne: "" } })
+      .find({ 
+        isActive: true, 
+        size: { 
+          $exists: true,
+          $nin: [null, ""] as any
+        }
+      } as any)
       .toArray();
 
     // Extract unique sizes
