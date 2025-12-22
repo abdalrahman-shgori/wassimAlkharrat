@@ -1,0 +1,170 @@
+.filterBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 100px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.filterSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filterLabel {
+  font-size: 20px;
+  font-weight: 400;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.filterDropdowns {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+// .filterSelect - Custom dropdown wrapper styling is handled in CustomDropdown component
+
+.resultsSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-inline-start: auto;
+}
+
+.resetAllButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background-color: #f5f5f5;
+    border-color: #AD8842;
+    color: #AD8842;
+
+    svg {
+      color: #AD8842;
+    }
+  }
+
+  &:active {
+    background-color: #e8e8e8;
+  }
+}
+
+.resultsCount {
+  font-size: 16px;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.resultsNumber {
+  color: #666666;
+  font-weight: 400;
+}
+
+@media (max-width: 1024px) {
+  .filterBar {
+    padding: 16px 60px;
+    gap: 16px;
+  }
+
+  .filterSection {
+    gap: 12px;
+  }
+
+  .filterDropdowns {
+    gap: 16px;
+  }
+
+  .filterSelect {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .filterBar {
+    padding: 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    background-color: #f8f8f8;
+    border-radius: 12px;
+    margin: 0 16px;
+  }
+
+  .filterSection {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filterLabel {
+    font-size: 15px;
+    font-weight: 500;
+    color: #333333;
+    margin-block-end: 4px;
+  }
+
+  .filterDropdowns {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .resultsSection {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-inline-start: 0;
+    padding-block-start: 12px;
+    border-block-start: 1px solid #e0e0e0;
+  }
+
+  .resetAllButton {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .resultsCount {
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+    color: #666666;
+  }
+
+  .resultsNumber {
+    font-weight: 500;
+    color: #333333;
+  }
+}
+

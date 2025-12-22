@@ -34,8 +34,17 @@
     "title": "Events",
     "empty": "No events available at the moment.",
     "explore": "Explore Events",
-    "momentsWeveMastered": "Moments We’ve Mastered",
-    "subtitle": "Our curated portfolio of celebrations, defined by unique style and seamless execution. Every detail, meticulously designed. "
+    "momentsWeveMastered": "Moments We've Mastered",
+    "subtitle": "Our curated portfolio of celebrations, defined by unique style and seamless execution. Every detail, meticulously designed. ",
+    "filterBy": "Filter by:",
+    "eventType": "Event Type",
+    "type": "Type",
+    "theme": "Theme",
+    "size": "Size",
+    "showing": "Showing:",
+    "results": "results",
+    "resetAll": "Reset All",
+    "reset": "Reset"
   },
   "stories": {
     "title": "Stories",

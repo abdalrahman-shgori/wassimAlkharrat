@@ -203,8 +203,13 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
     }
 
     try {
+      // Handle query parameters in API endpoint
+      const baseUrl = config.apiEndpoint.split('?')[0];
+      const queryString = config.apiEndpoint.includes('?') 
+        ? config.apiEndpoint.split('?').slice(1).join('?') 
+        : '';
       const url = editingItem
-        ? `${config.apiEndpoint}/${editingItem._id}`
+        ? `${baseUrl}/${editingItem._id}${queryString ? `?${queryString}` : ''}`
         : config.apiEndpoint;
       const method = editingItem ? "PUT" : "POST";
 
@@ -241,7 +246,14 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
     }
 
     try {
-      const response = await fetch(`${config.apiEndpoint}/${id}`, {
+      // Handle query parameters in API endpoint for delete
+      const baseUrl = config.apiEndpoint.split('?')[0];
+      const queryString = config.apiEndpoint.includes('?') 
+        ? config.apiEndpoint.split('?').slice(1).join('?') 
+        : '';
+      const deleteUrl = `${baseUrl}/${id}${queryString ? `?${queryString}` : ''}`;
+      
+      const response = await fetch(deleteUrl, {
         method: "DELETE",
         headers: baseHeaders,
       });

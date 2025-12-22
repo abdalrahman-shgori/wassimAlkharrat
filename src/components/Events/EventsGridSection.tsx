@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import styles from './EventsGridSection.module.scss';
 import Image from 'next/image';
 import arrowRight from '../../../public/images/arrowRight.svg';
@@ -13,11 +14,21 @@ interface Event {
   eventTitle: string;
   eventSubtitle: string;
   isActive: boolean;
+  eventTitleEn?: string;
+  eventTitleAr?: string | null;
 }
 
 interface EventsGridSectionProps {
   events: Event[];
 }
+
+// Utility function to create slug from event title
+const createSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+};
 
 export default function EventsGridSection({ events = [] }: EventsGridSectionProps) {
   const t = useTranslations('events');
@@ -63,6 +74,9 @@ export default function EventsGridSection({ events = [] }: EventsGridSectionProp
               (event.image.startsWith('http://') ||
                 event.image.startsWith('https://'));
 
+            // Use original English title for consistent slug generation
+            const eventSlug = createSlug(event.eventTitleEn || event.eventTitle);
+
             return (
               <motion.div
                 key={event._id}
@@ -71,7 +85,7 @@ export default function EventsGridSection({ events = [] }: EventsGridSectionProp
                 animate="visible"
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               >
-                <div className={styles.eventsSectionContentItem}>
+                <Link href={`/events/${eventSlug}`} className={styles.eventsSectionContentItem}>
                   <div className={styles.eventImageWrapper}>
                     {isCloudinaryImage ? (
                       <img
@@ -104,7 +118,7 @@ export default function EventsGridSection({ events = [] }: EventsGridSectionProp
                       className={styles.eventsSectionContentItemLinkArrow}
                     />
                   </div>
-                </div>
+                </Link>
               </motion.div>
             );
           })

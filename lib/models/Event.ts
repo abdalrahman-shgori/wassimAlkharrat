@@ -9,6 +9,14 @@ export interface Event {
   eventSubtitle: string;
   eventSubtitleEn?: string;
   eventSubtitleAr?: string;
+  eventType?: string; // Event type category (e.g., "Birthday", "Wedding", etc.)
+  type?: string; // Event sub-type (e.g., "Baby Birthday", "Adult Birthday", etc.)
+  typeAr?: string; // Event sub-type in Arabic
+  theme?: string; // Event theme (e.g., "Modern", "Classic", "Rustic", etc.)
+  themeAr?: string; // Event theme in Arabic
+  size?: string; // Event size (e.g., "Small", "Medium", "Large", etc.)
+  sizeAr?: string; // Event size in Arabic
+  isEventType?: boolean; // Flag to distinguish event types from individual events
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -22,6 +30,14 @@ export interface CreateEventInput {
   eventSubtitle: string;
   eventSubtitleEn?: string;
   eventSubtitleAr: string;
+  eventType?: string;
+  type?: string;
+  typeAr?: string;
+  theme?: string;
+  themeAr?: string;
+  size?: string;
+  sizeAr?: string;
+  isEventType?: boolean;
   isActive?: boolean;
 }
 
@@ -33,6 +49,14 @@ export interface UpdateEventInput {
   eventSubtitle?: string;
   eventSubtitleEn?: string;
   eventSubtitleAr?: string;
+  eventType?: string;
+  type?: string;
+  typeAr?: string;
+  theme?: string;
+  themeAr?: string;
+  size?: string;
+  sizeAr?: string;
+  isEventType?: boolean;
   isActive?: boolean;
 }
 

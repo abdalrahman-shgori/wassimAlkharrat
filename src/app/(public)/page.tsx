@@ -78,21 +78,31 @@ async function getServices(locale: Locale) {
 }
 
 async function getEvents(locale: Locale) {
-  const events = await fetchActiveDocs<Event>(getEventsCollection);
+  // Only fetch event types (categories) for the homepage, not individual events
+  try {
+    const collection = await getEventsCollection();
+    const eventTypes = await collection
+      .find({ isActive: true, isEventType: true })
+      .sort({ createdAt: -1 })
+      .toArray();
 
-  return events.map(event => ({
-    _id: idToString(event._id),
-    image: event.image,
-    isActive: event.isActive,
-    eventTitle: pickLocalizedString(locale, {
-      en: event.eventTitleEn ?? event.eventTitle,
-      ar: event.eventTitleAr ?? null,
-    }),
-    eventSubtitle: pickLocalizedString(locale, {
-      en: event.eventSubtitleEn ?? event.eventSubtitle,
-      ar: event.eventSubtitleAr ?? null,
-    }),
-  }));
+    return eventTypes.map((event: Event) => ({
+      _id: idToString(event._id),
+      image: event.image,
+      isActive: event.isActive,
+      eventTitle: pickLocalizedString(locale, {
+        en: event.eventTitleEn ?? event.eventTitle,
+        ar: event.eventTitleAr ?? null,
+      }),
+      eventSubtitle: pickLocalizedString(locale, {
+        en: event.eventSubtitleEn ?? event.eventSubtitle,
+        ar: event.eventSubtitleAr ?? null,
+      }),
+    }));
+  } catch (error) {
+    console.error('[getEvents] Error:', error);
+    return [];
+  }
 }
 
 async function getStories(locale: Locale) {

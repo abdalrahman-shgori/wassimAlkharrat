@@ -5,7 +5,7 @@ import { UpdateEventInput } from "../../../../../lib/models/Event";
 import { requireAdmin } from "../../../../../lib/auth";
 import { getPreferredLocale, pickLocalizedString } from "../../../../../lib/i18n/serverLocale";
 
-// GET /api/events/[id] - Get a single event by ID
+// GET /api/event-types/[id] - Get a single event type by ID
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -17,33 +17,35 @@ export async function GET(
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "Invalid event ID" },
+        { error: "Invalid event type ID" },
         { status: 400 }
       );
     }
 
     const eventsCollection = await getEventsCollection();
-    const event = await eventsCollection.findOne({ _id: new ObjectId(id) });
+    const eventType = await eventsCollection.findOne({ 
+      _id: new ObjectId(id),
+      isEventType: true 
+    });
 
-    if (!event) {
+    if (!eventType) {
       return NextResponse.json(
-        { error: "Event not found" },
+        { error: "Event type not found" },
         { status: 404 }
       );
     }
 
-    const titleEn = event.eventTitleEn ?? event.eventTitle ?? "";
-    const subtitleEn = event.eventSubtitleEn ?? event.eventSubtitle ?? "";
-    const titleAr = event.eventTitleAr ?? null;
-    const subtitleAr = event.eventSubtitleAr ?? null;
+    const titleEn = eventType.eventTitleEn ?? eventType.eventTitle ?? "";
+    const subtitleEn = eventType.eventSubtitleEn ?? eventType.eventSubtitle ?? "";
+    const titleAr = eventType.eventTitleAr ?? null;
+    const subtitleAr = eventType.eventSubtitleAr ?? null;
 
-    // Strip legacy "order" field if present
-    const { order: _order, ...safeEvent } = event as any;
+    const { order: _order, ...rest } = eventType as any;
 
     return NextResponse.json({
       success: true,
       data: {
-        ...safeEvent,
+        ...rest,
         eventTitle: pickLocalizedString(locale, { en: titleEn, ar: titleAr }),
         eventSubtitle: pickLocalizedString(locale, { en: subtitleEn, ar: subtitleAr }),
         eventTitleEn: titleEn,
@@ -53,15 +55,15 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("Error fetching event:", error);
+    console.error("Error fetching event type:", error);
     return NextResponse.json(
-      { error: "Failed to fetch event" },
+      { error: "Failed to fetch event type" },
       { status: 500 }
     );
   }
 }
 
-// PUT /api/events/[id] - Update an event (Admin only)
+// PUT /api/event-types/[id] - Update an event type (Admin only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -75,7 +77,7 @@ export async function PUT(
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "Invalid event ID" },
+        { error: "Invalid event type ID" },
         { status: 400 }
       );
     }
@@ -83,11 +85,15 @@ export async function PUT(
     const body: UpdateEventInput = await request.json();
     const eventsCollection = await getEventsCollection();
 
-    // Check if event exists
-    const existingEvent = await eventsCollection.findOne({ _id: new ObjectId(id) });
-    if (!existingEvent) {
+    // Check if event type exists
+    const existingEventType = await eventsCollection.findOne({ 
+      _id: new ObjectId(id),
+      isEventType: true 
+    });
+    
+    if (!existingEventType) {
       return NextResponse.json(
-        { error: "Event not found" },
+        { error: "Event type not found" },
         { status: 404 }
       );
     }
@@ -104,19 +110,14 @@ export async function PUT(
     if (body.eventSubtitle !== undefined) updateData.eventSubtitle = body.eventSubtitle;
     if (body.eventSubtitleEn !== undefined) updateData.eventSubtitleEn = body.eventSubtitleEn;
     if (body.eventSubtitleAr !== undefined) updateData.eventSubtitleAr = body.eventSubtitleAr;
-    if (body.eventType !== undefined) updateData.eventType = body.eventType;
-    if (body.type !== undefined) updateData.type = body.type;
-    if (body.typeAr !== undefined) updateData.typeAr = body.typeAr;
-    if (body.theme !== undefined) updateData.theme = body.theme;
-    if (body.themeAr !== undefined) updateData.themeAr = body.themeAr;
-    if (body.size !== undefined) updateData.size = body.size;
-    if (body.sizeAr !== undefined) updateData.sizeAr = body.sizeAr;
-    if (body.isEventType !== undefined) updateData.isEventType = body.isEventType;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
+    
+    // Ensure it remains an event type
+    updateData.isEventType = true;
 
-    // Update event
+    // Update event type
     const result = await eventsCollection.findOneAndUpdate(
-      { _id: new ObjectId(id) },
+      { _id: new ObjectId(id), isEventType: true },
       { $set: updateData },
       { returnDocument: "after" }
     );
@@ -132,15 +133,15 @@ export async function PUT(
         { status: 401 }
       );
     }
-    console.error("Error updating event:", error);
+    console.error("Error updating event type:", error);
     return NextResponse.json(
-      { error: "Failed to update event" },
+      { error: "Failed to update event type" },
       { status: 500 }
     );
   }
 }
 
-// DELETE /api/events/[id] - Delete an event (Admin only)
+// DELETE /api/event-types/[id] - Delete an event type (Admin only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -154,28 +155,29 @@ export async function DELETE(
     // Validate ObjectId
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
-        { error: "Invalid event ID" },
+        { error: "Invalid event type ID" },
         { status: 400 }
       );
     }
 
     const eventsCollection = await getEventsCollection();
 
-    // Check if event exists
-    const existingEvent = await eventsCollection.findOne({ _id: new ObjectId(id) });
-    if (!existingEvent) {
+    // Delete only if it's an event type
+    const result = await eventsCollection.deleteOne({ 
+      _id: new ObjectId(id),
+      isEventType: true 
+    });
+
+    if (result.deletedCount === 0) {
       return NextResponse.json(
-        { error: "Event not found" },
+        { error: "Event type not found" },
         { status: 404 }
       );
     }
 
-    // Delete event
-    await eventsCollection.deleteOne({ _id: new ObjectId(id) });
-
     return NextResponse.json({
       success: true,
-      message: "Event deleted successfully",
+      message: "Event type deleted successfully",
     });
   } catch (error: any) {
     if (error.message === "Unauthorized") {
@@ -184,9 +186,9 @@ export async function DELETE(
         { status: 401 }
       );
     }
-    console.error("Error deleting event:", error);
+    console.error("Error deleting event type:", error);
     return NextResponse.json(
-      { error: "Failed to delete event" },
+      { error: "Failed to delete event type" },
       { status: 500 }
     );
   }

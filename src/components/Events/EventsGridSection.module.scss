@@ -23,6 +23,9 @@
     flex-direction: column;
     overflow: visible;
     border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 
     &:hover .eventImage {
         transform: scale(1.05);
@@ -107,7 +110,7 @@
     grid-column: 1 / -1;
     text-align: center;
     padding: 3rem;
-    color: var(--white);
+    color: var(--dark);
     font-size: 1.2rem;
 }
 

@@ -1,0 +1,331 @@
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: auto;
+  min-width: 100px;
+}
+
+.dropdownButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 8px;
+  padding-inline-end: 28px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-alice), Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  color: #111111;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  text-align: start;
+  gap: 8px;
+  position: relative;
+
+  &:hover {
+    color: #AD8842;
+
+    .dropdownArrow {
+      color: #AD8842;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    color: #AD8842;
+    background-color: rgba(173, 136, 66, 0.08);
+    box-shadow: 0 2px 8px rgba(173, 136, 66, 0.15);
+
+    .dropdownArrow {
+      color: #AD8842;
+    }
+  }
+}
+
+.dropdownText {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdownArrow {
+  flex-shrink: 0;
+  width: 12px;
+  height: 8px;
+  color: #2c2c2c;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s ease;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  z-index: 1000;
+  animation: fadeInDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 180px;
+}
+
+.dropdownMenuInner {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  max-height: 300px;
+  overflow-y: auto;
+
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f5f5f5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d0d0d0;
+    border-radius: 3px;
+
+    &:hover {
+      background: #AD8842;
+    }
+  }
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  padding-block: 14px;
+  padding-inline: 20px;
+  border: none;
+  background: transparent;
+  text-align: start;
+  font-size: 15px;
+  font-weight: 400;
+  color: #2c2c2c;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  white-space: nowrap;
+
+  &:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  &:hover {
+    background: linear-gradient(90deg, rgba(173, 136, 66, 0.08) 0%, rgba(173, 136, 66, 0.04) 100%);
+    color: #AD8842;
+    font-weight: 500;
+    padding-inline-start: 24px;
+  }
+
+  &:active {
+    background: rgba(173, 136, 66, 0.12);
+  }
+
+  &.selected {
+    background: #AD8842;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 15px;
+    padding-inline-start: 24px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.01em;
+
+    &::before {
+      content: '✓';
+      position: absolute;
+      inset-inline-start: 8px;
+      top: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    &:hover {
+      background: #9a7740;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &.placeholder {
+    color: #999999;
+    font-style: italic;
+
+    &:hover {
+      color: #AD8842;
+      font-style: normal;
+    }
+  }
+}
+
+.resetButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  background: #f5f5f5;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666666;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: relative;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: #e8e8e8;
+    color: #AD8842;
+
+    svg {
+      color: #AD8842;
+    }
+  }
+
+  &:active {
+    background: #dcdcdc;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .dropdown {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .dropdownButton {
+    padding-block: 14px;
+    padding-inline: 16px;
+    padding-inline-end: 40px;
+    font-size: 15px;
+    font-weight: 400;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #AD8842;
+      box-shadow: 0 2px 6px rgba(173, 136, 66, 0.15);
+    }
+
+    &:focus {
+      border-color: #AD8842;
+      box-shadow: 0 0 0 3px rgba(173, 136, 66, 0.1);
+    }
+  }
+
+  .dropdownArrow {
+    width: 12px;
+    height: 8px;
+    position: absolute;
+    inset-inline-end: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    &.open {
+      transform: translateY(-50%) rotate(180deg);
+    }
+  }
+
+  .dropdownMenu {
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    min-width: unset;
+    width: 100%;
+  }
+
+  .dropdownMenuInner {
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e0e0e0;
+  }
+
+  .resetButton {
+    padding-block: 12px;
+    padding-inline: 18px;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e0e0e0;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    &:active {
+      background: #e8e8e8;
+    }
+  }
+
+  .dropdownItem {
+    padding-block: 14px;
+    padding-inline: 18px;
+    font-size: 15px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      padding-inline-start: 24px;
+      background: linear-gradient(90deg, rgba(173, 136, 66, 0.1) 0%, rgba(173, 136, 66, 0.05) 100%);
+    }
+
+    &.selected {
+      font-weight: 600;
+      font-size: 15px;
+      padding-inline-start: 24px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+      &::before {
+        font-size: 16px;
+        font-weight: 700;
+        inset-inline-start: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+}
+

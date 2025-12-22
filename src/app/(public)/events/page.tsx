@@ -43,6 +43,42 @@ async function fetchActiveDocs<T>(
 }
 
 /**
+ * Fetch active event types only (for hero sections)
+ */
+async function fetchActiveEventTypes<T>(
+  collectionGetter: () => Promise<any>
+): Promise<T[]> {
+  try {
+    const collection = await collectionGetter();
+    return await collection
+      .find({ isActive: true, isEventType: true })
+      .sort({ createdAt: -1 })
+      .toArray();
+  } catch (error) {
+    console.error('[fetchActiveEventTypes] Error:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch active events only (exclude event types)
+ */
+async function fetchActiveEventsOnly<T>(
+  collectionGetter: () => Promise<any>
+): Promise<T[]> {
+  try {
+    const collection = await collectionGetter();
+    return await collection
+      .find({ isActive: true, isEventType: { $ne: true } })
+      .sort({ createdAt: -1 })
+      .toArray();
+  } catch (error) {
+    console.error('[fetchActiveEventsOnly] Error:', error);
+    return [];
+  }
+}
+
+/**
  * Get locale from cookies
  */
 async function getLocale(): Promise<Locale> {
@@ -58,12 +94,12 @@ async function getLocale(): Promise<Locale> {
 }
 
 /**
- * Get all events (localized)
+ * Get all event types (localized) - for the main events page showing categories
  */
 async function getAllEvents(locale: Locale) {
-  const events = await fetchActiveDocs<Event>(getEventsCollection);
+  const eventTypes = await fetchActiveEventTypes<Event>(getEventsCollection);
 
-  return events.map(event => ({
+  return eventTypes.map((event: Event) => ({
     _id: idToString(event._id),
     image: event.image,
     isActive: event.isActive,
@@ -75,6 +111,9 @@ async function getAllEvents(locale: Locale) {
       en: event.eventSubtitleEn ?? event.eventSubtitle,
       ar: event.eventSubtitleAr ?? null,
     }),
+    // Keep original titles for slug generation and filtering
+    eventTitleEn: event.eventTitleEn ?? event.eventTitle,
+    eventTitleAr: event.eventTitleAr ?? null,
   }));
 }
 

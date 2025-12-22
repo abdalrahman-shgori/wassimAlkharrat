@@ -61,9 +61,21 @@ export default function HeroSection({
   const touchStartY = useRef<number | null>(null);
   const touchScrolled = useRef(false);
   const lastScrollTime = useRef<number>(0);
+  const hasScrolledPastHero = useRef(false);
+  const heroSectionHeight = useRef<number>(0);
+  
   const scrollToNextSection = () => {
     const now = Date.now();
     if (isScrolling.current || now - lastScrollTime.current < 1000) return;
+    
+    // Check if user is at the top of the hero section
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    const isAtTop = currentScroll <= heroSectionHeight.current * 0.1; // Allow small margin
+    
+    // Only allow scroll if user is at the top and hasn't scrolled past hero yet
+    if (hasScrolledPastHero.current && !isAtTop) {
+      return;
+    }
     
     isScrolling.current = true;
     lastScrollTime.current = now;
@@ -73,9 +85,6 @@ export default function HeroSection({
       ? document.getElementById(targetSectionId)
       : null;
     if (nextSection) {
-      // Get the current scroll position
-      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-      
       // Get the next section's position
       const nextSectionRect = nextSection.getBoundingClientRect();
       const nextSectionTop = nextSectionRect.top + currentScroll;
@@ -91,6 +100,9 @@ export default function HeroSection({
         behavior: 'smooth'
       });
       
+      // Mark that user has scrolled past hero
+      hasScrolledPastHero.current = true;
+      
       // Increase debounce time for better touch handling
       setTimeout(() => {
         isScrolling.current = false;
@@ -103,6 +115,22 @@ export default function HeroSection({
   };
 
   useEffect(() => {
+    // Store hero section height
+    if (sectionRef.current) {
+      heroSectionHeight.current = sectionRef.current.offsetHeight;
+    }
+    
+    // Track scroll position to reset hasScrolledPastHero when back at top
+    const handleScroll = () => {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      const isAtTop = currentScroll <= heroSectionHeight.current * 0.1;
+      
+      // Reset flag when user scrolls back to top
+      if (isAtTop && hasScrolledPastHero.current) {
+        hasScrolledPastHero.current = false;
+      }
+    };
+    
     const handleWheel = (e: WheelEvent) => {
       const now = Date.now();
       if (isScrolling.current || now - lastScrollTime.current < 1000) {
@@ -110,21 +138,16 @@ export default function HeroSection({
         return;
       }
       
-      // Check if we're in the AboutEthiq section
+      // Check if we're in the hero section
       if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
         // More permissive condition: if the section is mostly visible
         const isInSection = rect.bottom > window.innerHeight * 0.3;
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        const isAtTop = currentScroll <= heroSectionHeight.current * 0.1;
         
-        console.log('Wheel event:', {
-          deltaY: e.deltaY,
-          isInSection,
-          rectTop: rect.top,
-          rectBottom: rect.bottom,
-          windowHeight: window.innerHeight
-        });
-        
-        if (isInSection && e.deltaY > 0) {
+        // Only allow scroll if user is at the top and hasn't scrolled past hero yet
+        if (isInSection && e.deltaY > 0 && (isAtTop || !hasScrolledPastHero.current)) {
           // User is scrolling down
           e.preventDefault();
           scrollToNextSection();
@@ -135,13 +158,15 @@ export default function HeroSection({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isScrolling.current) return;
       
-      // Check if we're in the AboutEthiq section
+      // Check if we're in the hero section
       if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
         const isInSection = rect.bottom > window.innerHeight * 0.3;
+        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        const isAtTop = currentScroll <= heroSectionHeight.current * 0.1;
         
-        // Handle arrow down key
-        if (isInSection && e.key === 'ArrowDown') {
+        // Handle arrow down key - only if at top or hasn't scrolled past hero
+        if (isInSection && e.key === 'ArrowDown' && (isAtTop || !hasScrolledPastHero.current)) {
           e.preventDefault();
           scrollToNextSection();
         }
@@ -165,14 +190,17 @@ export default function HeroSection({
         const currentY = touch.clientY;
         const deltaY = touchStartY.current - currentY;
         
-        // Check if we're in the AboutEthiq section and swiping up
+        // Check if we're in the hero section and swiping up
         // Lower the swipe threshold so lighter upward swipes trigger scroll on mobile
         const swipeThreshold = 40;
         if (sectionRef.current && deltaY > swipeThreshold) {
           const rect = sectionRef.current.getBoundingClientRect();
           const isInSection = rect.bottom > window.innerHeight * 0.3;
+          const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+          const isAtTop = currentScroll <= heroSectionHeight.current * 0.1;
           
-          if (isInSection) {
+          // Only allow scroll if at top or hasn't scrolled past hero
+          if (isInSection && (isAtTop || !hasScrolledPastHero.current)) {
             e.preventDefault();
             touchScrolled.current = true;
             scrollToNextSection();
@@ -193,6 +221,7 @@ export default function HeroSection({
     };
 
     // Add event listeners
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
     document.addEventListener('touchstart', handleTouchStart, { passive: false });
@@ -213,6 +242,7 @@ export default function HeroSection({
 
     // Cleanup
     return () => {
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('touchstart', handleTouchStart);

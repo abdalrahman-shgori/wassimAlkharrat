@@ -24,14 +24,14 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
   const [isServicesPageOpen, setIsServicesPageOpen] = useState(isServicesPageActive);
 
   const eventsPageRoutes = useMemo(
-    () => ["/admin/events-hero-section"],
+    () => ["/admin/events-hero-section", "/admin/event-types", "/admin/events"],
     []
   );
   const isEventsPageActive = eventsPageRoutes.some((route) => pathname?.startsWith(route));
   const [isEventsPageOpen, setIsEventsPageOpen] = useState(isEventsPageActive);
 
   const homepageRoutes = useMemo(
-    () => ["/admin/hero-section", "/admin/services", "/admin/events", "/admin/stories"],
+    () => ["/admin/hero-section", "/admin/services", "/admin/stories"],
     []
   );
   // Check homepage routes, but exclude services-page and events-page routes to avoid conflicts
@@ -124,14 +124,6 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
                     </li>
                     <li>
                       <NavLink
-                        href="/admin/events"
-                        icon="🎉"
-                        label="Events"
-                        onClick={closeMobileMenu}
-                      />
-                    </li>
-                    <li>
-                      <NavLink
                         href="/admin/stories"
                         icon="📖"
                         label="Stories"
@@ -191,6 +183,22 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
                         href="/admin/events-hero-section"
                         icon="🌅"
                         label="Hero Section"
+                        onClick={closeMobileMenu}
+                      />
+                    </li>
+                    <li>
+                      <NavLink
+                        href="/admin/event-types"
+                        icon="🏷️"
+                        label="Event Types"
+                        onClick={closeMobileMenu}
+                      />
+                    </li>
+                    <li>
+                      <NavLink
+                        href="/admin/events"
+                        icon="🎉"
+                        label="Events"
                         onClick={closeMobileMenu}
                       />
                     </li>
