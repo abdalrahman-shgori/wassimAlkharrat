@@ -14,7 +14,7 @@ interface EventsFilterBarProps {
   typeOptions: FilterOption[];
   themeOptions: FilterOption[];
   sizeOptions: FilterOption[];
-  onFilterChange: (filters: { type: string; theme: string; size: string }) => void;
+  onFilterChange: (filters: { type: string; theme: string; size: string; placeSearch: string }) => void;
   totalResults: number;
 }
 
@@ -30,15 +30,17 @@ export default function EventsFilterBar({
   const [selectedType, setSelectedType] = useState<string>('');
   const [selectedTheme, setSelectedTheme] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('');
+  const [placeSearch, setPlaceSearch] = useState<string>('');
 
   useEffect(() => {
     onFilterChange({
       type: selectedType,
       theme: selectedTheme,
       size: selectedSize,
+      placeSearch: placeSearch,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedType, selectedTheme, selectedSize]);
+  }, [selectedType, selectedTheme, selectedSize, placeSearch]);
 
   const handleTypeChange = (value: string) => {
     setSelectedType(value);
@@ -56,9 +58,10 @@ export default function EventsFilterBar({
     setSelectedType('');
     setSelectedTheme('');
     setSelectedSize('');
+    setPlaceSearch('');
   };
 
-  const hasAnyFilter = selectedType !== '' || selectedTheme !== '' || selectedSize !== '';
+  const hasAnyFilter = selectedType !== '' || selectedTheme !== '' || selectedSize !== '' || placeSearch !== '';
 
   return (
     <div className={styles.filterBar} id="events-next-section" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
@@ -89,6 +92,26 @@ export default function EventsFilterBar({
             onReset={() => setSelectedSize('')}
             className={styles.filterSelect}
           />
+          <div className={styles.searchInputWrapper}>
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder={t('searchPlace') || 'Search by place (e.g., Dama Rose)'}
+              value={placeSearch}
+              onChange={(e) => setPlaceSearch(e.target.value)}
+              aria-label="Search by place"
+            />
+            {placeSearch && (
+              <button
+                type="button"
+                className={styles.clearSearchButton}
+                onClick={() => setPlaceSearch('')}
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
       </div>
       <div className={styles.resultsSection}>

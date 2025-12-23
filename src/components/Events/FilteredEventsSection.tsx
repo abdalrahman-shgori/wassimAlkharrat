@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import EventsGridSection from '@/components/Events/EventsGridSection';
+import EventsGridSkeleton from '@/components/Events/EventsGridSkeleton';
 import EventsFilterBar from '@/components/Events/EventsFilterBar';
+import Pagination from '@/components/Events/Pagination';
+import { fetchEventsApi } from '../../../lib/api/client';
 
 interface Event {
   _id: string;
@@ -11,12 +14,15 @@ interface Event {
   eventSubtitle: string;
   isActive: boolean;
   eventType?: string | null;
-  type?: string | null; // Localized value for display
-  typeEn?: string | null; // EN value for filtering
-  theme?: string | null; // Localized value for display
-  themeEn?: string | null; // EN value for filtering
-  size?: string | null; // Localized value for display
-  sizeEn?: string | null; // EN value for filtering
+  type?: string | null;
+  typeEn?: string | null;
+  theme?: string | null;
+  themeEn?: string | null;
+  size?: string | null;
+  sizeEn?: string | null;
+  place?: string | null;
+  placeEn?: string | null;
+  placeAr?: string | null;
 }
 
 interface FilterOption {
@@ -25,52 +31,122 @@ interface FilterOption {
 }
 
 interface FilteredEventsSectionProps {
-  events: Event[];
+  eventType: string; // The event type to filter by (Wedding, Birthday, etc.)
   typeOptions: FilterOption[];
   themeOptions: FilterOption[];
   sizeOptions: FilterOption[];
-  defaultEventType?: string;
 }
 
 export default function FilteredEventsSection({
-  events,
+  eventType,
   typeOptions,
   themeOptions,
   sizeOptions,
-  defaultEventType,
 }: FilteredEventsSectionProps) {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     type: '',
     theme: '',
     size: '',
+    placeSearch: '',
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 5,
+    total: 0,
+    totalPages: 0,
+    hasNext: false,
+    hasPrev: false,
   });
 
-  // Filter events based on selected filters
-  // Note: filters contain EN values, but events have both localized (type, theme, size) and EN (typeEn, themeEn, sizeEn) values
-  const filteredEvents = useMemo(() => {
-    return events.filter((event) => {
-      // Filter by type (match by EN value)
-      if (filters.type && event.typeEn !== filters.type) {
-        return false;
+  // Debounce timer for place search
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  // Fetch events from API
+  const fetchEvents = useCallback(async (page: number, currentFilters: typeof filters, limit: number) => {
+    setLoading(true);
+    try {
+      const result = await fetchEventsApi({
+        active: true,
+        eventType: eventType,
+        type: currentFilters.type || undefined,
+        theme: currentFilters.theme || undefined,
+        size: currentFilters.size || undefined,
+        placeSearch: currentFilters.placeSearch || undefined,
+        page,
+        limit,
+      });
+
+      if (result.success && result.data) {
+        setEvents(result.data);
+        if (result.pagination) {
+          setPagination(result.pagination);
+        }
+      } else {
+        setEvents([]);
       }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setEvents([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [eventType, itemsPerPage]);
 
-      // Filter by theme (match by EN value)
-      if (filters.theme && event.themeEn !== filters.theme) {
-        return false;
-      }
-
-      // Filter by size (match by EN value)
-      if (filters.size && event.sizeEn !== filters.size) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [events, filters]);
-
-  const handleFilterChange = useCallback((newFilters: { type: string; theme: string; size: string }) => {
-    setFilters(newFilters);
+  // Initial load
+  useEffect(() => {
+    fetchEvents(1, filters, itemsPerPage);
   }, []);
+
+  // Handle filter change with debouncing for search
+  const handleFilterChange = useCallback((newFilters: typeof filters) => {
+    setFilters(newFilters);
+
+    // Clear existing timeout
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    // Debounce place search (500ms), fetch immediately for dropdowns
+    const hasSearchChanged = newFilters.placeSearch !== filters.placeSearch;
+    const hasDropdownChanged = 
+      newFilters.type !== filters.type ||
+      newFilters.theme !== filters.theme ||
+      newFilters.size !== filters.size;
+
+    if (hasDropdownChanged) {
+      // Immediate fetch for dropdown changes
+      setCurrentPage(1);
+      fetchEvents(1, newFilters, itemsPerPage);
+    } else if (hasSearchChanged) {
+      // Debounced fetch for search input
+      const timeout = setTimeout(() => {
+        setCurrentPage(1);
+        fetchEvents(1, newFilters, itemsPerPage);
+      }, 500);
+      setSearchTimeout(timeout);
+    }
+  }, [filters, searchTimeout, fetchEvents, itemsPerPage]);
+
+  // Handle page change
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    fetchEvents(page, filters, itemsPerPage);
+    // Scroll to top of events section
+    document.getElementById('events-next-section')?.scrollIntoView({ behavior: 'smooth' });
+  }, [filters, fetchEvents, itemsPerPage]);
+
+  // Handle items per page change
+  const handleLimitChange = useCallback((newLimit: number) => {
+    setItemsPerPage(newLimit);
+    setCurrentPage(1);
+    fetchEvents(1, filters, newLimit);
+    // Scroll to top of events section
+    document.getElementById('events-next-section')?.scrollIntoView({ behavior: 'smooth' });
+  }, [filters, fetchEvents]);
 
   return (
     <>
@@ -79,10 +155,27 @@ export default function FilteredEventsSection({
         themeOptions={themeOptions}
         sizeOptions={sizeOptions}
         onFilterChange={handleFilterChange}
-        totalResults={filteredEvents.length}
+        totalResults={pagination.total}
       />
-      <EventsGridSection events={filteredEvents} />
+      
+      {loading ? (
+        <EventsGridSkeleton count={6} />
+      ) : (
+        <>
+          <EventsGridSection events={events} />
+          
+          <Pagination
+            currentPage={currentPage}
+            totalPages={pagination.totalPages}
+            total={pagination.total}
+            limit={itemsPerPage}
+            onPageChange={handlePageChange}
+            onLimitChange={handleLimitChange}
+            hasNext={pagination.hasNext}
+            hasPrev={pagination.hasPrev}
+          />
+        </>
+      )}
     </>
   );
 }
-

@@ -1,8 +1,7 @@
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
-import { getServicesCollection } from '../../../../../lib/db';
 import { Locale, defaultLocale, isLocale } from '@/lib/i18n/config';
-import { pickLocalizedString } from '../../../../../lib/i18n/serverLocale';
+import { fetchServiceBySlug } from '../../../../../lib/api/server';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,11 +12,6 @@ import WelcomeToSection from '@/components/welcomeTo/welcomeToSection';
 import WhatWeDoSection from '@/components/services/WhatWeDoSection';
 
 export const revalidate = 3600; // ISR: Revalidate every hour
-
-/**
- * Safe string ID converter for Mongo documents
- */
-const idToString = (id: any): string => id?.toString?.() ?? '';
 
 /**
  * Get locale from cookies safely
@@ -34,67 +28,6 @@ async function getLocale(): Promise<Locale> {
   return defaultLocale;
 }
 
-/**
- * Fetch service by slug and localize fields
- */
-async function getServiceBySlug(slug: string, locale: Locale) {
-  try {
-    const servicesCollection = await getServicesCollection();
-    const service = await servicesCollection.findOne({
-      slug,
-      isActive: true,
-    });
-
-    if (!service) return null;
-
-    return {
-      _id: idToString(service._id),
-      slug: service.slug,
-      icon: service.icon,
-      image: service.image,
-      filterKey: service.filterKey,
-      isActive: service.isActive,
-
-      title: pickLocalizedString(locale, {
-        en: service.titleEn ?? service.title,
-        ar: service.titleAr ?? null,
-      }),
-
-      details: pickLocalizedString(locale, {
-        en: service.detailsEn ?? service.details,
-        ar: service.detailsAr ?? null,
-      }),
-
-      name: pickLocalizedString(locale, {
-        en: service.nameEn ?? service.name,
-        ar: service.nameAr ?? null,
-      }),
-
-      description: pickLocalizedString(locale, {
-        en: service.descriptionEn ?? service.description,
-        ar: service.descriptionAr ?? null,
-      }),
-
-      whatWeDo: service.whatWeDo
-        ? service.whatWeDo.map((item: any) => ({
-          title: pickLocalizedString(locale, {
-            en: item.titleEn ?? item.title,
-            ar: item.titleAr ?? null,
-          }),
-          description: pickLocalizedString(locale, {
-            en: item.descriptionEn ?? item.description,
-            ar: item.descriptionAr ?? null,
-          }),
-          image: item.image,
-        }))
-        : [],
-    };
-  } catch (error) {
-    console.error('[getServiceBySlug] Error:', error);
-    return null;
-  }
-}
-
 interface ServiceDetailPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -107,7 +40,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
-  const service = await getServiceBySlug(slug, locale);
+  const service = await fetchServiceBySlug(slug, locale);
 
   if (!service) {
     return {
@@ -163,7 +96,9 @@ export default async function ServiceDetailPage({
 }: ServiceDetailPageProps) {
   const { slug } = await params;
   const locale = await getLocale();
-  const service = await getServiceBySlug(slug, locale);
+  
+  // Use centralized API utility
+  const service = await fetchServiceBySlug(slug, locale);
 
   if (!service) {
     notFound();

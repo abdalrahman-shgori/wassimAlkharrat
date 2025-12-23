@@ -21,6 +21,8 @@ interface Event {
   themeAr?: string;
   size?: string;
   sizeAr?: string;
+  place?: string;
+  placeAr?: string;
   isActive: boolean;
 }
 
@@ -69,6 +71,8 @@ export default function EventsPage() {
       themeAr: "",
       size: "",
       sizeAr: "",
+      place: "",
+      placeAr: "",
       isActive: true,
     },
     formFields: [
@@ -144,6 +148,20 @@ export default function EventsPage() {
         helpText: "أدخل حجم هذا الحدث بالعربية. سيتم استخدامه للتصفية في صفحة تفاصيل الحدث.",
       },
       {
+        name: "place",
+        label: "Place/Location (EN)",
+        type: "text",
+        placeholder: "e.g., Dama Rose Hotel, Four Seasons, Sheraton Damascus",
+        helpText: "Enter the place/location for this event. Users can search by place name.",
+      },
+      {
+        name: "placeAr",
+        label: "Place/Location (AR)",
+        type: "text",
+        placeholder: "مثال: فندق داما روز، فور سيزونز، شيراتون دمشق",
+        helpText: "أدخل المكان/الموقع لهذا الحدث بالعربية. يمكن للمستخدمين البحث بإسم المكان.",
+      },
+      {
         name: "isActive",
         label: "Active (visible to public)",
         type: "checkbox",
@@ -180,6 +198,9 @@ export default function EventsPage() {
           )}
           {event.size && (
             <span className={styles.eventDetail}>Size: {event.size}</span>
+          )}
+          {event.place && (
+            <span className={styles.eventDetail}>📍 {event.place}</span>
           )}
         </div>
       </>

@@ -71,6 +71,12 @@
   z-index: 1000;
   animation: fadeInDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 180px;
+
+  &.openUpward {
+    top: auto;
+    bottom: calc(100% + 8px);
+    animation: fadeInUp 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 .dropdownMenuInner {
@@ -218,6 +224,17 @@
   from {
     opacity: 0;
     transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
   to {
     opacity: 1;

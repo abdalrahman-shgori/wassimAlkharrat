@@ -36,6 +36,8 @@ export async function GET(
     const subtitleEn = event.eventSubtitleEn ?? event.eventSubtitle ?? "";
     const titleAr = event.eventTitleAr ?? null;
     const subtitleAr = event.eventSubtitleAr ?? null;
+    const placeEn = event.place ?? null;
+    const placeAr = event.placeAr ?? null;
 
     // Strip legacy "order" field if present
     const { order: _order, ...safeEvent } = event as any;
@@ -50,6 +52,9 @@ export async function GET(
         eventTitleAr: titleAr ?? "",
         eventSubtitleEn: subtitleEn,
         eventSubtitleAr: subtitleAr ?? "",
+        place: placeEn ? pickLocalizedString(locale, { en: placeEn, ar: placeAr }) : null,
+        placeEn: placeEn ?? "",
+        placeAr: placeAr ?? "",
       },
     });
   } catch (error) {
@@ -111,6 +116,8 @@ export async function PUT(
     if (body.themeAr !== undefined) updateData.themeAr = body.themeAr;
     if (body.size !== undefined) updateData.size = body.size;
     if (body.sizeAr !== undefined) updateData.sizeAr = body.sizeAr;
+    if (body.place !== undefined) updateData.place = body.place;
+    if (body.placeAr !== undefined) updateData.placeAr = body.placeAr;
     if (body.isEventType !== undefined) updateData.isEventType = body.isEventType;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
 

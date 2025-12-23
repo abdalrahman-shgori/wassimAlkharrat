@@ -16,6 +16,8 @@ export interface Event {
   themeAr?: string; // Event theme in Arabic
   size?: string; // Event size (e.g., "Small", "Medium", "Large", etc.)
   sizeAr?: string; // Event size in Arabic
+  place?: string; // Event place/location (e.g., "Dama Rose Hotel", "Four Seasons", etc.)
+  placeAr?: string; // Event place/location in Arabic
   isEventType?: boolean; // Flag to distinguish event types from individual events
   isActive: boolean;
   createdAt: Date;
@@ -37,6 +39,8 @@ export interface CreateEventInput {
   themeAr?: string;
   size?: string;
   sizeAr?: string;
+  place?: string;
+  placeAr?: string;
   isEventType?: boolean;
   isActive?: boolean;
 }
@@ -56,6 +60,8 @@ export interface UpdateEventInput {
   themeAr?: string;
   size?: string;
   sizeAr?: string;
+  place?: string;
+  placeAr?: string;
   isEventType?: boolean;
   isActive?: boolean;
 }

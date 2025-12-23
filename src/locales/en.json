@@ -41,10 +41,13 @@
     "type": "Type",
     "theme": "Theme",
     "size": "Size",
+    "searchPlace": "Search by place (e.g., Dama Rose)",
     "showing": "Showing:",
     "results": "results",
     "resetAll": "Reset All",
-    "reset": "Reset"
+    "reset": "Reset",
+    "previousPage": "Previous page",
+    "nextPage": "Next page"
   },
   "stories": {
     "title": "Stories",

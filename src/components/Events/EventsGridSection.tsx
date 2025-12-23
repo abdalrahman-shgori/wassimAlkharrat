@@ -107,9 +107,13 @@ export default function EventsGridSection({ events = [] }: EventsGridSectionProp
                   <h3 className={styles.eventsSectionContentItemTitle}>
                     {event.eventTitle}
                   </h3>
-                  <p className={styles.eventsSectionContentItemDescription}>
-                    {event.eventSubtitle}
-                  </p>
+                  {
+                    event.eventSubtitle && (
+                      <p className={styles.eventsSectionContentItemDescription}>
+                        {event.eventSubtitle}
+                      </p>
+                    )
+                  }
                   <div className={styles.eventsSectionContentItemLink}>
                     learn more
                     <Image

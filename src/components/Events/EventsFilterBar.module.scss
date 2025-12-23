@@ -85,6 +85,69 @@
   font-weight: 400;
 }
 
+.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 200px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 36px 10px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000000;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  &::placeholder {
+    color: #999999;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #AD8842;
+    box-shadow: 0 0 0 2px rgba(173, 136, 66, 0.1);
+  }
+
+  &:hover {
+    border-color: #cccccc;
+  }
+}
+
+.clearSearchButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  color: #999999;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: color 0.2s ease;
+  padding: 0;
+
+  &:hover {
+    color: #AD8842;
+  }
+
+  &:active {
+    color: #8B6F38;
+  }
+}
+
 @media (max-width: 1024px) {
   .filterBar {
     padding: 16px 60px;

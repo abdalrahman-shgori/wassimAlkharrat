@@ -16,6 +16,7 @@ interface CustomDropdownProps {
   onChange: (value: string) => void;
   onReset?: () => void;
   className?: string;
+  showReset?: boolean;
 }
 
 export default function CustomDropdown({
@@ -25,12 +26,31 @@ export default function CustomDropdown({
   onChange,
   onReset,
   className = '',
+  showReset = true,
 }: CustomDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const selectedOption = options.find((opt) => opt.value === value);
   const hasSelection = value !== '';
   const t = useTranslations('events');
+
+  // Detect dropdown direction based on viewport space
+  useEffect(() => {
+    if (isOpen && dropdownRef.current && menuRef.current) {
+      const buttonRect = dropdownRef.current.getBoundingClientRect();
+      const menuHeight = menuRef.current.scrollHeight;
+      const viewportHeight = window.innerHeight;
+      
+      const spaceBelow = viewportHeight - buttonRect.bottom;
+      const spaceAbove = buttonRect.top;
+      
+      // Open upward if there's not enough space below but enough space above
+      setOpenUpward(spaceBelow < menuHeight && spaceAbove > spaceBelow);
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -86,9 +106,12 @@ export default function CustomDropdown({
         </svg>
       </button>
       {isOpen && (
-        <div className={styles.dropdownMenu}>
+        <div 
+          ref={menuRef}
+          className={`${styles.dropdownMenu} ${openUpward ? styles.openUpward : ''}`}
+        >
           <div className={styles.dropdownMenuInner}>
-            {hasSelection && (
+            {showReset && hasSelection && (
               <button
                 type="button"
                 className={styles.resetButton}

@@ -52,18 +52,16 @@ export default function ServicesSection({ services, filters = [], isHomePage = f
     setLoading(true);
 
     try {
-      const url = filterKey 
-        ? `/api/services?active=true&filterKey=${encodeURIComponent(filterKey)}`
-        : '/api/services?active=true';
-      
-      const response = await fetch(url, {
-        credentials: 'include', // Include cookies in the request
+      // Use centralized API utility
+      const { fetchServicesApi } = await import('../../../lib/api/client');
+      const result = await fetchServicesApi({ 
+        active: true, 
+        filterKey: filterKey || undefined 
       });
-      const data = await response.json();
       
-      if (data.success && data.data) {
+      if (result.success && result.data) {
         // Ensure data structure matches Service interface
-        const formattedServices = data.data.map((service: any) => ({
+        const formattedServices = result.data.map((service: any) => ({
           _id: service._id?.toString() || service._id,
           name: service.name || '',
           slug: service.slug || '',

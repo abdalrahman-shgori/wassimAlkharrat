@@ -1,48 +1,16 @@
 import { cookies } from 'next/headers';
 import type { Metadata } from 'next';
 import ServicesSection from '@/components/services/ServicesSection';
-import {
-  getServicesCollection,
-  getServiceFiltersCollection,
-  getServicesPageSettingsCollection,
-} from '../../../../lib/db';
-import { Service } from '../../../../lib/models/Service';
-import { ServiceFilter } from '../../../../lib/models/ServiceFilter';
-import { ServicesPageSettings } from '../../../../lib/models/ServicesPageSettings';
-import {
-  Locale,
-  defaultLocale,
-  isLocale,
-  getMessages,
-} from '@/lib/i18n/config';
-import { pickLocalizedString } from '../../../../lib/i18n/serverLocale';
+import { Locale, defaultLocale, isLocale, getMessages } from '@/lib/i18n/config';
+import { 
+  fetchServices, 
+  fetchServiceFilters, 
+  fetchServicesPageSettings 
+} from '../../../../lib/api/server';
 import HeroSection from '@/components/HeroSection/HeroSection';
 import CTASection from '@/components/UI/CTASection';
 
 export const revalidate = 3600; // ISR: Revalidate every hour
-
-/**
- * Safe string ID converter for Mongo documents
- */
-const idToString = (id: any): string => id?.toString?.() ?? '';
-
-/**
- * Fetch active docs sorted by createdAt
- */
-async function fetchActiveDocs<T>(
-  collectionGetter: () => Promise<any>
-): Promise<T[]> {
-  try {
-    const collection = await collectionGetter();
-    return await collection
-      .find({ isActive: true })
-      .sort({ createdAt: -1 })
-      .toArray();
-  } catch (error) {
-    console.error('[fetchActiveDocs] Error:', error);
-    return [];
-  }
-}
 
 /**
  * Get locale from cookies
@@ -57,72 +25,6 @@ async function getLocale(): Promise<Locale> {
     /* fallback */
   }
   return defaultLocale;
-}
-
-/**
- * Get all services (localized)
- */
-async function getAllServices(locale: Locale) {
-  const services = await fetchActiveDocs<Service>(getServicesCollection);
-
-  return services.map(service => ({
-    _id: idToString(service._id),
-    slug: service.slug,
-    icon: service.icon,
-    image: service.image,
-    filterKey: service.filterKey,
-    isActive: service.isActive,
-    name: pickLocalizedString(locale, {
-      en: service.nameEn ?? service.name,
-      ar: service.nameAr ?? null,
-    }),
-    description: pickLocalizedString(locale, {
-      en: service.descriptionEn ?? service.description,
-      ar: service.descriptionAr ?? null,
-    }),
-  }));
-}
-
-/**
- * Get all service filters (localized)
- */
-async function getAllFilters(locale: Locale) {
-  try {
-    const filtersCollection = await getServiceFiltersCollection();
-    const filters = await filtersCollection
-      .find({ isActive: { $ne: false } })
-      .sort({ createdAt: -1 })
-      .toArray();
-
-    return filters.map(filter => ({
-      _id: idToString(filter._id),
-      key: filter.key,
-      name: pickLocalizedString(locale, {
-        en: filter.nameEn,
-        ar: filter.nameAr,
-      }),
-      nameEn: filter.nameEn,
-      nameAr: filter.nameAr,
-    }));
-  } catch (error) {
-    console.error('[getAllFilters] Error:', error);
-    return [];
-  }
-}
-
-/**
- * Get services page settings (hero image)
- */
-async function getServicesPageSettings(): Promise<{ heroImage?: string } | null> {
-  try {
-    const collection = await getServicesPageSettingsCollection();
-    const settings = await collection.findOne<ServicesPageSettings>({}, { sort: { updatedAt: -1 } });
-
-    return settings ? { heroImage: settings.heroImage } : null;
-  } catch (error) {
-    console.error('[getServicesPageSettings] Error:', error);
-    return null;
-  }
 }
 
 /**
@@ -170,11 +72,14 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function ServicesPage() {
   const locale = await getLocale();
+  
+  // Fetch all data in parallel using centralized API utilities
   const [services, filters, servicesPageSettings] = await Promise.all([
-    getAllServices(locale),
-    getAllFilters(locale),
-    getServicesPageSettings(),
+    fetchServices(locale),              // Fetch all services
+    fetchServiceFilters(locale),        // Fetch service filters
+    fetchServicesPageSettings(),        // Fetch services page settings
   ]);
+  
   const messages = getMessages(locale);
   const heroTranslations = (messages as any).servicesPage?.hero;
 

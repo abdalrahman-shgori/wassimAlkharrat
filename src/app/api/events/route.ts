@@ -15,6 +15,18 @@ export async function GET(request: NextRequest) {
     const activeOnly = searchParams.get("active") === "true";
     const includeEventTypes = searchParams.get("includeEventTypes") === "true";
     
+    // Pagination parameters
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "20", 10);
+    const skip = (page - 1) * limit;
+    
+    // Filter parameters
+    const eventTypeFilter = searchParams.get("eventType");
+    const typeFilter = searchParams.get("type");
+    const themeFilter = searchParams.get("theme");
+    const sizeFilter = searchParams.get("size");
+    const placeSearch = searchParams.get("placeSearch");
+    
     // Build query
     let query: any = {};
     if (activeOnly) {
@@ -26,10 +38,68 @@ export async function GET(request: NextRequest) {
       query.isEventType = { $ne: true };
     }
     
-    // Fetch events sorted by newest first
+    // Apply filters
+    if (eventTypeFilter) {
+      query.eventType = eventTypeFilter;
+    }
+    if (typeFilter) {
+      query.type = typeFilter;
+    }
+    if (themeFilter) {
+      query.theme = themeFilter;
+    }
+    if (sizeFilter) {
+      query.size = sizeFilter;
+    }
+    if (placeSearch) {
+      // Normalize search term: remove spaces and convert to lowercase
+      const normalizedSearch = placeSearch.replace(/\s+/g, '').toLowerCase();
+      
+      // Search in both EN and AR place fields (case-insensitive, space-insensitive)
+      // Using $expr to compare normalized strings
+      query.$expr = {
+        $or: [
+          {
+            $regexMatch: {
+              input: { 
+                $toLower: { 
+                  $replaceAll: { 
+                    input: { $ifNull: ["$place", ""] }, 
+                    find: " ", 
+                    replacement: "" 
+                  } 
+                } 
+              },
+              regex: normalizedSearch
+            }
+          },
+          {
+            $regexMatch: {
+              input: { 
+                $toLower: { 
+                  $replaceAll: { 
+                    input: { $ifNull: ["$placeAr", ""] }, 
+                    find: " ", 
+                    replacement: "" 
+                  } 
+                } 
+              },
+              regex: normalizedSearch
+            }
+          }
+        ]
+      };
+    }
+    
+    // Get total count for pagination
+    const total = await eventsCollection.countDocuments(query);
+    
+    // Fetch events with pagination
     const events = await eventsCollection
       .find(query)
       .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .toArray();
 
     const localized = events.map((event) => {
@@ -43,6 +113,8 @@ export async function GET(request: NextRequest) {
       const themeAr = event.themeAr ?? null;
       const sizeEn = event.size ?? null;
       const sizeAr = event.sizeAr ?? null;
+      const placeEn = event.place ?? null;
+      const placeAr = event.placeAr ?? null;
 
       // Strip legacy "order" field if it exists
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -63,17 +135,34 @@ export async function GET(request: NextRequest) {
         themeAr: themeAr ?? "",
         size: sizeEn ? pickLocalizedString(locale, { en: sizeEn, ar: sizeAr }) : null,
         sizeAr: sizeAr ?? "",
+        // Localize place
+        place: placeEn ? pickLocalizedString(locale, { en: placeEn, ar: placeAr }) : null,
+        placeAr: placeAr ?? "",
         // Keep EN values for filtering
         typeEn: typeEn,
         themeEn: themeEn,
         sizeEn: sizeEn,
+        placeEn: placeEn,
       };
     });
 
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(total / limit);
+    const hasNext = page < totalPages;
+    const hasPrev = page > 1;
+    
     return NextResponse.json({
       success: true,
       data: localized,
       count: localized.length,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNext,
+        hasPrev,
+      },
     });
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -125,6 +214,8 @@ export async function POST(request: NextRequest) {
       themeAr: body.themeAr || null,
       size: body.size || null,
       sizeAr: body.sizeAr || null,
+      place: body.place || null,
+      placeAr: body.placeAr || null,
       isEventType: body.isEventType !== undefined ? body.isEventType : false,
       isActive: body.isActive !== undefined ? body.isActive : true,
       createdAt: new Date(),
