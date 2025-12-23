@@ -47,7 +47,13 @@
     "resetAll": "إعادة تعيين الكل",
     "reset": "إعادة تعيين",
     "previousPage": "الصفحة السابقة",
-    "nextPage": "الصفحة التالية"
+    "nextPage": "الصفحة التالية",
+    "firstPage": "الصفحة الأولى",
+    "lastPage": "الصفحة الأخيرة",
+    "page": "صفحة",
+    "of": "من",
+    "items": "عناصر",
+    "itemsPerPage": "عناصر لكل صفحة"
   },
   "stories": {
     "title": "القصص",

@@ -73,12 +73,13 @@ export default function Pagination({
   };
 
   const pageNumbers = getPageNumbers();
+  const isRTL = locale === 'ar';
 
   return (
-    <div className={styles.paginationWrapper} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <div className={styles.paginationWrapper} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Items range */}
       <div className={styles.itemsInfo}>
-        {startItem}-{endItem < 10 ? `0${endItem}` : endItem} of {total} items
+        {startItem}-{endItem < 10 ? `0${endItem}` : endItem} {t('of')} {total} {t('items')}
       </div>
 
       {/* Pagination controls */}
@@ -88,12 +89,19 @@ export default function Pagination({
           className={styles.navButton}
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
-          aria-label="First page"
+          aria-label={t('firstPage') || 'First page'}
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M13 5L8 10L13 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M8 5L3 10L8 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          {isRTL ? (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7 5L12 10L7 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 5L17 10L12 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M13 5L8 10L13 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M8 5L3 10L8 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
         </button>
 
         {/* Previous page */}
@@ -103,9 +111,15 @@ export default function Pagination({
           disabled={!hasPrev}
           aria-label={t('previousPage') || 'Previous page'}
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M12 5L7 10L12 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          {isRTL ? (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M8 5L13 10L8 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M12 5L7 10L12 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
         </button>
 
         {/* Page numbers */}
@@ -114,7 +128,7 @@ export default function Pagination({
             key={page}
             className={`${styles.pageButton} ${page === currentPage ? styles.active : ''}`}
             onClick={() => onPageChange(page)}
-            aria-label={`Page ${page}`}
+            aria-label={`${t('page')} ${page}`}
             aria-current={page === currentPage ? 'page' : undefined}
           >
             {page}
@@ -128,9 +142,15 @@ export default function Pagination({
           disabled={!hasNext}
           aria-label={t('nextPage') || 'Next page'}
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M8 5L13 10L8 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          {isRTL ? (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M12 5L7 10L12 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M8 5L13 10L8 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
         </button>
 
         {/* Last page */}
@@ -138,12 +158,19 @@ export default function Pagination({
           className={styles.navButton}
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages}
-          aria-label="Last page"
+          aria-label={t('lastPage') || 'Last page'}
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M7 5L12 10L7 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M12 5L17 10L12 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          {isRTL ? (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M13 5L8 10L13 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M8 5L3 10L8 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7 5L12 10L7 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M12 5L17 10L12 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
         </button>
       </div>
 
@@ -157,7 +184,7 @@ export default function Pagination({
           showReset={false}
           className={styles.limitDropdown}
         />
-        <span className={styles.limitLabel}>Items per page</span>
+        <span className={styles.limitLabel}>{t('itemsPerPage')}</span>
       </div>
     </div>
   );

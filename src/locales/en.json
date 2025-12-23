@@ -47,7 +47,13 @@
     "resetAll": "Reset All",
     "reset": "Reset",
     "previousPage": "Previous page",
-    "nextPage": "Next page"
+    "nextPage": "Next page",
+    "firstPage": "First page",
+    "lastPage": "Last page",
+    "page": "Page",
+    "of": "of",
+    "items": "items",
+    "itemsPerPage": "Items per page"
   },
   "stories": {
     "title": "Stories",

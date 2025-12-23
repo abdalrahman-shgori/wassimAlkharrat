@@ -192,7 +192,7 @@ export default function HeroSection({
         
         // Check if we're in the hero section and swiping up
         // Lower the swipe threshold so lighter upward swipes trigger scroll on mobile
-        const swipeThreshold = 40;
+        const swipeThreshold = 10;
         if (sectionRef.current && deltaY > swipeThreshold) {
           const rect = sectionRef.current.getBoundingClientRect();
           const isInSection = rect.bottom > window.innerHeight * 0.3;
