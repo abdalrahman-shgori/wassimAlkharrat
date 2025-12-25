@@ -63,8 +63,8 @@ export default function HeroSection({
   const lastScrollTime = useRef<number>(0);
   const hasScrolledPastHero = useRef(false);
   const heroSectionHeight = useRef<number>(0);
-  const touchMoveHandler = useRef<((e: TouchEvent) => void) | null>(null);
-  const touchEndHandler = useRef<(() => void) | null>(null);
+
+
   
   const scrollToNextSection = () => {
     const now = Date.now();
@@ -179,24 +179,26 @@ export default function HeroSection({
       if (isScrolling.current) return;
       
       const touch = e.touches[0];
-      if (!touch) return;
-      
+
+
       touchStartY.current = touch.clientY;
       touchScrolled.current = false;
       
       const handleTouchMove = (e: TouchEvent) => {
-        // Don't prevent default if scrolling is in progress or already handled
+
         if (isScrolling.current || touchScrolled.current || !touchStartY.current) {
+          e.preventDefault();
           return;
         }
         
         const touch = e.touches[0];
-        if (!touch) return;
-        
+
+
         const currentY = touch.clientY;
         const deltaY = touchStartY.current - currentY;
         
         // Check if we're in the hero section and swiping up
+        // Lower the swipe threshold so lighter upward swipes trigger scroll on mobile
         const swipeThreshold = 10;
         if (sectionRef.current && deltaY > swipeThreshold) {
           const rect = sectionRef.current.getBoundingClientRect();
@@ -206,10 +208,10 @@ export default function HeroSection({
           
           // Only allow scroll if at top or hasn't scrolled past hero
           if (isInSection && (isAtTop || !hasScrolledPastHero.current)) {
-            // Only prevent default if event is cancelable
-            if (e.cancelable) {
+
+
               e.preventDefault();
-            }
+
             touchScrolled.current = true;
             scrollToNextSection();
             return;
@@ -220,30 +222,44 @@ export default function HeroSection({
       const handleTouchEnd = () => {
         touchStartY.current = null;
         touchScrolled.current = false;
-        if (touchMoveHandler.current) {
-          document.removeEventListener('touchmove', touchMoveHandler.current);
-        }
-        if (touchEndHandler.current) {
-          document.removeEventListener('touchend', touchEndHandler.current);
-        }
-        touchMoveHandler.current = null;
-        touchEndHandler.current = null;
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+
+
+
+
+
+
       };
       
-      // Store handlers for cleanup
-      touchMoveHandler.current = handleTouchMove;
-      touchEndHandler.current = handleTouchEnd;
-      
-      // Use passive: false only when we might need to prevent default
+
+
+
+
+
       document.addEventListener('touchmove', handleTouchMove, { passive: false });
-      document.addEventListener('touchend', handleTouchEnd, { passive: true });
+      document.addEventListener('touchend', handleTouchEnd);
     };
 
     // Add event listeners
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    
+    // Prevent default scroll behavior on touch devices when in this section
+    const preventDefaultScroll = (e: TouchEvent) => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        const isInSection = rect.bottom > window.innerHeight * 0.3;
+        
+        if (isInSection && !isScrolling.current) {
+          e.preventDefault();
+        }
+      }
+    };
+    
+    document.addEventListener('touchmove', preventDefaultScroll, { passive: false });
 
     // Cleanup
     return () => {
@@ -251,16 +267,16 @@ export default function HeroSection({
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('touchstart', handleTouchStart);
-      
-      // Clean up any active touch handlers
-      if (touchMoveHandler.current) {
-        document.removeEventListener('touchmove', touchMoveHandler.current);
-      }
-      if (touchEndHandler.current) {
-        document.removeEventListener('touchend', touchEndHandler.current);
-      }
-      touchMoveHandler.current = null;
-      touchEndHandler.current = null;
+      document.removeEventListener('touchmove', preventDefaultScroll);
+
+
+
+
+
+
+
+
+
     };
   }, [nextSectionId]);
 

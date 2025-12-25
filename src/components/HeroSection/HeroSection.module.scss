@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-
+  scroll-snap-align: start;
   &::before {
     content: '';
     position: absolute;
