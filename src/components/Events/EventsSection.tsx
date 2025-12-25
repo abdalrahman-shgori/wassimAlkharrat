@@ -11,6 +11,7 @@ import styles from './EventsSection.module.scss';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import Link from 'next/link';
 
 interface Event {
   _id: string;
@@ -121,7 +122,7 @@ export default function EventsSection({ events = [] }: EventsSectionProps) {
           </Swiper>
         )}
 
-        <button className={styles.exploreButton}>{t('explore')}</button>
+        <Link href="/events" ><button className={styles.exploreButton}>{t('explore')}</button></Link>
       </div>
     </section>
   );
