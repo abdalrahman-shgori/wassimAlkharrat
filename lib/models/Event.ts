@@ -18,6 +18,8 @@ export interface Event {
   sizeAr?: string; // Event size in Arabic
   place?: string; // Event place/location (e.g., "Dama Rose Hotel", "Four Seasons", etc.)
   placeAr?: string; // Event place/location in Arabic
+  servicesUsed?: Array<{ nameEn: string; nameAr: string }>; // Array of custom service objects with English and Arabic names
+  eventDate?: Date | string; // Date when the event occurred or will occur
   isEventType?: boolean; // Flag to distinguish event types from individual events
   isActive: boolean;
   createdAt: Date;
@@ -41,6 +43,8 @@ export interface CreateEventInput {
   sizeAr?: string;
   place?: string;
   placeAr?: string;
+  servicesUsed?: Array<{ nameEn: string; nameAr: string }>;
+  eventDate?: Date | string;
   isEventType?: boolean;
   isActive?: boolean;
 }
@@ -62,6 +66,8 @@ export interface UpdateEventInput {
   sizeAr?: string;
   place?: string;
   placeAr?: string;
+  servicesUsed?: Array<{ nameEn: string; nameAr: string }>;
+  eventDate?: Date | string;
   isEventType?: boolean;
   isActive?: boolean;
 }

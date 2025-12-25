@@ -275,7 +275,21 @@ export async function fetchEvents(locale: Locale) {
     }),
     placeEn: event.place,
     placeAr: event.placeAr,
+    servicesUsed: event.servicesUsed || [],
+    eventDate: event.eventDate || null,
   }));
+}
+
+/**
+ * Utility function to create slug from text
+ */
+function createSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 /**
@@ -283,16 +297,6 @@ export async function fetchEvents(locale: Locale) {
  */
 export async function fetchEventTypeBySlug(slug: string, locale: Locale) {
   const eventTypes = await fetchEventTypes(locale);
-  
-  // Also need to create slug from the fetched data
-  const createSlug = (text: string): string => {
-    return text
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-  };
 
   const eventType = eventTypes.find((et: any) => {
     const eventSlugEn = createSlug(et.eventTitleEn);
@@ -315,6 +319,38 @@ export async function fetchEventsByType(eventTypeValue: string, locale: Locale) 
     }
     return event.eventTitleEn === eventTypeValue;
   });
+}
+
+/**
+ * Fetch event by slug (eventName) with localization
+ * Excludes event types (only returns individual events)
+ */
+export async function fetchEventBySlug(eventNameSlug: string, locale: Locale, eventTypeSlug?: string) {
+  const allEvents = await fetchEvents(locale);
+  
+  // Filter by event type slug if provided
+  let eventsToSearch = allEvents;
+  if (eventTypeSlug) {
+    const eventType = await fetchEventTypeBySlug(eventTypeSlug, locale);
+    if (eventType) {
+      const filterType = eventType.eventType || eventType.eventTitleEn;
+      eventsToSearch = eventsToSearch.filter((event: any) => {
+        if (event.eventType) {
+          return event.eventType === filterType;
+        }
+        return event.eventTitleEn === filterType;
+      });
+    }
+  }
+  
+  // Find event by matching slug
+  const event = eventsToSearch.find((event: any) => {
+    const eventSlugEn = createSlug(event.eventTitleEn || event.eventTitle);
+    const eventSlugAr = event.eventTitleAr ? createSlug(event.eventTitleAr) : null;
+    return eventSlugEn === eventNameSlug || eventSlugAr === eventNameSlug;
+  });
+
+  return event || null;
 }
 
 /**

@@ -47,8 +47,60 @@
     font-weight: 400;
     line-height: 32px;
     max-width: 976px;
-    
+}
 
+.servicesSection{
+    margin-top: 40px;
+}
+
+.servicesHeading{
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--white);
+}
+
+.servicesList{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 6px;
+}
+
+.servicesList li{
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--white);
+    position: relative;
+}
+
+.servicesList li:not(:last-child)::after{
+    content: ',';
+    margin-left: 4px;
+}
+
+.eventMetaInfo{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+    padding-top: 40px;
+}
+
+.metaItem{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--white);
+}
+
+.metaIcon{
+    font-size: 20px;
+    color: var(--white);
 }
 
 .welcomeToSectionAuthor{
@@ -78,6 +130,40 @@
     .welcomeToSectionDescription{
         font-size: 12px;
         line-height: 18.5px;
+        margin-bottom: 24px;
+    }
+    
+    .servicesSection{
+        margin-top: 24px;
+        margin-bottom: 32px;
+    }
+    
+    .servicesHeading{
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .servicesList{
+        gap: 8px 16px;
+    }
+    
+    .servicesList li{
+        font-size: 14px;
+    }
+    
+    .eventMetaInfo{
+        gap: 24px;
+        margin-top: 32px;
+        padding-top: 24px;
+    }
+    
+    .metaItem{
+        gap: 8px;
+        font-size: 14px;
+    }
+    
+    .metaIcon{
+        font-size: 16px;
     }
     .welcomeToSectionAuthor{
         font-size: 24px;
@@ -104,6 +190,41 @@
         font-size: 12px;
         line-height: 100%;
         max-width: 314px;
+        margin-bottom: 16px;
+    }
+    
+    .servicesSection{
+        margin-top: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .servicesHeading{
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .servicesList{
+        gap: 6px 12px;
+    }
+    
+    .servicesList li{
+        font-size: 12px;
+    }
+    
+    .eventMetaInfo{
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 24px;
+        padding-top: 16px;
+    }
+    
+    .metaItem{
+        gap: 6px;
+        font-size: 12px;
+    }
+    
+    .metaIcon{
+        font-size: 14px;
     }
     .welcomeToSectionAuthor{
         font-size: 18px;

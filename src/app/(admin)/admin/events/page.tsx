@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import AdminCRUDPage, { AdminCRUDConfig } from "@/components/admin/AdminCRUDPage";
+import CustomServicesField, { CustomService } from "@/components/admin/CustomServicesField";
 import styles from "./page.module.scss";
 
 interface Event {
@@ -23,6 +24,8 @@ interface Event {
   sizeAr?: string;
   place?: string;
   placeAr?: string;
+  servicesUsed?: Array<{ nameEn: string; nameAr: string }>;
+  eventDate?: string;
   isActive: boolean;
 }
 
@@ -73,6 +76,8 @@ export default function EventsPage() {
       sizeAr: "",
       place: "",
       placeAr: "",
+      servicesUsed: [] as CustomService[],
+      eventDate: "",
       isActive: true,
     },
     formFields: [
@@ -136,16 +141,26 @@ export default function EventsPage() {
       {
         name: "size",
         label: "Size (EN)",
-        type: "text",
-        placeholder: "e.g., Small, Medium, Large, Extra Large",
-        helpText: "Enter the size for this event. This will be used for filtering on the event detail page.",
+        type: "select",
+        placeholder: "Select size",
+        helpText: "Select the size for this event. This will be used for filtering on the event detail page.",
+        options: [
+          { value: "Small", label: "Small" },
+          { value: "Medium", label: "Medium" },
+          { value: "Large", label: "Large" },
+        ],
       },
       {
         name: "sizeAr",
         label: "Size (AR)",
-        type: "text",
-        placeholder: "مثال: صغير، متوسط، كبير، كبير جداً",
-        helpText: "أدخل حجم هذا الحدث بالعربية. سيتم استخدامه للتصفية في صفحة تفاصيل الحدث.",
+        type: "select",
+        placeholder: "اختر الحجم",
+        helpText: "اختر حجم هذا الحدث بالعربية. سيتم استخدامه للتصفية في صفحة تفاصيل الحدث.",
+        options: [
+          { value: "صغير", label: "صغير" },
+          { value: "متوسط", label: "متوسط" },
+          { value: "كبير", label: "كبير" },
+        ],
       },
       {
         name: "place",
@@ -160,6 +175,69 @@ export default function EventsPage() {
         type: "text",
         placeholder: "مثال: فندق داما روز، فور سيزونز، شيراتون دمشق",
         helpText: "أدخل المكان/الموقع لهذا الحدث بالعربية. يمكن للمستخدمين البحث بإسم المكان.",
+      },
+      {
+        name: "eventDate",
+        label: "Event Date",
+        type: "custom",
+        customRender: (value, onChange) => {
+          // Convert date to YYYY-MM-DD format for input[type="date"]
+          let dateValue = "";
+          if (value) {
+            if (typeof value === "string") {
+              // Try to parse DD/MM/YYYY format
+              const ddmmyyyy = value.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+              if (ddmmyyyy) {
+                const [, day, month, year] = ddmmyyyy;
+                dateValue = `${year}-${month}-${day}`;
+              } else if (value.match(/^\d{4}-\d{2}-\d{2}/)) {
+                dateValue = value.substring(0, 10);
+              } else {
+                // Try to parse Date object or ISO string
+                try {
+                  const date = new Date(value);
+                  if (!isNaN(date.getTime())) {
+                    dateValue = date.toISOString().split("T")[0];
+                  }
+                } catch {
+                  dateValue = "";
+                }
+              }
+            } else if (value instanceof Date) {
+              dateValue = value.toISOString().split("T")[0];
+            }
+          }
+          return (
+            <div>
+              <label>Event Date *</label>
+              <input
+                type="date"
+                value={dateValue}
+                onChange={(e) => {
+                  onChange(e.target.value || "");
+                }}
+                style={{ width: "100%", padding: "8px", marginTop: "8px" }}
+              />
+              <small>Enter the date when the event occurred or will occur</small>
+            </div>
+          );
+        },
+        helpText: "Select the date when the event occurred or will occur",
+      },
+      {
+        name: "servicesUsed",
+        label: "Services Used",
+        type: "custom",
+        customRender: (value, onChange) => {
+          const services = Array.isArray(value) ? value : [];
+          return (
+            <CustomServicesField
+              services={services}
+              onChange={onChange}
+            />
+          );
+        },
+        helpText: "Add custom services used for this event. Click the + button to add a new service with English and Arabic names.",
       },
       {
         name: "isActive",

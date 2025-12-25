@@ -117,6 +117,7 @@ export default async function EventTypePage({ params }: EventTypePageProps) {
 
       <FilteredEventsSection
         eventType={filterType}
+        eventTypeSlug={slug}
         typeOptions={filterOptions.types}
         themeOptions={filterOptions.themes}
         sizeOptions={filterOptions.sizes}

@@ -118,6 +118,8 @@ export async function PUT(
     if (body.sizeAr !== undefined) updateData.sizeAr = body.sizeAr;
     if (body.place !== undefined) updateData.place = body.place;
     if (body.placeAr !== undefined) updateData.placeAr = body.placeAr;
+    if (body.servicesUsed !== undefined) updateData.servicesUsed = body.servicesUsed;
+    if (body.eventDate !== undefined) updateData.eventDate = body.eventDate;
     if (body.isEventType !== undefined) updateData.isEventType = body.isEventType;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
 

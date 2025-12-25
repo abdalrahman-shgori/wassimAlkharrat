@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useLocale } from 'next-intl';
 import EventsGridSection from '@/components/Events/EventsGridSection';
 import EventsGridSkeleton from '@/components/Events/EventsGridSkeleton';
 import EventsFilterBar from '@/components/Events/EventsFilterBar';
@@ -32,6 +33,7 @@ interface FilterOption {
 
 interface FilteredEventsSectionProps {
   eventType: string; // The event type to filter by (Wedding, Birthday, etc.)
+  eventTypeSlug: string; // The slug for the event type (for URL routing)
   typeOptions: FilterOption[];
   themeOptions: FilterOption[];
   sizeOptions: FilterOption[];
@@ -39,10 +41,12 @@ interface FilteredEventsSectionProps {
 
 export default function FilteredEventsSection({
   eventType,
+  eventTypeSlug,
   typeOptions,
   themeOptions,
   sizeOptions,
 }: FilteredEventsSectionProps) {
+  const locale = useLocale();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
@@ -96,10 +100,12 @@ export default function FilteredEventsSection({
     }
   }, [eventType, itemsPerPage]);
 
-  // Initial load
+  // Fetch events when component mounts or locale changes
   useEffect(() => {
+    setCurrentPage(1);
     fetchEvents(1, filters, itemsPerPage);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
 
   // Handle filter change with debouncing for search
   const handleFilterChange = useCallback((newFilters: typeof filters) => {
@@ -162,7 +168,7 @@ export default function FilteredEventsSection({
         <EventsGridSkeleton count={6} />
       ) : (
         <>
-          <EventsGridSection events={events} />
+          <EventsGridSection events={events} eventTypeSlug={eventTypeSlug} />
           
           <Pagination
             currentPage={currentPage}

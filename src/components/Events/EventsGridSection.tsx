@@ -20,17 +20,21 @@ interface Event {
 
 interface EventsGridSectionProps {
   events: Event[];
+  eventTypeSlug?: string; // Optional event type slug for URL routing
 }
 
 // Utility function to create slug from event title
+// Matches the server-side createSlug function for consistency
 const createSlug = (title: string): string => {
   return title
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 };
 
-export default function EventsGridSection({ events = [] }: EventsGridSectionProps) {
+export default function EventsGridSection({ events = [], eventTypeSlug }: EventsGridSectionProps) {
   const t = useTranslations('events');
   const safeEvents = events || [];
 
@@ -76,6 +80,10 @@ export default function EventsGridSection({ events = [] }: EventsGridSectionProp
 
             // Use original English title for consistent slug generation
             const eventSlug = createSlug(event.eventTitleEn || event.eventTitle);
+            // Build the link URL: if eventTypeSlug is provided, use /events/[slug]/[eventName], otherwise use /events/[eventName]
+            const eventUrl = eventTypeSlug 
+              ? `/events/${eventTypeSlug}/${eventSlug}`
+              : `/events/${eventSlug}`;
 
             return (
               <motion.div
@@ -85,7 +93,7 @@ export default function EventsGridSection({ events = [] }: EventsGridSectionProp
                 animate="visible"
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               >
-                <Link href={`/events/${eventSlug}`} className={styles.eventsSectionContentItem}>
+                <Link href={eventUrl} className={styles.eventsSectionContentItem}>
                   <div className={styles.eventImageWrapper}>
                     {isCloudinaryImage ? (
                       <img
@@ -115,7 +123,7 @@ export default function EventsGridSection({ events = [] }: EventsGridSectionProp
                     )
                   }
                   <div className={styles.eventsSectionContentItemLink}>
-                    learn more
+                   {t('learnMore')}
                     <Image
                       src={arrowRight}
                       alt="arrow"
