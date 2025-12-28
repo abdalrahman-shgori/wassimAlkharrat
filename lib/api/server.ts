@@ -277,6 +277,7 @@ export async function fetchEvents(locale: Locale) {
     placeAr: event.placeAr,
     servicesUsed: event.servicesUsed || [],
     eventDate: event.eventDate || null,
+    gallery: event.gallery || [],
   }));
 }
 

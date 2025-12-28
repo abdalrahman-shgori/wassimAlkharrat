@@ -20,6 +20,7 @@ export interface Event {
   placeAr?: string; // Event place/location in Arabic
   servicesUsed?: Array<{ nameEn: string; nameAr: string }>; // Array of custom service objects with English and Arabic names
   eventDate?: Date | string; // Date when the event occurred or will occur
+  gallery?: Array<string | { type: 'video'; url: string; thumbnail?: string }>; // Array of image URLs or video objects for the event gallery
   isEventType?: boolean; // Flag to distinguish event types from individual events
   isActive: boolean;
   createdAt: Date;
@@ -45,6 +46,7 @@ export interface CreateEventInput {
   placeAr?: string;
   servicesUsed?: Array<{ nameEn: string; nameAr: string }>;
   eventDate?: Date | string;
+  gallery?: Array<string | { type: 'video'; url: string; thumbnail?: string }>;
   isEventType?: boolean;
   isActive?: boolean;
 }
@@ -68,6 +70,7 @@ export interface UpdateEventInput {
   placeAr?: string;
   servicesUsed?: Array<{ nameEn: string; nameAr: string }>;
   eventDate?: Date | string;
+  gallery?: Array<string | { type: 'video'; url: string; thumbnail?: string }>;
   isEventType?: boolean;
   isActive?: boolean;
 }

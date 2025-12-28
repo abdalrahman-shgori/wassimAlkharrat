@@ -66,7 +66,7 @@
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 12px 6px;
+    gap: 12px 24px;
 }
 
 .servicesList li{
@@ -86,14 +86,14 @@
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 40px;
-    padding-top: 40px;
+    padding-top: 60px;
 }
 
 .metaItem{
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 400;
     color: var(--white);
 }
@@ -144,7 +144,7 @@
     }
     
     .servicesList{
-        gap: 8px 6px;
+        gap: 8px 16px;
     }
     
     .servicesList li{
@@ -204,7 +204,7 @@
     }
     
     .servicesList{
-        gap: 6px 6px;
+        gap: 6px 12px;
     }
     
     .servicesList li{
@@ -215,7 +215,7 @@
         flex-direction: column;
         gap: 16px;
         margin-top: 24px;
-        padding-top: 16px;
+        padding-top: 0px;
     }
     
     .metaItem{

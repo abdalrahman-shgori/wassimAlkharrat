@@ -9,6 +9,7 @@ import Link from 'next/link';
 import CTASection from '@/components/UI/CTASection';
 import HeroSection from '@/components/HeroSection/HeroSection';
 import WelcomeToSection from '@/components/welcomeTo/welcomeToSection';
+import EventGallerySection from '@/components/Events/EventGallerySection';
 
 export const revalidate = 3600; // ISR: Revalidate every hour
 
@@ -119,6 +120,8 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
   
   // Get event type display name (prefer eventType title, fallback to type field)
   const eventTypeDisplay = event.type || eventType?.eventTitle || event.eventType || '';
+  // Get event type for section title (the category like "Wedding", "Birthday", etc.)
+  const sectionTitleText = event.eventType || '';
 
   return (
     <>
@@ -128,7 +131,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
         subtitle={event.eventSubtitle || ''}
         ctaText=""
         ctaLink=""
-        sectionTitle={event.eventTitle}
+        sectionTitle={sectionTitleText}
         nextSectionId="event-detail-content"
       />
 
@@ -141,6 +144,10 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
         date={event.eventDate as string | undefined}
         eventType={eventTypeDisplay}
       />
+
+      {event.gallery && event.gallery.length > 0 && (
+        <EventGallerySection images={event.gallery} />
+      )}
 
       <CTASection />
     </>

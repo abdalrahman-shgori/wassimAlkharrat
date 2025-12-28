@@ -218,6 +218,7 @@ export async function POST(request: NextRequest) {
       placeAr: body.placeAr || null,
       servicesUsed: body.servicesUsed || [],
       eventDate: body.eventDate || null,
+      gallery: body.gallery || [],
       isEventType: body.isEventType !== undefined ? body.isEventType : false,
       isActive: body.isActive !== undefined ? body.isActive : true,
       createdAt: new Date(),

@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 import { useState, useEffect } from "react";
 import AdminCRUDPage, { AdminCRUDConfig } from "@/components/admin/AdminCRUDPage";
 import CustomServicesField, { CustomService } from "@/components/admin/CustomServicesField";
+import GalleryField from "@/components/admin/GalleryField";
 import styles from "./page.module.scss";
 
 interface Event {
@@ -26,6 +27,7 @@ interface Event {
   placeAr?: string;
   servicesUsed?: Array<{ nameEn: string; nameAr: string }>;
   eventDate?: string;
+  gallery?: Array<string | { type: 'video'; url: string; thumbnail?: string }>;
   isActive: boolean;
 }
 
@@ -67,6 +69,9 @@ export default function EventsPage() {
       eventTitle: "",
       eventTitleEn: "",
       eventTitleAr: "",
+      eventSubtitle: "",
+      eventSubtitleEn: "",
+      eventSubtitleAr: "",
       eventType: "",
       type: "",
       typeAr: "",
@@ -78,6 +83,7 @@ export default function EventsPage() {
       placeAr: "",
       servicesUsed: [] as CustomService[],
       eventDate: "",
+      gallery: [],
       isActive: true,
     },
     formFields: [
@@ -100,6 +106,22 @@ export default function EventsPage() {
         type: "text",
         placeholder: "مثال: حفلة عيد ميلاد جون الثلاثين",
         required: true,
+      },
+      {
+        name: "eventSubtitleEn",
+        label: "Event Description (EN)",
+        type: "textarea",
+        placeholder: "e.g., A beautiful celebration of John's 30th birthday with elegant decorations and delicious food",
+        helpText: "Enter a detailed description of the event. This will be displayed on the event detail page.",
+        rows: 4,
+      },
+      {
+        name: "eventSubtitleAr",
+        label: "Event Description (AR)",
+        type: "textarea",
+        placeholder: "مثال: احتفال جميل بعيد ميلاد جون الثلاثين مع ديكورات أنيقة وطعام لذيذ",
+        helpText: "أدخل وصفاً تفصيلياً للحدث. سيتم عرضه في صفحة تفاصيل الحدث.",
+        rows: 4,
       },
       {
         name: "eventType",
@@ -240,6 +262,23 @@ export default function EventsPage() {
         helpText: "Add custom services used for this event. Click the + button to add a new service with English and Arabic names.",
       },
       {
+        name: "gallery",
+        label: "Event Gallery",
+        type: "custom",
+        customRender: (value, onChange) => {
+          const images = Array.isArray(value) ? value : [];
+          return (
+            <GalleryField
+              images={images}
+              onChange={onChange}
+              uploadEndpoint="/api/events/upload"
+              maxSize={10}
+            />
+          );
+        },
+        helpText: "Upload multiple images or add YouTube videos for the event gallery. Images and videos will be displayed together in the gallery section on the event detail page.",
+      },
+      {
         name: "isActive",
         label: "Active (visible to public)",
         type: "checkbox",
@@ -253,10 +292,14 @@ export default function EventsPage() {
 
       // Keep derived fields in sync for display/API fallbacks
       formData.eventTitle = formData.eventTitleEn;
-      // Set default subtitle if not provided
-      formData.eventSubtitle = formData.eventTitleEn;
-      formData.eventSubtitleEn = formData.eventTitleEn;
-      formData.eventSubtitleAr = formData.eventTitleAr;
+      // Set default subtitle only if not provided
+      if (!formData.eventSubtitleEn) {
+        formData.eventSubtitleEn = formData.eventTitleEn;
+      }
+      if (!formData.eventSubtitleAr) {
+        formData.eventSubtitleAr = formData.eventTitleAr;
+      }
+      formData.eventSubtitle = formData.eventSubtitleEn || formData.eventTitleEn;
       // Ensure this is NOT an event type
       (formData as any).isEventType = false;
       return null;
