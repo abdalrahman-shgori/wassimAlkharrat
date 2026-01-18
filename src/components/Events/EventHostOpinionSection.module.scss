@@ -4,15 +4,7 @@
   justify-content: center;
   background: var(--background);
   position: relative;
-  bottom: 200px;
 
-  @media (max-width: 834px) {
-    bottom: 160px;
-  }
-
-  @media (max-width: 600px) {
-    bottom: 0px;
-  }
 }
 
 .opinionCard {

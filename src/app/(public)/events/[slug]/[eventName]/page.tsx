@@ -4,14 +4,12 @@ import { notFound } from 'next/navigation';
 import { Locale, defaultLocale, isLocale } from '@/lib/i18n/config';
 import { fetchEventBySlug, fetchEventTypeBySlug } from '../../../../../../lib/api/server';
 import { pickLocalizedString } from '../../../../../../lib/i18n/serverLocale';
-import Image from 'next/image';
-import Link from 'next/link';
 import CTASection from '@/components/UI/CTASection';
 import HeroSection from '@/components/HeroSection/HeroSection';
 import WelcomeToSection from '@/components/welcomeTo/welcomeToSection';
 import EventGallerySection from '@/components/Events/EventGallerySection';
 import EventHostOpinionSection from '@/components/Events/EventHostOpinionSection';
-
+import styles from './EventDetailPage.module.scss';
 export const revalidate = 3600; // ISR: Revalidate every hour
 
 /**
@@ -167,7 +165,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
       {event.gallery && event.gallery.length > 0 && (
         <EventGallerySection images={event.gallery} />
       )}
-
+<div className={styles.hostOpinionSectionWrapper}>
       <EventHostOpinionSection
         title={locale === 'ar' ? 'رأي ' : 'Testimonial'}
         quote={hostOpinion || ''}
@@ -177,6 +175,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
       />
 
       <CTASection />
+      </div>
     </>
   );
 }
