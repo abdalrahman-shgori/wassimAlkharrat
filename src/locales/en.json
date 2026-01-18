@@ -80,6 +80,82 @@
     "accessories": "Accessories",
     "about": "About us",
     "copyright": "© All rights reserved, 2025"
+  },
+  "about": {
+    "hero": {
+      "title": "The Art of the Extraordinary",
+      "subtitle": "A studio dedicated to transforming dreams into spectacular, unforgettable realities. Founded by the visionary Wassim Alkharrat, our mission is to redefine luxury, elegance, and emotional connection in event design.",
+      "sectionTitle": "about.title"
+    },
+    "title": "About Wassim Alkharrat",
+    "welcome": {
+      "title": "Welcome to Wassim Alkharrat Events",
+      "description": "With over a decade of experience in event planning and design, Wassim Alkharrat Events has established itself as a premier destination for creating unforgettable celebrations. Our journey began with a simple vision: to transform ordinary moments into extraordinary experiences that leave lasting impressions.",
+      "author": "Wassim Alkharrat"
+    },
+    "mission": {
+      "subtitle": "• Get to know us",
+      "title": "OUR",
+      "titleSuffix": "Mission",
+      "is": "is",
+
+      "statement": "To craft bespoke, unforgettable events that reflect the unique story and vision of every client, setting a new standard for elegance and flawless execution.",
+      "stats": {
+        "events": {
+          "number": "500+",
+          "label": "Event planning"
+        },
+        "clients": {
+          "number": "100+",
+          "label": "Happy Clients"
+        },
+        "awards": {
+          "number": "15+",
+          "label": "Awards Won"
+        },
+        "experience": {
+          "number": "10+",
+          "label": "Years Experience"
+        }
+      }
+    },
+    "values": {
+      "title": "Our Values",
+      "creativity": {
+        "title": "Creativity",
+        "description": "We believe in pushing boundaries and thinking outside the box to create unique and memorable experiences."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "We strive for perfection in every detail, ensuring that each event exceeds expectations."
+      },
+      "passion": {
+        "title": "Passion",
+        "description": "Our love for what we do drives us to go above and beyond for every client."
+      },
+      "integrity": {
+        "title": "Integrity",
+        "description": "We build lasting relationships based on trust, transparency, and genuine care for our clients."
+      }
+    },
+    "whyChooseUs": {
+      "title": "Why Choose Us",
+      "features": {
+        "personalized": {
+          "title": "Personalized Approach",
+          "description": "Every event is unique. We take time to understand your vision and create a tailored experience that reflects your style and values."
+        },
+        "detail": {
+          "title": "Attention to Detail",
+          "description": "From the grandest elements to the smallest touches, we ensure every aspect of your event is meticulously planned and flawlessly executed."
+        },
+        "creative": {
+          "title": "Creative Excellence",
+          "description": "Our creative team brings fresh ideas and innovative solutions to make your event stand out and create unforgettable memories."
+        }
+      },
+      "ctaButton": "Book Consultation"
+    }
   }
 }
 

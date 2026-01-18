@@ -28,6 +28,13 @@ interface Event {
   servicesUsed?: Array<{ nameEn: string; nameAr: string }>;
   eventDate?: string;
   gallery?: Array<string | { type: 'video'; url: string; thumbnail?: string }>;
+  hostOpinionEn?: string;
+  hostOpinionAr?: string;
+  hostOpinionImage?: string;
+  hostNameEn?: string;
+  hostNameAr?: string;
+  hostRoleEn?: string;
+  hostRoleAr?: string;
   isActive: boolean;
 }
 
@@ -84,6 +91,13 @@ export default function EventsPage() {
       servicesUsed: [] as CustomService[],
       eventDate: "",
       gallery: [],
+      hostOpinionEn: "",
+      hostOpinionAr: "",
+      hostOpinionImage: "",
+      hostNameEn: "",
+      hostNameAr: "",
+      hostRoleEn: "",
+      hostRoleAr: "",
       isActive: true,
     },
     formFields: [
@@ -277,6 +291,54 @@ export default function EventsPage() {
           );
         },
         helpText: "Upload multiple images or add YouTube videos for the event gallery. Images and videos will be displayed together in the gallery section on the event detail page.",
+      },
+      {
+        name: "hostNameEn",
+        label: "Host Name (EN) (optional)",
+        type: "text",
+        placeholder: "e.g., Sarah & Ahmad",
+        helpText: "Name of the party host(s) in English shown under the opinion card",
+      },
+      {
+        name: "hostNameAr",
+        label: "Host Name (AR) (optional)",
+        type: "text",
+        placeholder: "مثال: سارة وأحمد",
+        helpText: "اسم أصحاب الحفل بالعربية المعروض تحت بطاقة الرأي",
+      },
+      {
+        name: "hostRoleEn",
+        label: "Host Role/Title (EN) (optional)",
+        type: "text",
+        placeholder: "e.g., Party Host",
+      },
+      {
+        name: "hostRoleAr",
+        label: "Host Role/Title (AR) (optional)",
+        type: "text",
+        placeholder: "مثال: أصحاب الحفل",
+      },
+      {
+        name: "hostOpinionImage",
+        label: "Testimonial Image (optional)",
+        type: "image",
+        helpText: "Image displayed on the left side of the testimonial section. If not provided, the event image will be used.",
+      },
+      {
+        name: "hostOpinionEn",
+        label: "Host Opinion (EN)",
+        type: "textarea",
+        placeholder: "e.g., The team exceeded our expectations. Everything was perfect from start to finish...",
+        rows: 4,
+        helpText: "This will be displayed as a testimonial/opinion section after the gallery",
+      },
+      {
+        name: "hostOpinionAr",
+        label: "Host Opinion (AR)",
+        type: "textarea",
+        placeholder: "مثال: الفريق فاق توقعاتنا... كان كل شيء مثالياً من البداية حتى النهاية",
+        rows: 4,
+        helpText: "سيتم عرض هذا كنص رأي/تقييم بعد قسم المعرض",
       },
       {
         name: "isActive",

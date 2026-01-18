@@ -121,6 +121,13 @@ export async function PUT(
     if (body.servicesUsed !== undefined) updateData.servicesUsed = body.servicesUsed;
     if (body.eventDate !== undefined) updateData.eventDate = body.eventDate;
     if (body.gallery !== undefined) updateData.gallery = body.gallery;
+    if (body.hostOpinionEn !== undefined) updateData.hostOpinionEn = body.hostOpinionEn;
+    if (body.hostOpinionAr !== undefined) updateData.hostOpinionAr = body.hostOpinionAr;
+    if (body.hostOpinionImage !== undefined) updateData.hostOpinionImage = body.hostOpinionImage;
+    if (body.hostNameEn !== undefined) updateData.hostNameEn = body.hostNameEn;
+    if (body.hostNameAr !== undefined) updateData.hostNameAr = body.hostNameAr;
+    if (body.hostRoleEn !== undefined) updateData.hostRoleEn = body.hostRoleEn;
+    if (body.hostRoleAr !== undefined) updateData.hostRoleAr = body.hostRoleAr;
     if (body.isEventType !== undefined) updateData.isEventType = body.isEventType;
     if (body.isActive !== undefined) updateData.isActive = body.isActive;
 

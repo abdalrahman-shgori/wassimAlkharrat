@@ -10,6 +10,7 @@ import CTASection from '@/components/UI/CTASection';
 import HeroSection from '@/components/HeroSection/HeroSection';
 import WelcomeToSection from '@/components/welcomeTo/welcomeToSection';
 import EventGallerySection from '@/components/Events/EventGallerySection';
+import EventHostOpinionSection from '@/components/Events/EventHostOpinionSection';
 
 export const revalidate = 3600; // ISR: Revalidate every hour
 
@@ -120,8 +121,26 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
   
   // Get event type display name (prefer eventType title, fallback to type field)
   const eventTypeDisplay = event.type || eventType?.eventTitle || event.eventType || '';
-  // Get event type for section title (the category like "Wedding", "Birthday", etc.)
-  const sectionTitleText = event.eventType || '';
+  // Get event type for section title (the category like "Wedding", "Birthday", etc.) - use localized eventType title
+  const sectionTitleText = eventType?.eventTitle || event.eventType || '';
+
+  const hostOpinion = pickLocalizedString(locale, {
+    en: (event as any).hostOpinionEn ?? null,
+    ar: (event as any).hostOpinionAr ?? null,
+  });
+
+  const hostName = pickLocalizedString(locale, {
+    en: (event as any).hostNameEn ?? null,
+    ar: (event as any).hostNameAr ?? null,
+  });
+
+  const hostRole = pickLocalizedString(locale, {
+    en: (event as any).hostRoleEn ?? null,
+    ar: (event as any).hostRoleAr ?? null,
+  });
+
+  // Use testimonial image if available, otherwise fallback to event image
+  const testimonialImage = (event as any).hostOpinionImage || imageSrc;
 
   return (
     <>
@@ -148,6 +167,14 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
       {event.gallery && event.gallery.length > 0 && (
         <EventGallerySection images={event.gallery} />
       )}
+
+      <EventHostOpinionSection
+        title={locale === 'ar' ? 'رأي ' : 'Testimonial'}
+        quote={hostOpinion || ''}
+        hostName={hostName || ''}
+        hostRole={hostRole || ''}
+        image={testimonialImage}
+      />
 
       <CTASection />
     </>

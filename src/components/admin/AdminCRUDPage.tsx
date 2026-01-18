@@ -60,7 +60,7 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState<T | null>(null);
   const [formData, setFormData] = useState<T>(config.initialFormData);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreviews, setImagePreviews] = useState<Record<string, string | null>>({});
   const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -97,11 +97,18 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
     if (item) {
       setEditingItem(item);
       setFormData(item);
-      setImagePreview((item as any).image || null);
+      // Initialize all image previews from the item
+      const previews: Record<string, string | null> = {};
+      config.formFields.forEach((field) => {
+        if (field.type === "image") {
+          previews[field.name] = (item as any)[field.name] || null;
+        }
+      });
+      setImagePreviews(previews);
     } else {
       setEditingItem(null);
       setFormData(config.initialFormData);
-      setImagePreview(null);
+      setImagePreviews({});
     }
     setShowModal(true);
     setError("");
@@ -111,61 +118,63 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
   const handleCloseModal = () => {
     setShowModal(false);
     setEditingItem(null);
-    setImagePreview(null);
+    setImagePreviews({});
     setError("");
     setSuccess("");
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleImageUpload = (fieldName: string) => {
+    return async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
-      setError("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
-      return;
-    }
-
-    const maxSize = (config.imageMaxSize || 10) * 1024 * 1024;
-    if (file.size > maxSize) {
-      setError(`File size exceeds ${config.imageMaxSize || 10}MB limit.`);
-      return;
-    }
-
-    try {
-      setUploadingImage(true);
-      setError("");
-
-      const formDataToSend = new FormData();
-      formDataToSend.append("image", file);
-
-      const response = await fetch(config.uploadEndpoint, {
-        method: "POST",
-        headers: baseHeaders,
-        body: formDataToSend,
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setFormData((prev: any) => ({ ...prev, image: data.imageUrl }));
-        setImagePreview(data.imageUrl);
-        setSuccess("Image uploaded successfully!");
-        setTimeout(() => setSuccess(""), 2000);
-      } else {
-        setError(data.error || "Failed to upload image");
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+      if (!allowedTypes.includes(file.type)) {
+        setError("Invalid file type. Only JPEG, PNG, and WebP are allowed.");
+        return;
       }
-    } catch (error) {
-      setError("An error occurred while uploading the image");
-      console.error(error);
-    } finally {
-      setUploadingImage(false);
-    }
+
+      const maxSize = (config.imageMaxSize || 10) * 1024 * 1024;
+      if (file.size > maxSize) {
+        setError(`File size exceeds ${config.imageMaxSize || 10}MB limit.`);
+        return;
+      }
+
+      try {
+        setUploadingImage(true);
+        setError("");
+
+        const formDataToSend = new FormData();
+        formDataToSend.append("image", file);
+
+        const response = await fetch(config.uploadEndpoint, {
+          method: "POST",
+          headers: baseHeaders,
+          body: formDataToSend,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setFormData((prev: any) => ({ ...prev, [fieldName]: data.imageUrl }));
+          setImagePreviews((prev) => ({ ...prev, [fieldName]: data.imageUrl }));
+          setSuccess("Image uploaded successfully!");
+          setTimeout(() => setSuccess(""), 2000);
+        } else {
+          setError(data.error || "Failed to upload image");
+        }
+      } catch (error) {
+        setError("An error occurred while uploading the image");
+        console.error(error);
+      } finally {
+        setUploadingImage(false);
+      }
+    };
   };
 
-  const handleRemoveImage = () => {
-    setFormData((prev: any) => ({ ...prev, image: "" }));
-    setImagePreview(null);
+  const handleRemoveImage = (fieldName: string) => () => {
+    setFormData((prev: any) => ({ ...prev, [fieldName]: "" }));
+    setImagePreviews((prev) => ({ ...prev, [fieldName]: null }));
   };
 
   const handleFieldChange = (fieldName: string, value: any) => {
@@ -351,11 +360,11 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
                         {field.label} {field.required && "*"}
                       </label>
                       <ImageUpload
-                        imageUrl={(formData as any).image || ""}
-                        imagePreview={imagePreview}
+                        imageUrl={(formData as any)[field.name] || ""}
+                        imagePreview={imagePreviews[field.name] || null}
                         uploadingImage={uploadingImage}
-                        onImageChange={handleImageUpload}
-                        onRemoveImage={handleRemoveImage}
+                        onImageChange={handleImageUpload(field.name)}
+                        onRemoveImage={handleRemoveImage(field.name)}
                         maxSize={config.imageMaxSize}
                       />
                     </div>

@@ -278,6 +278,17 @@ export async function fetchEvents(locale: Locale) {
     servicesUsed: event.servicesUsed || [],
     eventDate: event.eventDate || null,
     gallery: event.gallery || [],
+    hostOpinionEn: event.hostOpinionEn || null,
+    hostOpinionAr: event.hostOpinionAr || null,
+    hostOpinionImage: event.hostOpinionImage || null,
+    hostName: pickLocalizedString(locale, {
+      en: event.hostNameEn ?? null,
+      ar: event.hostNameAr ?? null,
+    }),
+    hostNameEn: event.hostNameEn || null,
+    hostNameAr: event.hostNameAr || null,
+    hostRoleEn: event.hostRoleEn || null,
+    hostRoleAr: event.hostRoleAr || null,
   }));
 }
 

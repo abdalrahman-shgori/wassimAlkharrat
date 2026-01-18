@@ -1,0 +1,130 @@
+.aboutSection {
+  background-color: var(--dark);
+  color: var(--white);
+  padding: 0;
+  width: 100%;
+}
+.sectionsWrapper {
+  margin-top: -200px;
+
+  @media screen and (max-width: 834px) {
+    margin-top: -200px;
+  }
+  @media screen and (max-width: 480px) {
+    margin-top: -100px;
+  }
+}
+
+.missionSection {
+  padding: 80px 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 60px 24px;
+  }
+}
+
+.missionTitle {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 60px;
+  margin-bottom: 24px;
+  color: var(--white);
+  
+  @media (max-width: 768px) {
+    font-size: 36px;
+    line-height: 44px;
+  }
+}
+
+.missionDescription {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 32px;
+  color: var(--white);
+  max-width: 976px;
+  
+  @media (max-width: 768px) {
+    font-size: 18px;
+    line-height: 28px;
+  }
+}
+
+.valuesSection {
+  padding: 0 100px 80px 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 0 24px 60px 24px;
+  }
+}
+
+.valuesTitle {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 60px;
+  margin-bottom: 48px;
+  color: var(--white);
+  
+  @media (max-width: 768px) {
+    font-size: 36px;
+    line-height: 44px;
+    margin-bottom: 32px;
+  }
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+.valueCard {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 32px;
+  border-radius: 8px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+  
+  @media (max-width: 768px) {
+    padding: 24px;
+  }
+}
+
+.valueTitle {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 36px;
+  margin-bottom: 16px;
+  color: var(--white);
+  
+  @media (max-width: 768px) {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
+
+.valueDescription {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+  color: var(--white);
+  opacity: 0.9;
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+

@@ -21,6 +21,13 @@ export interface Event {
   servicesUsed?: Array<{ nameEn: string; nameAr: string }>; // Array of custom service objects with English and Arabic names
   eventDate?: Date | string; // Date when the event occurred or will occur
   gallery?: Array<string | { type: 'video'; url: string; thumbnail?: string }>; // Array of image URLs or video objects for the event gallery
+  hostOpinionEn?: string; // Testimonial / opinion from the party host (EN)
+  hostOpinionAr?: string; // Testimonial / opinion from the party host (AR)
+  hostOpinionImage?: string; // Host image URL (optional)
+  hostNameEn?: string; // Host name in English (optional)
+  hostNameAr?: string; // Host name in Arabic (optional)
+  hostRoleEn?: string; // Host role/title (EN) (optional)
+  hostRoleAr?: string; // Host role/title (AR) (optional)
   isEventType?: boolean; // Flag to distinguish event types from individual events
   isActive: boolean;
   createdAt: Date;
@@ -47,6 +54,13 @@ export interface CreateEventInput {
   servicesUsed?: Array<{ nameEn: string; nameAr: string }>;
   eventDate?: Date | string;
   gallery?: Array<string | { type: 'video'; url: string; thumbnail?: string }>;
+  hostOpinionEn?: string;
+  hostOpinionAr?: string;
+  hostOpinionImage?: string;
+  hostNameEn?: string;
+  hostNameAr?: string;
+  hostRoleEn?: string;
+  hostRoleAr?: string;
   isEventType?: boolean;
   isActive?: boolean;
 }
@@ -71,6 +85,13 @@ export interface UpdateEventInput {
   servicesUsed?: Array<{ nameEn: string; nameAr: string }>;
   eventDate?: Date | string;
   gallery?: Array<string | { type: 'video'; url: string; thumbnail?: string }>;
+  hostOpinionEn?: string;
+  hostOpinionAr?: string;
+  hostOpinionImage?: string;
+  hostNameEn?: string;
+  hostNameAr?: string;
+  hostRoleEn?: string;
+  hostRoleAr?: string;
   isEventType?: boolean;
   isActive?: boolean;
 }

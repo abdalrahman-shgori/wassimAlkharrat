@@ -73,12 +73,12 @@ export default function WelcomeToSection({
           transition={{ staggerChildren: 0.15, duration: 0.6, ease: "easeOut" }}
         >
         <motion.div className={styles.welcomeToSectionLogo} variants={fadeUp}>
-            <Image src={logo} alt="logo" className={styles.welcomeToSectionLogoImage} />
+            <Image src={logo} alt="Wassim Alkharrat Events Logo" className={styles.welcomeToSectionLogoImage} />
         </motion.div>
         <motion.div className={styles.welcomeToSectionContent} variants={fadeUp}>
-          <h1 className={styles.welcomeToSectionTitle}>{title}</h1>
+          <h2 className={styles.welcomeToSectionTitle}>{title}</h2>
           <p className={styles.welcomeToSectionDescription}>{description}</p>
-          <h5 className={styles.welcomeToSectionAuthor}>{author}</h5>
+          <h5 className={styles.welcomeToSectionAuthor}>{author}...</h5>
           
           {services && services.length > 0 && (
             <div className={styles.servicesSection}>
