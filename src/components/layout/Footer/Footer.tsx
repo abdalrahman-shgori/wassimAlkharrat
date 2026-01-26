@@ -84,6 +84,7 @@ export default function Footer() {
             <Link href="/" className={styles.link}>{t('home')}</Link>
             <Link href="/services" className={styles.link}>{t('services')}</Link>
             <Link href="/events" className={styles.link}>{t('events')}</Link>
+            <Link href="/gallery" className={styles.link}>{t('gallery')}</Link>
             <Link href="/accessories" className={styles.link}>{t('accessories')}</Link>
             <Link href="/about" className={styles.link}>{t('about')}</Link>
           </nav>

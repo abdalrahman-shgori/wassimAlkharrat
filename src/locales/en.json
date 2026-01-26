@@ -3,6 +3,7 @@
     "home": "Home",
     "events": "Events",
     "services": "Services",
+    "gallery": "Gallery",
     "about": "About",
     "contact": "Contact",
     "switchToArabic": "العربية",
@@ -77,9 +78,18 @@
     "home": "Home",
     "services": "Services",
     "events": "Events",
+    "gallery": "Gallery",
     "accessories": "Accessories",
     "about": "About us",
     "copyright": "© All rights reserved, 2025"
+  },
+  "gallery": {
+    "hero": {
+      "title": "Gallery",
+      "subtitle": "A glimpse into our world—carefully chosen images that reflect our style, vision, and dedication to quality.",
+      "sectionTitle": "gallery.title"
+    },
+    "title": "Gallery"
   },
   "about": {
     "hero": {

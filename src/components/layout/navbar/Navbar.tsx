@@ -173,6 +173,13 @@ export default function Navbar() {
               {t('services')}
             </Link>
             <Link 
+              href="/gallery" 
+              onClick={closeMenu} 
+              className={`${styles.menuItem} ${pathname === '/gallery' ? styles.active : ''}`}
+            >
+              {t('gallery')}
+            </Link>
+            <Link 
               href="/about" 
               onClick={closeMenu} 
               className={`${styles.menuItem} ${pathname === '/about' ? styles.active : ''}`}

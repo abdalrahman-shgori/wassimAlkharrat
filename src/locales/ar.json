@@ -3,6 +3,7 @@
     "home": "الرئيسية",
     "events": "الفعاليات",
     "services": "الخدمات",
+    "gallery": "المعرض",
     "about": "من نحن",
     "contact": "تواصل",
     "switchToArabic": "العربية",
@@ -77,9 +78,18 @@
     "home": "الرئيسية",
     "services": "الخدمات",
     "events": "الفعاليات",
+    "gallery": "المعرض",
     "accessories": "الإكسسوارات",
     "about": "من نحن",
     "copyright": "© جميع الحقوق محفوظة، ٢٠٢٥"
+  },
+  "gallery": {
+    "hero": {
+      "title": "المعرض",
+      "subtitle": "نظرة خاطفة إلى عالمنا—صور مختارة بعناية تعكس أسلوبنا ورؤيتنا والتزامنا بالجودة.",
+      "sectionTitle": "gallery.title"
+    },
+    "title": "المعرض"
   },
   "about": {
     "hero": {
