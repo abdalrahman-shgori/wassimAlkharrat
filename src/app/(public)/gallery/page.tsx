@@ -85,7 +85,7 @@ export default async function GalleryPage() {
     return value || key;
   };
 
-  const heroImage = '/images/galerry/galerry.webp';
+  const heroImage = '/images/galerry/gallery.webp';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://wassim-alkharrat.vercel.app';
 
   // Structured Data for SEO
