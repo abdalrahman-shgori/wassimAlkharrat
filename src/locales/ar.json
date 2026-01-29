@@ -89,7 +89,14 @@
       "subtitle": "نظرة خاطفة إلى عالمنا—صور مختارة بعناية تعكس أسلوبنا ورؤيتنا والتزامنا بالجودة.",
       "sectionTitle": "gallery.title"
     },
-    "title": "المعرض"
+    "title": "المعرض",
+    "empty": "لا توجد صور متاحة حالياً.",
+    "categories": {
+      "all": "الكل",
+      "weddings": "أعراس",
+      "birthdays": "أعياد ميلاد",
+      "conferences": "مؤتمرات"
+    }
   },
   "about": {
     "hero": {

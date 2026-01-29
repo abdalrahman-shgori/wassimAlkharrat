@@ -43,7 +43,7 @@ export default function AdminCard({
           ✏️ Edit
         </button>
         <button
-          onClick={() => onDelete(item._id, getName(item))}
+          onClick={() => onDelete(String(item._id), getName(item))}
           className={styles.deleteBtn}
         >
           🗑️ Delete

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Locale, defaultLocale, isLocale, getMessages } from '@/lib/i18n/config';
 import HeroSection from '@/components/HeroSection/HeroSection';
 import CTASection from '@/components/UI/CTASection';
+import GallerySection from '@/components/Gallery/GallerySection';
 
 export const revalidate = 3600; // ISR: Revalidate every hour
 
@@ -118,9 +119,7 @@ export default async function GalleryPage() {
         nextSectionId="gallery-content"
       />
 
-      <main id="gallery-content">
-        {/* Gallery content will be added here */}
-      </main>
+      <GallerySection />
 
       <CTASection />
     </>

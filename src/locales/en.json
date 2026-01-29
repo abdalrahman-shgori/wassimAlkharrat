@@ -89,7 +89,14 @@
       "subtitle": "A glimpse into our world—carefully chosen images that reflect our style, vision, and dedication to quality.",
       "sectionTitle": "gallery.title"
     },
-    "title": "Gallery"
+    "title": "Gallery",
+    "empty": "No images available at the moment.",
+    "categories": {
+      "all": "All",
+      "weddings": "Weddings",
+      "birthdays": "Birthdays",
+      "conferences": "Conferences"
+    }
   },
   "about": {
     "hero": {

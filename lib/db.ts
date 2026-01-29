@@ -7,6 +7,8 @@ import { HomepageSettings } from "./models/HomepageSettings";
 import { ServicesPageSettings } from "./models/ServicesPageSettings";
 import { EventsPageSettings } from "./models/EventsPageSettings";
 import { ServiceFilter } from "./models/ServiceFilter";
+import { GalleryImage } from "./models/Gallery";
+import { GalleryCategory } from "./models/GalleryCategory";
 
 export async function getAdminsCollection() {
   const client = await clientPromise;
@@ -62,3 +64,14 @@ export async function getEventsPageSettingsCollection() {
   return db.collection<EventsPageSettings>("events_page_settings");
 }
 
+export async function getGalleryCollection() {
+  const client = await clientPromise;
+  const db = client.db("event_planner");
+  return db.collection<GalleryImage>("gallery");
+}
+
+export async function getGalleryCategoriesCollection() {
+  const client = await clientPromise;
+  const db = client.db("event_planner");
+  return db.collection<GalleryCategory>("gallery_categories");
+}

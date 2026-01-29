@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaTimes, FaVideo } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { FaVideo } from 'react-icons/fa';
 import styles from './EventGallerySection.module.scss';
-import YouTubeEmbed from './YouTubeEmbed';
+import GalleryShowcase from '../Gallery/GalleryShowcase';
 
 type GalleryItem = string | { type: 'video'; url: string; thumbnail?: string };
 
@@ -18,8 +18,8 @@ export default function EventGallerySection({
   images, 
   title = "Gallery" 
 }: EventGallerySectionProps) {
-  const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [showcaseOpen, setShowcaseOpen] = useState(false);
+  const [showcaseIndex, setShowcaseIndex] = useState(0);
 
   if (!images || images.length === 0) {
     return null;
@@ -34,52 +34,14 @@ export default function EventGallerySection({
     return item.thumbnail || '';
   };
 
-  const openLightbox = (item: GalleryItem, index: number) => {
-    setSelectedItem(item);
-    setSelectedIndex(index);
+  const handleImageClick = (index: number) => {
+    setShowcaseIndex(index);
+    setShowcaseOpen(true);
   };
 
-  const closeLightbox = () => {
-    setSelectedItem(null);
-    setSelectedIndex(null);
+  const handleShowcaseClose = () => {
+    setShowcaseOpen(false);
   };
-
-  const navigateItem = (direction: 'prev' | 'next') => {
-    if (selectedIndex === null) return;
-    
-    let newIndex: number;
-    if (direction === 'prev') {
-      newIndex = selectedIndex > 0 ? selectedIndex - 1 : images.length - 1;
-    } else {
-      newIndex = selectedIndex < images.length - 1 ? selectedIndex + 1 : 0;
-    }
-    
-    setSelectedIndex(newIndex);
-    setSelectedItem(images[newIndex]);
-  };
-
-  // Keyboard navigation for lightbox
-  useEffect(() => {
-    if (selectedItem === null || selectedIndex === null) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setSelectedItem(null);
-        setSelectedIndex(null);
-      } else if (e.key === 'ArrowLeft') {
-        const newIndex = selectedIndex > 0 ? selectedIndex - 1 : images.length - 1;
-        setSelectedIndex(newIndex);
-        setSelectedItem(images[newIndex]);
-      } else if (e.key === 'ArrowRight') {
-        const newIndex = selectedIndex < images.length - 1 ? selectedIndex + 1 : 0;
-        setSelectedIndex(newIndex);
-        setSelectedItem(images[newIndex]);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedItem, selectedIndex, images]);
 
   const fadeUp = {
     hidden: { opacity: 0, y: 32 },
@@ -110,7 +72,7 @@ export default function EventGallerySection({
                   key={index}
                   className={`${styles.galleryItem} ${index === 0 ? styles.firstItem : ''}`}
                   variants={fadeUp}
-                  onClick={() => openLightbox(item, index)}
+                  onClick={() => handleImageClick(index)}
                 >
                   <div className={styles.imageWrapper}>
                     {itemUrl && (
@@ -149,91 +111,15 @@ export default function EventGallerySection({
         </div>
       </motion.section>
 
-      {/* Lightbox Modal */}
-      <AnimatePresence>
-        {selectedItem && selectedIndex !== null && (
-          <motion.div
-            className={styles.lightbox}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeLightbox}
-          >
-            <motion.button
-              className={styles.closeButton}
-              onClick={closeLightbox}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-            >
-              <FaTimes />
-            </motion.button>
-
-            {images.length > 1 && (
-              <>
-                <motion.button
-                  className={`${styles.navButton} ${styles.navButtonPrev}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigateItem('prev');
-                  }}
-                  aria-label="Previous item"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  ←
-                </motion.button>
-
-                <motion.button
-                  className={`${styles.navButton} ${styles.navButtonNext}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigateItem('next');
-                  }}
-                  aria-label="Next item"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  →
-                </motion.button>
-              </>
-            )}
-
-            <motion.div
-              className={styles.lightboxContent}
-              onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-            >
-              {isVideo(selectedItem) ? (
-                <div className={styles.lightboxVideo}>
-                  <YouTubeEmbed url={selectedItem.url} title={`Gallery video ${selectedIndex + 1}`} />
-                </div>
-              ) : (
-                <div className={styles.lightboxImage}>
-                  <Image
-                    src={selectedItem}
-                    alt={`Gallery image ${selectedIndex + 1}`}
-                    fill
-                    className={styles.lightboxImg}
-                    sizes="90vw"
-                    priority
-                  />
-                </div>
-              )}
-            </motion.div>
-
-            <div className={styles.imageCounter}>
-              {selectedIndex + 1} / {images.length}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Gallery Showcase */}
+      {showcaseOpen && images.length > 0 && (
+        <GalleryShowcase
+          images={images}
+          initialIndex={showcaseIndex}
+          isOpen={showcaseOpen}
+          onClose={handleShowcaseClose}
+        />
+      )}
     </>
   );
 }

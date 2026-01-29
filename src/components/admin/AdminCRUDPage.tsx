@@ -218,7 +218,7 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
         ? config.apiEndpoint.split('?').slice(1).join('?') 
         : '';
       const url = editingItem
-        ? `${baseUrl}/${editingItem._id}${queryString ? `?${queryString}` : ''}`
+        ? `${baseUrl}/${String(editingItem._id)}${queryString ? `?${queryString}` : ''}`
         : config.apiEndpoint;
       const method = editingItem ? "PUT" : "POST";
 
@@ -255,12 +255,15 @@ export default function AdminCRUDPage<T extends { _id: string; image?: string; i
     }
 
     try {
+      // Ensure ID is a string
+      const idString = String(id);
+      
       // Handle query parameters in API endpoint for delete
       const baseUrl = config.apiEndpoint.split('?')[0];
       const queryString = config.apiEndpoint.includes('?') 
         ? config.apiEndpoint.split('?').slice(1).join('?') 
         : '';
-      const deleteUrl = `${baseUrl}/${id}${queryString ? `?${queryString}` : ''}`;
+      const deleteUrl = `${baseUrl}/${idString}${queryString ? `?${queryString}` : ''}`;
       
       const response = await fetch(deleteUrl, {
         method: "DELETE",

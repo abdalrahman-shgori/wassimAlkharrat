@@ -30,13 +30,20 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
   const isEventsPageActive = eventsPageRoutes.some((route) => pathname?.startsWith(route));
   const [isEventsPageOpen, setIsEventsPageOpen] = useState(isEventsPageActive);
 
+  const galleryRoutes = useMemo(
+    () => ["/admin/gallery", "/admin/gallery-categories"],
+    []
+  );
+  const isGalleryActive = galleryRoutes.some((route) => pathname?.startsWith(route));
+  const [isGalleryOpen, setIsGalleryOpen] = useState(isGalleryActive);
+
   const homepageRoutes = useMemo(
     () => ["/admin/hero-section", "/admin/services", "/admin/stories"],
     []
   );
-  // Check homepage routes, but exclude services-page and events-page routes to avoid conflicts
+  // Check homepage routes, but exclude services-page, events-page, and gallery routes to avoid conflicts
   // This prevents /admin/services-page from matching /admin/services
-  const isHomepageActive = !isServicesPageActive && !isEventsPageActive && homepageRoutes.some((route) => pathname?.startsWith(route));
+  const isHomepageActive = !isServicesPageActive && !isEventsPageActive && !isGalleryActive && homepageRoutes.some((route) => pathname?.startsWith(route));
   const [isHomepageOpen, setIsHomepageOpen] = useState(isHomepageActive);
 
   useEffect(() => {
@@ -60,7 +67,14 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
     } else {
       setIsEventsPageOpen(false);
     }
-  }, [isHomepageActive, isServicesPageActive, isEventsPageActive]);
+    
+    // Update gallery dropdown state
+    if (isGalleryActive) {
+      setIsGalleryOpen(true);
+    } else {
+      setIsGalleryOpen(false);
+    }
+  }, [isHomepageActive, isServicesPageActive, isEventsPageActive, isGalleryActive]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -199,6 +213,38 @@ export default function AdminLayoutClient({ adminName, children }: AdminLayoutCl
                         href="/admin/events"
                         icon="🎉"
                         label="Events"
+                        onClick={closeMobileMenu}
+                      />
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </li>
+            <li>
+              <div className={styles.dropdown}>
+                <button
+                  type="button"
+                  className={`${styles.dropdownHeader} ${isGalleryActive ? styles.dropdownActive : ""}`}
+                  onClick={() => setIsGalleryOpen((prev) => !prev)}
+                >
+                  <span className={styles.dropdownLabel}>🖼️ Gallery</span>
+                  <span className={`${styles.chevron} ${isGalleryOpen ? styles.chevronOpen : ""}`}>▸</span>
+                </button>
+                {isGalleryOpen && (
+                  <ul className={styles.dropdownList}>
+                    <li>
+                      <NavLink
+                        href="/admin/gallery"
+                        icon="🖼️"
+                        label="Gallery Images"
+                        onClick={closeMobileMenu}
+                      />
+                    </li>
+                    <li>
+                      <NavLink
+                        href="/admin/gallery-categories"
+                        icon="🏷️"
+                        label="Gallery Categories"
                         onClick={closeMobileMenu}
                       />
                     </li>
