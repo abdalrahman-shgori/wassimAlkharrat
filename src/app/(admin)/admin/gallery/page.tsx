@@ -2,7 +2,12 @@
 
 import { useState, useEffect } from "react";
 import AdminCRUDPage, { AdminCRUDConfig } from "@/components/admin/AdminCRUDPage";
-import { GalleryImage } from "@/lib/models/Gallery";
+import { GalleryImage } from "../../../../../lib/models/Gallery";
+
+// Form data type with _id as string for AdminCRUDPage compatibility
+type GalleryImageFormData = Omit<GalleryImage, '_id'> & {
+  _id: string;
+};
 
 export default function GalleryAdminPage() {
   const [filterOptions, setFilterOptions] = useState<{ value: string; label: string }[]>([]);
@@ -31,7 +36,7 @@ export default function GalleryAdminPage() {
     fetchCategories();
   }, []);
 
-  const galleryConfig: AdminCRUDConfig<GalleryImage> = {
+  const galleryConfig: AdminCRUDConfig<GalleryImageFormData> = {
   apiEndpoint: "/api/gallery",
   uploadEndpoint: "/api/gallery/upload",
   entityName: "Gallery Image",
@@ -74,7 +79,7 @@ export default function GalleryAdminPage() {
       helpText: "Show this image in the gallery",
     },
   ],
-  renderCardContent: (item: GalleryImage) => (
+  renderCardContent: (item: GalleryImageFormData) => (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       <div>
         <strong>Category:</strong> {item.categoryEn || item.category}
@@ -89,7 +94,7 @@ export default function GalleryAdminPage() {
       </div>
     </div>
   ),
-  getName: (item: GalleryImage) => {
+  getName: (item: GalleryImageFormData) => {
     const category = filterOptions.find(opt => opt.value === item.category);
     return category?.label || item.category || "Gallery Image";
   },

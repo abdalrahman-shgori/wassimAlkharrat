@@ -1,7 +1,12 @@
 "use client";
 
 import AdminCRUDPage, { AdminCRUDConfig } from "@/components/admin/AdminCRUDPage";
-import { GalleryCategory } from "@/lib/models/GalleryCategory";
+import { GalleryCategory } from "../../../../../lib/models/GalleryCategory";
+
+// Form data type with _id as string for AdminCRUDPage compatibility
+type GalleryCategoryFormData = Omit<GalleryCategory, '_id'> & {
+  _id: string;
+};
 
 const generateKey = (nameEn: string) => {
   return nameEn
@@ -10,7 +15,7 @@ const generateKey = (nameEn: string) => {
     .replace(/(^-|-$)/g, "");
 };
 
-const galleryCategoriesConfig: AdminCRUDConfig<GalleryCategory> = {
+const galleryCategoriesConfig: AdminCRUDConfig<GalleryCategoryFormData> = {
   apiEndpoint: "/api/gallery-categories",
   uploadEndpoint: "", // Not needed for categories
   entityName: "Gallery Category",
@@ -70,7 +75,7 @@ const galleryCategoriesConfig: AdminCRUDConfig<GalleryCategory> = {
       helpText: "Show this category in filters",
     },
   ],
-  renderCardContent: (item: GalleryCategory) => (
+  renderCardContent: (item: GalleryCategoryFormData) => (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       <div>
         <strong>Key:</strong> {item.key}
@@ -91,7 +96,7 @@ const galleryCategoriesConfig: AdminCRUDConfig<GalleryCategory> = {
       </div>
     </div>
   ),
-  getName: (item: GalleryCategory) => item.nameEn || item.key || "Gallery Category",
+  getName: (item: GalleryCategoryFormData) => item.nameEn || item.key || "Gallery Category",
 };
 
 export default function GalleryCategoriesAdminPage() {

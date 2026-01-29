@@ -7,11 +7,11 @@ import { ObjectId } from "mongodb";
 // GET /api/gallery-categories/[id] - Get a single gallery category
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const categoriesCollection = await getGalleryCategoriesCollection();
-    const id = params.id;
+    const { id } = await params;
 
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -45,14 +45,14 @@ export async function GET(
 // PUT /api/gallery-categories/[id] - Update a gallery category (Admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
     await requireAdmin();
 
     const categoriesCollection = await getGalleryCategoriesCollection();
-    const id = params.id;
+    const { id } = await params;
 
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -123,14 +123,14 @@ export async function PUT(
 // DELETE /api/gallery-categories/[id] - Delete a gallery category (Admin only)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
     await requireAdmin();
 
     const categoriesCollection = await getGalleryCategoriesCollection();
-    const id = params.id;
+    const { id } = await params;
 
     if (!ObjectId.isValid(id)) {
       return NextResponse.json(
